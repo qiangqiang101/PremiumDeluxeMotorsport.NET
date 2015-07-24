@@ -1,0 +1,22 @@
+C:\Users\Bartholomew\AppData\Local\Temporary Projects\PremiumDeluxeMotorsport.NET\bin\x64\Debug\PremiumDeluxeMotorsport.NET.dll
+C:\Users\Bartholomew\AppData\Local\Temporary Projects\PremiumDeluxeMotorsport.NET\bin\x64\Debug\PremiumDeluxeMotorsport.NET.pdb
+C:\Users\Bartholomew\AppData\Local\Temporary Projects\PremiumDeluxeMotorsport.NET\bin\x64\Debug\PremiumDeluxeMotorsport.NET.xml
+C:\Users\Bartholomew\AppData\Local\Temporary Projects\PremiumDeluxeMotorsport.NET\bin\x64\Debug\NativeUI.dll
+C:\Users\Bartholomew\AppData\Local\Temporary Projects\PremiumDeluxeMotorsport.NET\bin\x64\Debug\ScriptHookVDotNet.dll
+C:\Users\Bartholomew\AppData\Local\Temporary Projects\PremiumDeluxeMotorsport.NET\obj\x64\Debug\PremiumDeluxeMotorsport.NET.Resources.resources
+C:\Users\Bartholomew\AppData\Local\Temporary Projects\PremiumDeluxeMotorsport.NET\obj\x64\Debug\PremiumDeluxeMotorsport.NET.vbproj.GenerateResource.Cache
+C:\Users\Bartholomew\AppData\Local\Temporary Projects\PremiumDeluxeMotorsport.NET\obj\x64\Debug\PremiumDeluxeMotorsport.NET.dll
+C:\Users\Bartholomew\AppData\Local\Temporary Projects\PremiumDeluxeMotorsport.NET\obj\x64\Debug\PremiumDeluxeMotorsport.NET.xml
+C:\Users\Bartholomew\AppData\Local\Temporary Projects\PremiumDeluxeMotorsport.NET\obj\x64\Debug\PremiumDeluxeMotorsport.NET.pdb
+D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\bin\x64\Debug\PremiumDeluxeMotorsportMod.dll
+D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\bin\x64\Debug\PremiumDeluxeMotorsportMod.pdb
+D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\bin\x64\Debug\PremiumDeluxeMotorsportMod.xml
+D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\bin\x64\Debug\ScriptHookVDotNet.dll
+D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\obj\x64\Debug\PremiumDeluxeMotorsport.NET.vbprojResolveAssemblyReference.cache
+D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\obj\x64\Debug\PremiumDeluxeMotorsport.NET.Resources.resources
+D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\obj\x64\Debug\PremiumDeluxeMotorsport.NET.vbproj.GenerateResource.Cache
+D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\obj\x64\Debug\PremiumDeluxeMotorsportMod.dll
+D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\obj\x64\Debug\PremiumDeluxeMotorsportMod.xml
+D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\obj\x64\Debug\PremiumDeluxeMotorsportMod.pdb
+D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\bin\x64\Debug\NativeUI_ForPDMCarShop.dll
+D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\bin\x64\Debug\NativeUI_ForPDMCarShop.pdb

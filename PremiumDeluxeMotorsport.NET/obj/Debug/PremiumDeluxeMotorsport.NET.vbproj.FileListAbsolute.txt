@@ -1,0 +1,11 @@
+C:\Users\Bartholomew\AppData\Local\Temporary Projects\PremiumDeluxeMotorsport.NET\bin\Debug\PremiumDeluxeMotorsport.NET.dll
+C:\Users\Bartholomew\AppData\Local\Temporary Projects\PremiumDeluxeMotorsport.NET\bin\Debug\PremiumDeluxeMotorsport.NET.pdb
+C:\Users\Bartholomew\AppData\Local\Temporary Projects\PremiumDeluxeMotorsport.NET\bin\Debug\PremiumDeluxeMotorsport.NET.xml
+C:\Users\Bartholomew\AppData\Local\Temporary Projects\PremiumDeluxeMotorsport.NET\bin\Debug\NativeUI.dll
+C:\Users\Bartholomew\AppData\Local\Temporary Projects\PremiumDeluxeMotorsport.NET\bin\Debug\ScriptHookVDotNet.dll
+C:\Users\Bartholomew\AppData\Local\Temporary Projects\PremiumDeluxeMotorsport.NET\obj\Debug\PremiumDeluxeMotorsport.NET.vbprojResolveAssemblyReference.cache
+C:\Users\Bartholomew\AppData\Local\Temporary Projects\PremiumDeluxeMotorsport.NET\obj\Debug\PremiumDeluxeMotorsport.NET.Resources.resources
+C:\Users\Bartholomew\AppData\Local\Temporary Projects\PremiumDeluxeMotorsport.NET\obj\Debug\PremiumDeluxeMotorsport.NET.vbproj.GenerateResource.Cache
+C:\Users\Bartholomew\AppData\Local\Temporary Projects\PremiumDeluxeMotorsport.NET\obj\Debug\PremiumDeluxeMotorsport.NET.dll
+C:\Users\Bartholomew\AppData\Local\Temporary Projects\PremiumDeluxeMotorsport.NET\obj\Debug\PremiumDeluxeMotorsport.NET.xml
+C:\Users\Bartholomew\AppData\Local\Temporary Projects\PremiumDeluxeMotorsport.NET\obj\Debug\PremiumDeluxeMotorsport.NET.pdb
