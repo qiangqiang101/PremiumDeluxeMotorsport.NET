@@ -9,3 +9,15 @@ C:\Users\Bartholomew\AppData\Local\Temporary Projects\PremiumDeluxeMotorsport.NE
 C:\Users\Bartholomew\AppData\Local\Temporary Projects\PremiumDeluxeMotorsport.NET\obj\Debug\PremiumDeluxeMotorsport.NET.dll
 C:\Users\Bartholomew\AppData\Local\Temporary Projects\PremiumDeluxeMotorsport.NET\obj\Debug\PremiumDeluxeMotorsport.NET.xml
 C:\Users\Bartholomew\AppData\Local\Temporary Projects\PremiumDeluxeMotorsport.NET\obj\Debug\PremiumDeluxeMotorsport.NET.pdb
+D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\bin\Debug\PDMCarShopMod.dll
+D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\bin\Debug\PDMCarShopMod.pdb
+D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\bin\Debug\PDMCarShopMod.xml
+D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\bin\Debug\PDMCarShopGUI.dll
+D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\bin\Debug\ScriptHookVDotNet.dll
+D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\bin\Debug\PDMCarShopGUI.pdb
+D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\obj\Debug\PremiumDeluxeMotorsport.NET.vbprojResolveAssemblyReference.cache
+D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\obj\Debug\PremiumDeluxeMotorsport.NET.Resources.resources
+D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\obj\Debug\PremiumDeluxeMotorsport.NET.vbproj.GenerateResource.Cache
+D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\obj\Debug\PDMCarShopMod.dll
+D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\obj\Debug\PDMCarShopMod.xml
+D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\obj\Debug\PDMCarShopMod.pdb

@@ -53,6 +53,90 @@ Namespace My
                 Return defaultInstance
             End Get
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("F9")>  _
+        Public Property keyModEnable() As Global.System.Windows.Forms.Keys
+            Get
+                Return CType(Me("keyModEnable"),Global.System.Windows.Forms.Keys)
+            End Get
+            Set
+                Me("keyModEnable") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("1")>  _
+        Public Property keyRotLeft() As Global.System.Windows.Forms.Keys
+            Get
+                Return CType(Me("keyRotLeft"),Global.System.Windows.Forms.Keys)
+            End Get
+            Set
+                Me("keyRotLeft") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("2")>  _
+        Public Property keyRotRight() As Global.System.Windows.Forms.Keys
+            Get
+                Return CType(Me("keyRotRight"),Global.System.Windows.Forms.Keys)
+            End Get
+            Set
+                Me("keyRotRight") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("3")>  _
+        Public Property keyOpenDoor() As Global.System.Windows.Forms.Keys
+            Get
+                Return CType(Me("keyOpenDoor"),Global.System.Windows.Forms.Keys)
+            End Get
+            Set
+                Me("keyOpenDoor") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("4")>  _
+        Public Property keyCloseDoor() As Global.System.Windows.Forms.Keys
+            Get
+                Return CType(Me("keyCloseDoor"),Global.System.Windows.Forms.Keys)
+            End Get
+            Set
+                Me("keyCloseDoor") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("E")>  _
+        Public Property keyUse() As Global.System.Windows.Forms.Keys
+            Get
+                Return CType(Me("keyUse"),Global.System.Windows.Forms.Keys)
+            End Get
+            Set
+                Me("keyUse") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("V")>  _
+        Public Property keyChangeCam() As Global.System.Windows.Forms.Keys
+            Get
+                Return CType(Me("keyChangeCam"),Global.System.Windows.Forms.Keys)
+            End Get
+            Set
+                Me("keyChangeCam") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

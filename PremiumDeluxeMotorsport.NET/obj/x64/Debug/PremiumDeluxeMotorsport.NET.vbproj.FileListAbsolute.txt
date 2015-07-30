@@ -18,5 +18,5 @@ D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\obj
 D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\obj\x64\Debug\PremiumDeluxeMotorsportMod.dll
 D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\obj\x64\Debug\PremiumDeluxeMotorsportMod.xml
 D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\obj\x64\Debug\PremiumDeluxeMotorsportMod.pdb
-D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\bin\x64\Debug\NativeUI_ForPDMCarShop.dll
-D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\bin\x64\Debug\NativeUI_ForPDMCarShop.pdb
+D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\bin\x64\Debug\NativeUI.dll
+D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\bin\x64\Debug\NativeUI.pdb

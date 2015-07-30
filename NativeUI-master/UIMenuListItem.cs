@@ -8,21 +8,28 @@ namespace NativeUI
 {
     public class UIMenuListItem : UIMenuItem
     {
-        private UIResText itemText;
+        private readonly UIResText _itemText;
 
-        private Sprite _arrowLeft;
-        private Sprite _arrowRight;
+        private readonly Sprite _arrowLeft;
+        private readonly Sprite _arrowRight;
 
-        private List<dynamic> Items;
+        private readonly List<dynamic> _items;
 
+
+        /// <summary>
+        /// Triggered when the list is changed.
+        /// </summary>
         public event ItemListEvent OnListChanged;
 
-        private int _index = 0;
-        
+        private int _index;
+
+        /// <summary>
+        /// Returns the current selected index.
+        /// </summary>
         public int Index
         {
-            get { return _index % Items.Count; }
-            set { _index = 100000 - (100000 % Items.Count) + value; }
+            get { return _index % _items.Count; }
+            set { _index = 100000 - (100000 % _items.Count) + value; }
         }
 
 
@@ -48,11 +55,11 @@ namespace NativeUI
             : base(text, description)
         {
             int y = 0;
-            Items = new List<dynamic>(items);
+            _items = new List<dynamic>(items);
             _arrowLeft = new Sprite("commonmenu", "arrowleft", new Point(110, 105 + y), new Size(30, 30));
             _arrowRight = new Sprite("commonmenu", "arrowright", new Point(280, 105 + y), new Size(30, 30));
-            itemText = new UIResText("", new Point(290, y + 104), 0.33f, Color.White, GTA.Font.ChaletLondon, false);
-            
+            _itemText = new UIResText("", new Point(290, y + 104), 0.35f, Color.White, GTA.Font.ChaletLondon, UIResText.Alignment.Left);
+            _itemText.TextAlignment = UIResText.Alignment.Right;
             Index = index;
         }
 
@@ -63,9 +70,9 @@ namespace NativeUI
         /// <param name="y">New Y position.</param>
         public override void Position(int y)
         {
-            _arrowLeft.Position = new Point(300 + Offset.X, 148 + y + Offset.Y);
-            _arrowRight.Position = new Point(400 + Offset.X, 148 + y + Offset.Y);
-            itemText.Position = new Point(300 + Offset.X, y + 149 + Offset.Y);
+            _arrowLeft.Position = new Point(300 + Offset.X + Parent.WidthOffset, 147 + y + Offset.Y);
+            _arrowRight.Position = new Point(400 + Offset.X + Parent.WidthOffset, 147 + y + Offset.Y);
+            _itemText.Position = new Point(300 + Offset.X + Parent.WidthOffset, y + 147 + Offset.Y);
             base.Position(y);
         }
 
@@ -77,7 +84,7 @@ namespace NativeUI
         /// <returns>Item index.</returns>
         public int ItemToIndex(dynamic item)
         {
-            return Items.FindIndex(item);
+            return _items.FindIndex(item);
         }
 
 
@@ -88,7 +95,7 @@ namespace NativeUI
         /// <returns>Item</returns>
         public dynamic IndexToItem(int index)
         {
-            return Items[index];
+            return _items[index];
         }
 
 
@@ -98,7 +105,7 @@ namespace NativeUI
         public override void Draw()
         {
             base.Draw();
-            string caption = Items[Index % Items.Count].ToString();
+            string caption = _items[Index % _items.Count].ToString();
             Function.Call((Hash)0x54CE8AC98E120CAB, "jamyfafi");
             UIResText.AddLongString(caption);
             int screenw = Game.ScreenResolution.Width;
@@ -106,32 +113,42 @@ namespace NativeUI
             const float height = 1080f;
             float ratio = (float)screenw / screenh;
             var width = height * ratio;
-            int offset = Convert.ToInt32(Function.Call<float>((Hash)0x85F061DA64ED2F67, (int)0) * width * 0.33f);
+            int offset = Convert.ToInt32(Function.Call<float>((Hash)0x85F061DA64ED2F67, 0) * width * 0.35f);
 
-            itemText.Color = Selected ? Color.Black : Color.WhiteSmoke;
-            
-            itemText.Caption = caption;
+            _itemText.Color = Enabled ? Selected ? Color.Black : Color.WhiteSmoke : Color.FromArgb(163, 159, 148);
 
-            _arrowLeft.Color = Selected ? Color.Black : Color.WhiteSmoke;
-            _arrowRight.Color = Selected ? Color.Black : Color.WhiteSmoke;
+            _itemText.Caption = caption;
 
-            _arrowLeft.Position = new Point(380 - offset + Offset.X, _arrowLeft.Position.Y);
+            _arrowLeft.Color = Enabled ? Selected ? Color.Black : Color.WhiteSmoke : Color.FromArgb(163, 159, 148);
+            _arrowRight.Color = Enabled ? Selected ? Color.Black : Color.WhiteSmoke : Color.FromArgb(163, 159, 148);
+
+            _arrowLeft.Position = new Point(365 - offset + Offset.X + Parent.WidthOffset, _arrowLeft.Position.Y);
             if (Selected)
             {
                 _arrowLeft.Draw();
                 _arrowRight.Draw();
-                itemText.Position = new Point(410 - offset + Offset.X, itemText.Position.Y);
+                _itemText.Position = new Point(400 + Offset.X + Parent.WidthOffset, _itemText.Position.Y);
             }
             else
             {
-                itemText.Position = new Point(430 - offset + Offset.X, itemText.Position.Y);
+                _itemText.Position = new Point(420 + Offset.X + Parent.WidthOffset, _itemText.Position.Y);
             }
-            itemText.Draw();
+            _itemText.Draw();
         }
 
         internal virtual void ListChangedTrigger(int newindex)
         {
             OnListChanged?.Invoke(this, newindex);
+        }
+
+        public override void SetRightBadge(BadgeStyle badge)
+        {
+            throw new Exception("UIMenuListItem cannot have a right badge.");
+        }
+
+        public override void SetRightLabel(string text)
+        {
+            throw new Exception("UIMenuListItem cannot have a right label.");
         }
     }
 }

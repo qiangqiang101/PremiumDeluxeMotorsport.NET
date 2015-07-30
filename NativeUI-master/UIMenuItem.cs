@@ -1,29 +1,34 @@
-﻿using System.Drawing;
-using GTA;
+﻿using System;
+using System.Drawing;
 
 namespace NativeUI
 {
+    /// <summary>
+    /// Simple item with a label.
+    /// </summary>
     public class UIMenuItem
     {
         private readonly UIResRectangle _rectangle;
         private readonly UIResText _text;
         private bool _selected;
-        private Sprite _selectedSprite;
+        private readonly Sprite _selectedSprite;
 
-        private Sprite _badgeLeft;
-        private Sprite _badgeRight;
-        private string hash;
+        private readonly Sprite _badgeLeft;
+        private readonly Sprite _badgeRight;
+
+        private readonly UIResText _labelText;
+
         private string model;
         private int price;
+        private string car;
 
-        //Events
 
         /// <summary>
         /// Called when user selects the current item.
         /// </summary>
         public event ItemActivatedEvent Activated;
 
-        
+
         /// <summary>
         /// Basic menu button.
         /// </summary>
@@ -39,18 +44,22 @@ namespace NativeUI
         /// <param name="description">Description.</param>
         public UIMenuItem(string text, string description)
         {
-            Text = text;
+
+            Enabled = true;
+
             _rectangle = new UIResRectangle(new Point(0, 0), new Size(431, 38), Color.FromArgb(150, 0, 0, 0));
-            _text = new UIResText(text, new Point(8, 0), 0.33f, Color.WhiteSmoke, GTA.Font.ChaletLondon, false);
+            _text = new UIResText(text, new Point(8, 0), 0.33f, Color.WhiteSmoke, GTA.Font.ChaletLondon, UIResText.Alignment.Left);
             Description = description;
             _selectedSprite = new Sprite("commonmenu", "gradient_nav", new Point(0, 0), new Size(431, 38));
 
             _badgeLeft = new Sprite("commonmenu", "", new Point(0, 0), new Size(40, 40));
             _badgeRight = new Sprite("commonmenu", "", new Point(0, 0), new Size(40, 40));
 
-            Hash = hash;
+            _labelText = new UIResText("", new Point(0, 0), 0.35f) { TextAlignment = UIResText.Alignment.Right };
+
             Model = model;
             Price = price;
+            Car = car;
         }
 
 
@@ -63,22 +72,41 @@ namespace NativeUI
             set
             {
                 _selected = value;
-                
-                _text.Color = value ? Color.Black : Color.WhiteSmoke;
+
+                _text.Color = Enabled ? value ? Color.Black : Color.WhiteSmoke : Color.FromArgb(163, 159, 148);
             }
         }
 
+
+        /// <summary>
+        /// Whether this item is currently being hovered on with a mouse.
+        /// </summary>
         public virtual bool Hovered { get; set; }
 
-        public virtual string Description { get; set; }
-        public virtual string Hash { get; set; }
+
+        /// <summary>
+        /// This item's description.
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
+        /// Added by Barry for PDMCarShop
+        /// </summary>
         public virtual string Model { get; set; }
         public virtual int Price { get; set; }
+        public virtual string Car { get; set; }
+
+        /// <summary>
+        /// Whether this item is enabled or disabled (text is greyed out and you cannot select it).
+        /// </summary>
+        public bool Enabled { get; set; }
+
         internal virtual void ItemActivate(UIMenu sender)
         {
             Activated?.Invoke(sender, this);
         }
-        
+
+
         /// <summary>
         /// Set item's position.
         /// </summary>
@@ -91,6 +119,8 @@ namespace NativeUI
 
             _badgeLeft.Position = new Point(0 + Offset.X, y + 142 + Offset.Y);
             _badgeRight.Position = new Point(385 + Offset.X, y + 142 + Offset.Y);
+
+            _labelText.Position = new Point(420 + Offset.X, y + 148 + Offset.Y);
         }
 
 
@@ -99,6 +129,9 @@ namespace NativeUI
         /// </summary>
         public virtual void Draw()
         {
+            _rectangle.Size = new Size(431 + Parent.WidthOffset, 38);
+            _selectedSprite.Size = new Size(431 + Parent.WidthOffset, 38);
+
             if (Hovered && !Selected)
             {
                 _rectangle.Color = Color.FromArgb(20, 255, 255, 255);
@@ -106,6 +139,8 @@ namespace NativeUI
             }
             if (Selected)
                 _selectedSprite.Draw();
+            if (!Enabled)
+                _text.Color = Color.FromArgb(163, 159, 148);
             if (LeftBadge != BadgeStyle.None)
             {
                 _text.Position = new Point(35 + Offset.X, _text.Position.Y);
@@ -118,23 +153,88 @@ namespace NativeUI
             {
                 _text.Position = new Point(8 + Offset.X, _text.Position.Y);
             }
+
             if (RightBadge != BadgeStyle.None)
             {
+                _badgeRight.Position = new Point(385 + Offset.X + Parent.WidthOffset, _badgeRight.Position.Y);
                 _badgeRight.TextureDict = BadgeToSpriteLib(RightBadge);
                 _badgeRight.TextureName = BadgeToSpriteName(RightBadge, Selected);
                 _badgeRight.Color = BadgeToColor(RightBadge, Selected);
                 _badgeRight.Draw();
             }
             _text.Draw();
+
+            if (!String.IsNullOrWhiteSpace(RightLabel))
+            {
+                _labelText.Position = new Point(420 + Offset.X + Parent.WidthOffset, _labelText.Position.Y);
+                _labelText.Caption = RightLabel;
+                _labelText.Color = _text.Color = Enabled ? Selected ? Color.Black : Color.WhiteSmoke : Color.FromArgb(163, 159, 148);
+                _labelText.Draw();
+            }
         }
 
+
+        /// <summary>
+        /// This item's offset.
+        /// </summary>
         public Point Offset { get; set; }
 
-        public string Text { get; set; }
 
-        public virtual BadgeStyle LeftBadge { get; set; }
+        /// <summary>
+        /// Returns this item's label.
+        /// </summary>
+        public string Text
+        {
+            get { return _text.Caption; }
+            set { _text.Caption = value; }
+        }
 
-        public virtual BadgeStyle RightBadge { get; set; }
+
+        /// <summary>
+        /// Set the left badge. Set it to None to remove the badge.
+        /// </summary>
+        /// <param name="badge"></param>
+        public virtual void SetLeftBadge(BadgeStyle badge)
+        {
+            LeftBadge = badge;
+        }
+
+
+        /// <summary>
+        /// Set the right badge. Set it to None to remove the badge.
+        /// </summary>
+        /// <param name="badge"></param>
+        public virtual void SetRightBadge(BadgeStyle badge)
+        {
+            RightBadge = badge;
+        }
+
+
+        /// <summary>
+        /// Set the right label.
+        /// </summary>
+        /// <param name="text">Text as label. Set it to "" to remove the label.</param>
+        public virtual void SetRightLabel(string text)
+        {
+            RightLabel = text;
+        }
+
+        /// <summary>
+        /// Returns the current right label.
+        /// </summary>
+        public string RightLabel { get; private set; }
+
+
+        /// <summary>
+        /// Returns the current left badge.
+        /// </summary>
+        public BadgeStyle LeftBadge { get; private set; }
+
+
+        /// <summary>
+        /// Returns the current right badge.
+        /// </summary>
+        public BadgeStyle RightBadge { get; private set; }
 
         public enum BadgeStyle
         {
@@ -169,7 +269,7 @@ namespace NativeUI
             {
                 default:
                     return "commonmenu";
-            }   
+            }
         }
 
         private string BadgeToSpriteName(BadgeStyle badge, bool selected)
@@ -227,7 +327,7 @@ namespace NativeUI
             }
         }
 
-        public Color BadgeToColor(BadgeStyle badge, bool selected)
+        private Color BadgeToColor(BadgeStyle badge, bool selected)
         {
             switch (badge)
             {
@@ -240,6 +340,10 @@ namespace NativeUI
             }
         }
 
+
+        /// <summary>
+        /// Returns the menu this item is in.
+        /// </summary>
         public UIMenu Parent { get; set; }
     }
 }
