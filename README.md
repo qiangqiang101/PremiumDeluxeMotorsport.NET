@@ -3,19 +3,43 @@ Premium Deluxe Motorsport Car Shop Mod for Grand Theft Auto V
 
 Features:
 You can buy All cars and bikes except trucks, trailers, trains, planes, buses, helicopters and bicycle.
-Heist Mission: Kill Simeon you will get random amount of money, but you will get 3 star wanted level.
 
 Requirements:
 - Latest ScriptHookV
-- Latest .NET Scripthook
-- Open All Interiors 2
+- Latest Community Script Hook V .NET
 
-Changelog
-v1.0
-- Initial Release
+Controls:
+Up - Menu Up
+Down - Menu Down 
+Enter/Return - Accept
+Esc/Backspace - Cancel
+1 - Vehicle Rotate Left
+2 - Vehicle Rotate Right
+3 - Open Vehicle Doors
+4 - Close Vehicle Doors
+E - Activate Menu
+F9 - Enable Mod
+To Edit the Controls, open 'config.ini' located in 'GTAV Root\Scripts\'
+
+Changelog:
+v2.1
+- Added Change Camera Button (Request by Rohith)
+- Fixed Bati RR incorrect model (Thanks to Matt_STS)
+- Fixed Change Number Plate Text Option
+- Added Secondary Color Menu
+- Added Tick on Mod Enable Status
+
+v2.0
+- Re-code with vB.NET from Scratch
+- New NativeUI Menu Style (Thanks to Guad)
+- New Camera while Menu Activate
+- Open Interior Mod no longer require
 
 Known Bugs:
-None
+1. If you enable/disable Mod Twice, Mod will crash.
+2. If you press and hold Close All Doors key, The Vehicle will fly.
+3. If you kill Simeon, he will dissappear.
+4. Mod Crash Randomly
 
 Credits:
-Alexander Blade, Crosire, Guad
+Rockstar Games, Alexander Blade, Crosire, Guad, EnergyStyle, LetsPlayOrDy, NewTheft, Calm, LCBuffalo, Gang1111, Matt_STS, frodzet, leftas & marhex
