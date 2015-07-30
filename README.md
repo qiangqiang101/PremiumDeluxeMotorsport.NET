@@ -9,6 +9,7 @@ Requirements:
 - Latest Community Script Hook V .NET
 
 Controls:
+
 Up - Menu Up
 Down - Menu Down 
 Enter/Return - Accept
@@ -22,6 +23,7 @@ F9 - Enable Mod
 To Edit the Controls, open 'config.ini' located in 'GTAV Root\Scripts\'
 
 Changelog:
+
 v2.1
 - Added Change Camera Button (Request by Rohith)
 - Fixed Bati RR incorrect model (Thanks to Matt_STS)
