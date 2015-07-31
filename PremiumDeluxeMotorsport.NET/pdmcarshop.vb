@@ -23,6 +23,8 @@ Public Class pdmcarshop
     Private vehiclePrice As Integer
     Private categoryName As String = Nothing
     Private ChangeCamera As Integer = 0
+    Private enableByDefault As Boolean
+    Private Price As Decimal = 0
 
     Private mainMenu, modMenu, colorMenu, colorMenu2, plateMenu, confirmMenu As UIMenu
     Private motorMenu, compactMenu, coupeMenu, sedanMenu, sportMenu, classicMenu, exoticMenu, muscleMenu, offroadMenu, suvMenu, vanMenu, utilityMenu, armouredMenu As UIMenu
@@ -91,9 +93,10 @@ Public Class pdmcarshop
 
         AddHandler Tick, AddressOf OnTick
         AddHandler KeyDown, AddressOf OnKeyDown
+
         _menuPool = New MenuPool()
 
-        modMenu = New UIMenu("PDM Car Shop", "~b~VERSION: 2.1")
+        modMenu = New UIMenu("PDM Car Shop", "~b~VERSION: 2.2")
         _menuPool.Add(modMenu)
         modMenu.AddItem(New UIMenuItem("Enable", "Enable Mod"))
         modMenu.AddItem(New UIMenuItem("Disable", "Disable Mod"))
@@ -178,21 +181,17 @@ Public Class pdmcarshop
     End Sub
 
     Public Sub SpawnSimeon()
-        Dim _random As Random = New Random
         simeon = World.CreatePed(PedHash.SiemonYetarian, New GTA.Math.Vector3(-40.3857F, -1108.79F, 25.4375F), 157.821F)
         simeon.AddBlip()
         simeon.Armor = 100
         simeon.Health = 500
-        'simeon.Money = _random.Next(40000, 300000)
         simeon.Task.LookAt(playerPed)
         simeon.AlwaysKeepTask = True
         simeon.CurrentBlip.Sprite = BlipSprite.PersonalVehicleCar
         simeon.CurrentBlip.Color = BlipColor.Yellow
         simeon.CurrentBlip.IsShortRange = True
         simeon.FreezePosition = True
-        'Dim ShopName As String = "Premium Deluxe Motorsport"
         GTA.Native.Function.Call(Hash.SET_BLIP_NAME_FROM_TEXT_FILE, simeon.CurrentBlip, "BLIP_FRIEND") 'VED_BLIPN
-        'Native.Function.Call(Native.Hash.CREATE_CHECKPOINT, 24, -40.76268, -1110.27, 23.43815, -40.76268, -1110.27, 23.43815, 1, 255, 0, 0, 100, 0)
     End Sub
 
     Public Sub ReadMotorcycle()
@@ -207,9 +206,11 @@ Public Class pdmcarshop
         motorMenu.AddInstructionalButton(btnCloseDoor)
         motorMenu.AddInstructionalButton(btnChangeCam)
         For i As Integer = 0 To format.Count - 1
-            Dim item As New UIMenuItem(format(i)("name") & " $" & format(i)("price"))
+            Price = format(i)("price")
+            Dim item As New UIMenuItem(format(i)("name"))
             motorMenu.AddItem(item)
             With item
+                .SetRightLabel("$" & Price.ToString("N"))
                 .Model = format(i)("model")
                 .Price = format(i)("price")
                 .Car = format(i)("name")
@@ -232,9 +233,11 @@ Public Class pdmcarshop
         compactMenu.AddInstructionalButton(btnCloseDoor)
         compactMenu.AddInstructionalButton(btnChangeCam)
         For i As Integer = 0 To format.Count - 1
-            Dim item As New UIMenuItem(format(i)("name") & " $" & format(i)("price"))
+            Price = format(i)("price")
+            Dim item As New UIMenuItem(format(i)("name"))
             compactMenu.AddItem(item)
             With item
+                .SetRightLabel("$" & Price.ToString("N"))
                 .Model = format(i)("model")
                 .Price = format(i)("price")
                 .Car = format(i)("name")
@@ -257,9 +260,11 @@ Public Class pdmcarshop
         coupeMenu.AddInstructionalButton(btnCloseDoor)
         coupeMenu.AddInstructionalButton(btnChangeCam)
         For i As Integer = 0 To format.Count - 1
-            Dim item As New UIMenuItem(format(i)("name") & " $" & format(i)("price"))
+            Price = format(i)("price")
+            Dim item As New UIMenuItem(format(i)("name"))
             coupeMenu.AddItem(item)
             With item
+                .SetRightLabel("$" & Price.ToString("N"))
                 .Model = format(i)("model")
                 .Price = format(i)("price")
                 .Car = format(i)("name")
@@ -282,9 +287,11 @@ Public Class pdmcarshop
         sedanMenu.AddInstructionalButton(btnCloseDoor)
         sedanMenu.AddInstructionalButton(btnChangeCam)
         For i As Integer = 0 To format.Count - 1
-            Dim item As New UIMenuItem(format(i)("name") & " $" & format(i)("price"))
+            Price = format(i)("price")
+            Dim item As New UIMenuItem(format(i)("name"))
             sedanMenu.AddItem(item)
             With item
+                .SetRightLabel("$" & Price.ToString("N"))
                 .Model = format(i)("model")
                 .Price = format(i)("price")
                 .Car = format(i)("name")
@@ -307,9 +314,11 @@ Public Class pdmcarshop
         sportMenu.AddInstructionalButton(btnCloseDoor)
         sportMenu.AddInstructionalButton(btnChangeCam)
         For i As Integer = 0 To format.Count - 1
-            Dim item As New UIMenuItem(format(i)("name") & " $" & format(i)("price"))
+            Price = format(i)("price")
+            Dim item As New UIMenuItem(format(i)("name"))
             sportMenu.AddItem(item)
             With item
+                .SetRightLabel("$" & Price.ToString("N"))
                 .Model = format(i)("model")
                 .Price = format(i)("price")
                 .Car = format(i)("name")
@@ -332,9 +341,11 @@ Public Class pdmcarshop
         classicMenu.AddInstructionalButton(btnCloseDoor)
         classicMenu.AddInstructionalButton(btnChangeCam)
         For i As Integer = 0 To format.Count - 1
-            Dim item As New UIMenuItem(format(i)("name") & " $" & format(i)("price"))
+            Price = format(i)("price")
+            Dim item As New UIMenuItem(format(i)("name"))
             classicMenu.AddItem(item)
             With item
+                .SetRightLabel("$" & Price.ToString("N"))
                 .Model = format(i)("model")
                 .Price = format(i)("price")
                 .Car = format(i)("name")
@@ -357,9 +368,11 @@ Public Class pdmcarshop
         exoticMenu.AddInstructionalButton(btnCloseDoor)
         exoticMenu.AddInstructionalButton(btnChangeCam)
         For i As Integer = 0 To format.Count - 1
-            Dim item As New UIMenuItem(format(i)("name") & " $" & format(i)("price"))
+            Price = format(i)("price")
+            Dim item As New UIMenuItem(format(i)("name"))
             exoticMenu.AddItem(item)
             With item
+                .SetRightLabel("$" & Price.ToString("N"))
                 .Model = format(i)("model")
                 .Price = format(i)("price")
                 .Car = format(i)("name")
@@ -382,9 +395,11 @@ Public Class pdmcarshop
         muscleMenu.AddInstructionalButton(btnCloseDoor)
         muscleMenu.AddInstructionalButton(btnChangeCam)
         For i As Integer = 0 To format.Count - 1
-            Dim item As New UIMenuItem(format(i)("name") & " $" & format(i)("price"))
+            Price = format(i)("price")
+            Dim item As New UIMenuItem(format(i)("name"))
             muscleMenu.AddItem(item)
             With item
+                .SetRightLabel("$" & Price.ToString("N"))
                 .Model = format(i)("model")
                 .Price = format(i)("price")
                 .Car = format(i)("name")
@@ -407,9 +422,11 @@ Public Class pdmcarshop
         offroadMenu.AddInstructionalButton(btnCloseDoor)
         offroadMenu.AddInstructionalButton(btnChangeCam)
         For i As Integer = 0 To format.Count - 1
-            Dim item As New UIMenuItem(format(i)("name") & " $" & format(i)("price"))
+            Price = format(i)("price")
+            Dim item As New UIMenuItem(format(i)("name"))
             offroadMenu.AddItem(item)
             With item
+                .SetRightLabel("$" & Price.ToString("N"))
                 .Model = format(i)("model")
                 .Price = format(i)("price")
                 .Car = format(i)("name")
@@ -432,9 +449,11 @@ Public Class pdmcarshop
         suvMenu.AddInstructionalButton(btnCloseDoor)
         suvMenu.AddInstructionalButton(btnChangeCam)
         For i As Integer = 0 To format.Count - 1
-            Dim item As New UIMenuItem(format(i)("name") & " $" & format(i)("price"))
+            Price = format(i)("price")
+            Dim item As New UIMenuItem(format(i)("name"))
             suvMenu.AddItem(item)
             With item
+                .SetRightLabel("$" & Price.ToString("N"))
                 .Model = format(i)("model")
                 .Price = format(i)("price")
                 .Car = format(i)("name")
@@ -457,9 +476,11 @@ Public Class pdmcarshop
         vanMenu.AddInstructionalButton(btnCloseDoor)
         vanMenu.AddInstructionalButton(btnChangeCam)
         For i As Integer = 0 To format.Count - 1
-            Dim item As New UIMenuItem(format(i)("name") & " $" & format(i)("price"))
+            Price = format(i)("price")
+            Dim item As New UIMenuItem(format(i)("name"))
             vanMenu.AddItem(item)
             With item
+                .SetRightLabel("$" & Price.ToString("N"))
                 .Model = format(i)("model")
                 .Price = format(i)("price")
                 .Car = format(i)("name")
@@ -482,9 +503,11 @@ Public Class pdmcarshop
         utilityMenu.AddInstructionalButton(btnCloseDoor)
         utilityMenu.AddInstructionalButton(btnChangeCam)
         For i As Integer = 0 To format.Count - 1
-            Dim item As New UIMenuItem(format(i)("name") & " $" & format(i)("price"))
+            Price = format(i)("price")
+            Dim item As New UIMenuItem(format(i)("name"))
             utilityMenu.AddItem(item)
             With item
+                .SetRightLabel("$" & Price.ToString("N"))
                 .Model = format(i)("model")
                 .Price = format(i)("price")
                 .Car = format(i)("name")
@@ -507,9 +530,11 @@ Public Class pdmcarshop
         armouredMenu.AddInstructionalButton(btnCloseDoor)
         armouredMenu.AddInstructionalButton(btnChangeCam)
         For i As Integer = 0 To format.Count - 1
-            Dim item As New UIMenuItem(format(i)("name") & " $" & format(i)("price"))
+            Price = format(i)("price")
+            Dim item As New UIMenuItem(format(i)("name"))
             armouredMenu.AddItem(item)
             With item
+                .SetRightLabel("$" & Price.ToString("N"))
                 .Model = format(i)("model")
                 .Price = format(i)("price")
                 .Car = format(i)("name")
@@ -631,8 +656,8 @@ Public Class pdmcarshop
     Public Sub ConfirmItemSelectHandler(sender As UIMenu, selectedItem As UIMenuItem, index As Integer)
         'UI.Notify("You have selected: ~b~" + selectedItem.Text)
         If selectedItem.Text = "Confirm" Then
-            If player.Money > vehiclePrice Then
-                player.Money = (player.Money - vehiclePrice)
+            If PlayerCash > vehiclePrice Then
+                player.Money = (PlayerCash - vehiclePrice)
                 confirmMenu.Visible = False
                 World.RenderingCamera = Nothing
                 vehPreview.IsDriveable = True
@@ -711,8 +736,8 @@ Public Class pdmcarshop
             UI.Notify("Keys has been Saved.", True)
         ElseIf selectedItem.Text = "About" Then
             modMenu.Visible = False
-            UI.Notify("Premium Deluxe Motorsport Car Shop Mod v2.1", True)
-            UI.Notify("Release Date: 30 Jul 2015", True)
+            UI.Notify("Premium Deluxe Motorsport Car Shop Mod v2.2", True)
+            UI.Notify("Release Date: 31 Jul 2015", True)
             UI.Notify("Mod Author: I'm Not MentaL", True)
             UI.Notify("Special Thanks: Rockstar Games, Alexander Blade, Crosire, Guad, EnergyStyle, LetsPlayOrDy,", True)
             UI.Notify("NewTheft, Calm, LCBuffalo, Gang1111, Matt_STS, frodzet, leftas & marhex", True)
@@ -1003,8 +1028,13 @@ Public Class pdmcarshop
     Public Sub OnTick(o As Object, e As EventArgs)
         _menuPool.ProcessMenus()
 
+
+
         If ModEnable = True Then
             simeonDist = GTA.World.GetDistance(Game.Player.Character.Position, simeon.Position)
+            player = Game.Player
+            playerPed = Game.Player.Character
+            PlayerCash = player.Money
 
             If simeon.IsDead Then
                 simeon.CurrentBlip.Remove()
@@ -1021,7 +1051,7 @@ Public Class pdmcarshop
     End Sub
 
     Public Sub OnKeyDown(o As Object, e As KeyEventArgs)
-        If e.KeyCode = My.Settings.keyUse AndAlso ModEnable = True AndAlso simeonDist < 3.0F Then
+        If e.KeyCode = My.Settings.keyUse AndAlso ModEnable = True AndAlso simeonDist < 3.0F AndAlso Not playerPed.IsInVehicle Then
             'mainMenu.Visible = Not mainMenu.Visible
             mainMenu.Visible = True
             ChangeCamera = 1
@@ -1031,6 +1061,7 @@ Public Class pdmcarshop
 
         If e.KeyCode = My.Settings.keyModEnable Then
             modMenu.Visible = Not mainMenu.Visible
+            World.RenderingCamera = Nothing
         End If
 
         If e.KeyCode = My.Settings.keyRotLeft AndAlso ModEnable = True AndAlso simeonDist < 40.0F Then
