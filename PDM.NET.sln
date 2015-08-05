@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "PDM.NET", "PremiumDeluxeMotorsport.NET\PDM.NET.vbproj", "{9F23CF25-727D-4D97-AFEE-F0EF3956D517}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NativeUI", "NativeUI-master\NativeUI.csproj", "{F3E16ED9-DBF7-4E7B-B04B-9B24B11891D3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PDMCarShopGUI", "NativeUI-master\PDMCarShopGUI.csproj", "{F3E16ED9-DBF7-4E7B-B04B-9B24B11891D3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

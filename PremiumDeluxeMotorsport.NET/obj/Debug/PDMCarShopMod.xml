@@ -6,20 +6,25 @@ PDMCarShopMod
 </name>
 </assembly>
 <members>
-<member name="T:PremiumDeluxeMotorsport.NET.My.Resources.Resources">
+<member name="T:PDMCarShopMod.My.Resources.Resources">
 <summary>
   A strongly-typed resource class, for looking up localized strings, etc.
 </summary>
 </member>
-<member name="P:PremiumDeluxeMotorsport.NET.My.Resources.Resources.ResourceManager">
+<member name="P:PDMCarShopMod.My.Resources.Resources.ResourceManager">
 <summary>
   Returns the cached ResourceManager instance used by this class.
 </summary>
 </member>
-<member name="P:PremiumDeluxeMotorsport.NET.My.Resources.Resources.Culture">
+<member name="P:PDMCarShopMod.My.Resources.Resources.Culture">
 <summary>
   Overrides the current thread's CurrentUICulture property for all
   resource lookups using this strongly typed resource class.
+</summary>
+</member>
+<member name="P:PDMCarShopMod.My.Resources.Resources.pdm_banner">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
 </member>
 </members>

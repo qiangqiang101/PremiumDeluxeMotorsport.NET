@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Windows.Forms;
 
-namespace NativeUI
+namespace PDMCarShopGUI
 {
     /// <summary>
     /// Helper class that handles all of your Menus. After instatiating it, you will have to add your menu by using the Add method.

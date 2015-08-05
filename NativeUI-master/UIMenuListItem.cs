@@ -4,7 +4,7 @@ using System.Drawing;
 using GTA;
 using GTA.Native;
 
-namespace NativeUI
+namespace PDMCarShopGUI
 {
     public class UIMenuListItem : UIMenuItem
     {
@@ -106,14 +106,7 @@ namespace NativeUI
         {
             base.Draw();
             string caption = _items[Index % _items.Count].ToString();
-            Function.Call((Hash)0x54CE8AC98E120CAB, "jamyfafi");
-            UIResText.AddLongString(caption);
-            int screenw = Game.ScreenResolution.Width;
-            int screenh = Game.ScreenResolution.Height;
-            const float height = 1080f;
-            float ratio = (float)screenw / screenh;
-            var width = height * ratio;
-            int offset = Convert.ToInt32(Function.Call<float>((Hash)0x85F061DA64ED2F67, 0) * width * 0.35f);
+            int offset = Convert.ToInt32(UIResText.MeasureStringWidth(caption, GTA.Font.ChaletLondon, 0.35f));
 
             _itemText.Color = Enabled ? Selected ? Color.Black : Color.WhiteSmoke : Color.FromArgb(163, 159, 148);
 
@@ -122,7 +115,7 @@ namespace NativeUI
             _arrowLeft.Color = Enabled ? Selected ? Color.Black : Color.WhiteSmoke : Color.FromArgb(163, 159, 148);
             _arrowRight.Color = Enabled ? Selected ? Color.Black : Color.WhiteSmoke : Color.FromArgb(163, 159, 148);
 
-            _arrowLeft.Position = new Point(365 - offset + Offset.X + Parent.WidthOffset, _arrowLeft.Position.Y);
+            _arrowLeft.Position = new Point(375 - offset + Offset.X + Parent.WidthOffset, _arrowLeft.Position.Y);
             if (Selected)
             {
                 _arrowLeft.Draw();

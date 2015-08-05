@@ -4,16 +4,19 @@ Imports System.Drawing
 Imports System.Windows.Forms
 Imports GTA
 Imports GTA.Native
-Imports NativeUI
+Imports PDMCarShopGUI
 Imports System.Linq
 Imports System.Text
 Imports System.Threading.Tasks
+Imports System.Reflection
 
 Public Class pdmcarshop
     Inherits Script
 
     Private player As Player
-    Private playerPed, simeon As Ped
+    Private playerPed As Ped
+    Private simeon As GTA.Math.Vector3
+    Private simeonBlip As Blip
     Private selectedVehicle As String
     Private vehPreview As Vehicle
     Private simeonDist As Single
@@ -66,7 +69,7 @@ Public Class pdmcarshop
     Dim btnRotRight As New InstructionalButton(ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "RotRightKey"), "Rotate Right")
     Dim btnOpenDoor As New InstructionalButton(ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "OpenDoorKey"), "Open Doors")
     Dim btnCloseDoor As New InstructionalButton(ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "CloseDoorKey"), "Close Doors")
-    Dim btnChangeCam As New InstructionalButton(ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "ChangeCam"), "Change Camera")
+    Dim btnChangeCam As New InstructionalButton(GTA.Control.NextCamera, "Change Camera")
 
     Private motorcycle As String = Application.StartupPath & "\scripts\PDMCarShop\motorcycle.ini"
     Private compact As String = Application.StartupPath & "\scripts\PDMCarShop\compact.ini"
@@ -103,6 +106,7 @@ Public Class pdmcarshop
             _menuPool = New MenuPool()
 
             modMenu = New UIMenu("PDM Car Shop", "~b~VERSION: " & ver)
+            'modMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, ".\Scripts\PDMCarShop\purchase.png"))
             _menuPool.Add(modMenu)
             modMenu.AddItem(New UIMenuItem("Enable", "Enable Mod"))
             modMenu.AddItem(New UIMenuItem("Disable", "Disable Mod"))
@@ -180,13 +184,18 @@ Public Class pdmcarshop
             My.Settings.keyRotRight = [Enum].Parse(GetType(Keys), ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "RotRightKey"), False)
             My.Settings.keyOpenDoor = [Enum].Parse(GetType(Keys), ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "OpenDoorKey"), False)
             My.Settings.keyCloseDoor = [Enum].Parse(GetType(Keys), ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "CloseDoorKey"), False)
-            My.Settings.keyUse = [Enum].Parse(GetType(Keys), ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "UseKey"), False)
-            My.Settings.keyChangeCam = [Enum].Parse(GetType(Keys), ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "ChangeCam"), False)
             My.Settings.Save()
 
             UI.DrawTexture(".\Scripts\PDMCarShop\purchase.png", 0, 0, 10, New Point(CInt(UI.WIDTH * 0.3), 100), New Size(600, 50), 0.0, Color.White)
 
-            modMenu.MenuItems(1).SetRightBadge(UIMenuItem.BadgeStyle.Tick)
+            If ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "DefaultEnable") = True Then
+                ModEnable = True
+                SpawnSimeon()
+                modMenu.MenuItems(0).SetRightBadge(UIMenuItem.BadgeStyle.Tick)
+                modMenu.MenuItems(1).SetRightBadge(UIMenuItem.BadgeStyle.None)
+            Else
+                modMenu.MenuItems(1).SetRightBadge(UIMenuItem.BadgeStyle.Tick)
+            End If
         Catch ex As Exception
             logger.Log(ex.Message)
             logger.Log(ex.InnerException)
@@ -197,17 +206,12 @@ Public Class pdmcarshop
 
     Public Sub SpawnSimeon()
         Try
-            simeon = World.CreatePed(PedHash.SiemonYetarian, New GTA.Math.Vector3(-40.3857F, -1108.79F, 25.4375F), 157.821F)
-            simeon.AddBlip()
-            simeon.Armor = 100
-            simeon.Health = 500
-            simeon.Task.LookAt(playerPed)
-            simeon.AlwaysKeepTask = True
-            simeon.CurrentBlip.Sprite = BlipSprite.PersonalVehicleCar
-            simeon.CurrentBlip.Color = BlipColor.Yellow
-            simeon.CurrentBlip.IsShortRange = True
-            simeon.FreezePosition = True
-            GTA.Native.Function.Call(Hash.SET_BLIP_NAME_FROM_TEXT_FILE, simeon.CurrentBlip, "BLIP_FRIEND") 'VED_BLIPN
+            simeon = New GTA.Math.Vector3(-40.3857F, -1108.79F, 25.4375F)
+            simeonBlip = World.CreateBlip(simeon)
+            simeonBlip.Sprite = BlipSprite.PersonalVehicleCar
+            simeonBlip.Color = BlipColor.Red
+            simeonBlip.IsShortRange = True
+            GTA.Native.Function.Call(Hash.SET_BLIP_NAME_FROM_TEXT_FILE, simeonBlip, "BLIP_FRIEND") 'VED_BLIPN, BLIP_FRIEND
         Catch ex As Exception
             logger.Log(ex.Message)
             logger.Log(ex.InnerException)
@@ -829,8 +833,8 @@ Public Class pdmcarshop
     Public Function getNumVehMod(_vehicle As Vehicle, _modType As Integer) As Integer
         If Native.Function.Call(Of Integer)(Hash.GET_NUM_VEHICLE_MODS, _vehicle, _modType) > 1 Then
             Return Native.Function.Call(Of Integer)(Hash.GET_NUM_VEHICLE_MODS, _vehicle, _modType) - 1
-            Return 0
         End If
+        Return 0
     End Function
 
     Public Sub ConfirmItemSelectHandler(sender As UIMenu, selectedItem As UIMenuItem, index As Integer)
@@ -838,33 +842,44 @@ Public Class pdmcarshop
             'UI.Notify("You have selected: ~b~" + selectedItem.Text)
             If selectedItem.Text = "Confirm" Then
                 If PlayerCash > vehiclePrice Then
+                    Game.FadeScreenOut(500)
+                    Script.Wait(&H3E8)
                     player.Money = (PlayerCash - vehiclePrice)
                     confirmMenu.Visible = False
+                    World.DestroyAllCameras()
                     World.RenderingCamera = Nothing
                     vehPreview.IsDriveable = True
                     Native.Function.Call(Hash.SET_VEHICLE_DOORS_SHUT, vehPreview, False)
                     Native.Function.Call(Hash.TASK_WARP_PED_INTO_VEHICLE, playerPed, vehPreview, -1)
                     vehPreview.MarkAsNoLongerNeeded()
                     vehPreview = Nothing
+                    Script.Wait(500)
+                    Game.FadeScreenIn(500)
                     UI.DrawTexture(".\Scripts\PDMCarShop\purchase.png", 0, 0, 2000, New Point(CInt(UI.WIDTH * 0.3), 100), New Size(600, 50), 0.0, Color.White)
                     Native.Function.Call(Hash.PLAY_SOUND_FRONTEND, -1, "PROPERTY_PURCHASE", "HUD_AWARDS", False)
                 Else
                     UI.Notify("You have insufficient funds to purchase this vehicle.", True)
                 End If
             ElseIf selectedItem.Text = "Test Drive" Then
+                Game.FadeScreenOut(500)
+                Script.Wait(&H3E8)
                 Native.Function.Call(Hash.TASK_WARP_PED_INTO_VEHICLE, playerPed, vehPreview, -1)
                 confirmMenu.Visible = False
+                World.DestroyAllCameras()
                 World.RenderingCamera = Nothing
                 vehPreview.IsDriveable = True
                 Native.Function.Call(Hash.SET_VEHICLE_DOORS_SHUT, vehPreview, False)
                 UI.Notify("To quit Test Drive, Leave this vehicle.", True)
                 testDrive = testDrive + 1
+                Script.Wait(500)
+                Game.FadeScreenIn(500)
             End If
             If selectedItem.Text = "Plate Number" Then
                 Dim NumPlateText As String = Game.GetUserInput(vehPreview.NumberPlate, 9)
                 If NumPlateText <> "" Then
                     vehPreview.NumberPlate = NumPlateText
                     If ChangeCamera = 0 Then
+                        World.DestroyAllCameras()
                         World.RenderingCamera = Nothing
                     ElseIf ChangeCamera = 1 Then
                         World.RenderingCamera = World.CreateCamera(New GTA.Math.Vector3(-78.79827F, -1103.386F, 26.8126F), New GTA.Math.Vector3(Game.Player.Character.Rotation.X, Game.Player.Character.Rotation.Y, 253.0F), 10.0F)
@@ -943,9 +958,7 @@ Public Class pdmcarshop
             ElseIf selectedItem.Text = "Disable" Then
                 ModEnable = False
                 UI.Notify("~r~Premium Deluxe Motorsport ~w~Mod Disabled.", True)
-                simeon.CurrentBlip.Remove()
-                simeon.MarkAsNoLongerNeeded()
-                simeon.Delete()
+                simeonBlip.Remove()
                 modMenu.Visible = False
                 sender.MenuItems(1).SetRightBadge(UIMenuItem.BadgeStyle.Tick)
                 sender.MenuItems(0).SetRightBadge(UIMenuItem.BadgeStyle.None)
@@ -955,18 +968,16 @@ Public Class pdmcarshop
                 My.Settings.keyRotRight = [Enum].Parse(GetType(Keys), ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "RotRightKey"), False)
                 My.Settings.keyOpenDoor = [Enum].Parse(GetType(Keys), ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "OpenDoorKey"), False)
                 My.Settings.keyCloseDoor = [Enum].Parse(GetType(Keys), ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "CloseDoorKey"), False)
-                My.Settings.keyUse = [Enum].Parse(GetType(Keys), ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "UseKey"), False)
-                My.Settings.keyChangeCam = [Enum].Parse(GetType(Keys), ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "ChangeCam"), False)
                 My.Settings.Save()
                 modMenu.Visible = False
                 UI.Notify("Keys has been Saved.", True)
             ElseIf selectedItem.Text = "About" Then
                 modMenu.Visible = False
                 UI.Notify("Premium Deluxe Motorsport Car Shop Mod v" & ver, True)
-                UI.Notify("Release Date: 04 Aug 2015", True)
+                UI.Notify("Release Date: 06 Aug 2015", True)
                 UI.Notify("Mod Author: I'm Not MentaL", True)
                 UI.Notify("Special Thanks: Rockstar Games, Alexander Blade, Crosire, Guad, EnergyStyle, LetsPlayOrDy,", True)
-                UI.Notify("NewTheft, Calm, LCBuffalo, Gang1111, Matt_STS, frodzet, leftas & marhex", True)
+                UI.Notify("Calm, LCBuffalo, Gang1111, Matt_STS, frodzet, leftas & marhex", True)
             End If
         Catch ex As Exception
             logger.Log(ex.Message)
@@ -1421,6 +1432,7 @@ Public Class pdmcarshop
             If selectedVehicle IsNot Nothing Then
                 vehPreview.Delete()
             End If
+            World.DestroyAllCameras()
             World.RenderingCamera = Nothing
         Catch ex As Exception
             logger.Log(ex.Message)
@@ -1435,25 +1447,28 @@ Public Class pdmcarshop
             _menuPool.ProcessMenus()
 
             If ModEnable = True Then
-                simeonDist = GTA.World.GetDistance(Game.Player.Character.Position, simeon.Position)
+                simeonDist = GTA.World.GetDistance(Game.Player.Character.Position, simeon)
                 player = Game.Player
                 playerPed = Game.Player.Character
                 PlayerCash = player.Money
 
-                If simeon.IsDead Then
-                    simeon.CurrentBlip.Remove()
-                    ModEnable = False
-                    simeon.MarkAsNoLongerNeeded()
-                    simeon.Delete()
-                End If
-
-                If Not playerPed.IsInVehicle AndAlso Not playerPed.IsDead AndAlso simeonDist < 3.0F Then
+                If Not playerPed.IsInVehicle AndAlso Not playerPed.IsDead AndAlso simeonDist < 3.0F AndAlso player.WantedLevel = 0 Then
                     'mainMenu.Visible = True
-                    UI.Notify("Welcome to ~h~~r~Premium Deluxe Motorsport~h~~s~, Please press " & ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "UseKey") & " to browse Vehicles.", True)
+                    'UI.Notify("Welcome to ~h~~r~Premium Deluxe Motorsport~h~~s~, Please press " & ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "UseKey") & " to browse Vehicles.", True)
+                    Native.Function.Call(Hash.DISPLAY_HELP_TEXT_THIS_FRAME, New InputArgument() {"SHR_MENU", 0})
+                ElseIf Not playerPed.IsInVehicle AndAlso Not playerPed.IsDead AndAlso simeonDist < 3.0F AndAlso player.WantedLevel >= 1 Then
+                    Native.Function.Call(Hash.DISPLAY_HELP_TEXT_THIS_FRAME, New InputArgument() {"LOSE_WANTED", 0})
                 End If
             End If
 
             If ModEnable = True AndAlso testDrive = 3 AndAlso Not playerPed.IsInVehicle Then
+                Game.FadeScreenOut(500)
+                Script.Wait(&H3E8)
+                Dim penalty As Double = vehiclePrice / 99
+                If vehPreview.HasBeenDamagedBy(playerPed) Then
+                    player.Money = (PlayerCash - (vehiclePrice / 99))
+                    UI.Notify("$" & Math.Round(penalty) & " has been charge for fixing the vehicle.")
+                End If
                 confirmMenu.Visible = True
                 World.RenderingCamera = World.CreateCamera(New GTA.Math.Vector3(-78.79827F, -1103.386F, 26.8126F), New GTA.Math.Vector3(Game.Player.Character.Rotation.X, Game.Player.Character.Rotation.Y, 253.0F), 10.0F)
                 vehPreview.IsDriveable = False
@@ -1462,6 +1477,8 @@ Public Class pdmcarshop
                 Native.Function.Call(Hash.SET_VEHICLE_DOORS_SHUT, vehPreview, False)
                 Native.Function.Call(Hash.SET_VEHICLE_FIXED, vehPreview)
                 testDrive = 1
+                Script.Wait(500)
+                Game.FadeScreenIn(500)
             ElseIf ModEnable = True AndAlso testDrive = 2 AndAlso playerPed.IsInVehicle Then
                 testDrive = testDrive + 1
             End If
@@ -1476,16 +1493,21 @@ Public Class pdmcarshop
 
     Public Sub OnKeyDown(o As Object, e As KeyEventArgs)
         Try
-            If e.KeyCode = My.Settings.keyUse AndAlso ModEnable = True AndAlso simeonDist < 3.0F AndAlso Not playerPed.IsInVehicle Then
+            If Game.IsControlJustPressed(0, GTA.Control.Talk) AndAlso ModEnable = True AndAlso simeonDist < 3.0F AndAlso Not playerPed.IsInVehicle AndAlso player.WantedLevel = 0 Then
                 'mainMenu.Visible = Not mainMenu.Visible
+                Game.FadeScreenOut(500)
+                Script.Wait(&H3E8)
                 mainMenu.Visible = True
                 ChangeCamera = 1
                 World.RenderingCamera = World.CreateCamera(New GTA.Math.Vector3(-78.79827F, -1103.386F, 26.8126F), New GTA.Math.Vector3(Game.Player.Character.Rotation.X, Game.Player.Character.Rotation.Y, 253.0F), 10.0F)
                 Game.Player.Character.Position = New GTA.Math.Vector3(-43.79905F, -1116.247F, 25.43394F)
+                Script.Wait(500)
+                Game.FadeScreenIn(500)
             End If
 
             If e.KeyCode = My.Settings.keyModEnable Then
                 modMenu.Visible = Not mainMenu.Visible
+                World.DestroyAllCameras()
                 World.RenderingCamera = Nothing
             End If
 
@@ -1507,10 +1529,11 @@ Public Class pdmcarshop
             ElseIf e.KeyCode = My.Settings.keyCloseDoor AndAlso ModEnable = True AndAlso simeonDist < 40.0F Then
                 Native.Function.Call(Hash.SET_VEHICLE_DOORS_SHUT, vehPreview, False)
                 Native.Function.Call(Hash.RAISE_CONVERTIBLE_ROOF, vehPreview, False)
-            ElseIf e.KeyCode = My.Settings.keyChangeCam AndAlso ModEnable = True AndAlso simeonDist < 40.0F AndAlso ChangeCamera = 0 Then
+            ElseIf Game.IsControlJustPressed(0, GTA.Control.NextCamera) AndAlso ModEnable = True AndAlso simeonDist < 40.0F AndAlso ChangeCamera = 0 Then
+                World.DestroyAllCameras()
                 World.RenderingCamera = Nothing
                 ChangeCamera = (ChangeCamera + 1)
-            ElseIf e.KeyCode = My.Settings.keyChangeCam AndAlso ModEnable = True AndAlso simeonDist < 40.0F AndAlso ChangeCamera = 1 Then
+            ElseIf Game.IsControlJustPressed(0, GTA.Control.NextCamera) AndAlso ModEnable = True AndAlso simeonDist < 40.0F AndAlso ChangeCamera = 1 Then
                 World.RenderingCamera = World.CreateCamera(New GTA.Math.Vector3(-78.79827F, -1103.386F, 26.8126F), New GTA.Math.Vector3(Game.Player.Character.Rotation.X, Game.Player.Character.Rotation.Y, 253.0F), 10.0F)
                 ChangeCamera = (ChangeCamera - 1)
             End If

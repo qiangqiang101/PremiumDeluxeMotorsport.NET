@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{9F23CF25-727D-4D97-AFEE-F0EF3956D517}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>PremiumDeluxeMotorsport.NET</RootNamespace>
+    <RootNamespace>PDMCarShopMod</RootNamespace>
     <AssemblyName>PDMCarShopMod</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>Windows</MyType>
@@ -31,6 +31,7 @@
     <OutputPath>bin\Release\</OutputPath>
     <DocumentationFile>PDMCarShopMod.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup>
     <OptionExplicit>On</OptionExplicit>
@@ -132,9 +133,12 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NativeUI-master\NativeUI.csproj">
+    <None Include="Resources\pdm_banner.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NativeUI-master\PDMCarShopGUI.csproj">
       <Project>{f3e16ed9-dbf7-4e7b-b04b-9b24b11891d3}</Project>
-      <Name>NativeUI</Name>
+      <Name>PDMCarShopGUI</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />

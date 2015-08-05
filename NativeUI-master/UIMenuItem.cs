@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-namespace NativeUI
+namespace PDMCarShopGUI
 {
     /// <summary>
     /// Simple item with a label.
@@ -18,10 +18,9 @@ namespace NativeUI
 
         private readonly UIResText _labelText;
 
-        private string model;
-        private int price;
-        private string car;
-
+        private string model = null;
+        private int price = 0;
+        private string car = null;
 
         /// <summary>
         /// Called when user selects the current item.
@@ -44,7 +43,6 @@ namespace NativeUI
         /// <param name="description">Description.</param>
         public UIMenuItem(string text, string description)
         {
-
             Enabled = true;
 
             _rectangle = new UIResRectangle(new Point(0, 0), new Size(431, 38), Color.FromArgb(150, 0, 0, 0));

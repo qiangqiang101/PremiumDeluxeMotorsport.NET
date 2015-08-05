@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-namespace NativeUI
+namespace PDMCarShopGUI
 {
     public class UIMenuCheckboxItem : UIMenuItem
     {

@@ -5,7 +5,7 @@ using System.Reflection;
 using GTA;
 using GTA.Native;
 
-namespace NativeUI
+namespace PDMCarShopGUI
 {
     public class Sprite
     {

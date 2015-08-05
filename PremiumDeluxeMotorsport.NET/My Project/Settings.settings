@@ -17,11 +17,5 @@
     <Setting Name="keyCloseDoor" Type="System.Windows.Forms.Keys" Scope="User">
       <Value Profile="(Default)">4</Value>
     </Setting>
-    <Setting Name="keyUse" Type="System.Windows.Forms.Keys" Scope="User">
-      <Value Profile="(Default)">E</Value>
-    </Setting>
-    <Setting Name="keyChangeCam" Type="System.Windows.Forms.Keys" Scope="User">
-      <Value Profile="(Default)">V</Value>
-    </Setting>
   </Settings>
 </SettingsFile>

@@ -113,30 +113,6 @@ Namespace My
                 Me("keyCloseDoor") = value
             End Set
         End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("E")>  _
-        Public Property keyUse() As Global.System.Windows.Forms.Keys
-            Get
-                Return CType(Me("keyUse"),Global.System.Windows.Forms.Keys)
-            End Get
-            Set
-                Me("keyUse") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("V")>  _
-        Public Property keyChangeCam() As Global.System.Windows.Forms.Keys
-            Get
-                Return CType(Me("keyChangeCam"),Global.System.Windows.Forms.Keys)
-            End Get
-            Set
-                Me("keyChangeCam") = value
-            End Set
-        End Property
     End Class
 End Namespace
 
@@ -148,9 +124,9 @@ Namespace My
     Friend Module MySettingsProperty
         
         <Global.System.ComponentModel.Design.HelpKeywordAttribute("My.Settings")>  _
-        Friend ReadOnly Property Settings() As Global.PremiumDeluxeMotorsport.NET.My.MySettings
+        Friend ReadOnly Property Settings() As Global.PDMCarShopMod.My.MySettings
             Get
-                Return Global.PremiumDeluxeMotorsport.NET.My.MySettings.Default
+                Return Global.PDMCarShopMod.My.MySettings.Default
             End Get
         End Property
     End Module

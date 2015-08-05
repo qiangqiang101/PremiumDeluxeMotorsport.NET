@@ -4,10 +4,10 @@ D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\bin
 D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\bin\Debug\PDMCarShopGUI.dll
 D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\bin\Debug\ScriptHookVDotNet.dll
 D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\bin\Debug\PDMCarShopGUI.pdb
-D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\obj\Debug\PremiumDeluxeMotorsport.NET.Resources.resources
 D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\obj\Debug\PDM.NET.vbproj.GenerateResource.Cache
 D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\obj\Debug\PDMCarShopMod.dll
 D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\obj\Debug\PDMCarShopMod.xml
 D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\obj\Debug\PDMCarShopMod.pdb
 D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\obj\Debug\PDM.NET.vbprojResolveAssemblyReference.cache
 D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\bin\Debug\PDMCarShopMod.dll.config
+D:\PDM Car Shop .NET\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsport.NET\obj\Debug\PDMCarShopMod.Resources.resources

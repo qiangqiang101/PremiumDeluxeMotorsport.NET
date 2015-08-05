@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using GTA;
 using GTA.Native;
-using NativeUI;
+using PDMCarShopGUI;
 
 public class MenuExample : Script
 {
@@ -97,7 +97,7 @@ public class MenuExample : Script
 
     public void OnKeyDown(object o, KeyEventArgs e)
     {
-        if (e.KeyCode == Keys.F11) // Our menu on/off switch
+        if (e.KeyCode == Keys.F5 && !_menuPool.IsAnyMenuOpen()) // Our menu on/off switch
         {
             mainMenu.Visible = !mainMenu.Visible;
         }

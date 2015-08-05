@@ -2,7 +2,7 @@
 using GTA;
 using GTA.Native;
 
-namespace NativeUI
+namespace PDMCarShopGUI
 {
     /// <summary>
     /// A rectangle in 1080 pixels height system.

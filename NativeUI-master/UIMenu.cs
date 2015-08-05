@@ -8,7 +8,7 @@ using GTA.Native;
 using Control = GTA.Control;
 using Font = GTA.Font;
 
-namespace NativeUI
+namespace PDMCarShopGUI
 {
     public delegate void IndexChangedEvent(UIMenu sender, int newIndex);
 
@@ -73,6 +73,10 @@ namespace NativeUI
 
         public List<UIMenuItem> MenuItems = new List<UIMenuItem>();
 
+        public bool MouseEdgeEnabled = true;
+        public bool ControlDisablingEnabled = true;
+        public bool ResetCursorOnOpen = true;
+
         //Events
 
         /// <summary>
@@ -107,7 +111,7 @@ namespace NativeUI
 
 
         //Keys
-        private Dictionary<MenuControls, Tuple<List<Keys>, List<Tuple<GTA.Control, int>>>> _keyDictionary = new Dictionary<MenuControls, Tuple<List<Keys>, List<Tuple<GTA.Control, int>>>>();
+        private readonly Dictionary<MenuControls, Tuple<List<Keys>, List<Tuple<Control, int>>>> _keyDictionary = new Dictionary<MenuControls, Tuple<List<Keys>, List<Tuple<Control, int>>>>();
 
         //Tree structure
         public Dictionary<UIMenuItem, UIMenu> Children { get; private set; }
@@ -190,19 +194,20 @@ namespace NativeUI
             _background = new Sprite("commonmenu", "gradient_bgd", new Point(_offset.X, 144 + _offset.Y - 37 + _extraYOffset), new Size(290, 25));
 
 
-            SetKey(MenuControls.Up, Control.FrontendUp);
-            SetKey(MenuControls.Down, Control.FrontendDown);
-            SetKey(MenuControls.Left, Control.FrontendLeft);
-            SetKey(MenuControls.Right, Control.FrontendRight);
+            SetKey(MenuControls.Up, Control.PhoneUp);
+            SetKey(MenuControls.Down, Control.PhoneDown);
+            SetKey(MenuControls.Left, Control.PhoneLeft);
+            SetKey(MenuControls.Right, Control.PhoneRight);
             SetKey(MenuControls.Select, Control.FrontendAccept);
 
-            SetKey(MenuControls.Back, Control.FrontendCancel);
-            SetKey(MenuControls.Back, Control.FrontendPause);
             SetKey(MenuControls.Back, Control.PhoneCancel);
+            SetKey(MenuControls.Back, Control.FrontendPause);
         }
 
         private void RecaulculateDescriptionPosition()
         {
+            _descriptionText.WordWrap = new Size(425 + WidthOffset, 0);
+
             _descriptionBar.Position = new Point(_offset.X, 149 - 37 + _extraYOffset + _offset.Y);
             _descriptionRectangle.Position = new Point(_offset.X, 149 - 37 + _extraYOffset + _offset.Y);
             _descriptionText.Position = new Point(_offset.X + 8, 155 - 37 + _extraYOffset + _offset.Y);
@@ -252,7 +257,7 @@ namespace NativeUI
         /// Enable or disable all controls but the necessary to operate a menu.
         /// </summary>
         /// <param name="enable"></param>
-        private void DisEnableControls(bool enable)
+        public void DisEnableControls(bool enable)
         {
             Hash thehash = enable ? Hash.ENABLE_CONTROL_ACTION : Hash.DISABLE_CONTROL_ACTION;
             foreach (var con in Enum.GetValues(typeof(Control)))
@@ -419,15 +424,15 @@ namespace NativeUI
         {
             if (!Visible) return;
 
-            DisEnableControls(false);
+            if (ControlDisablingEnabled)
+                DisEnableControls(false);
+
             if (_buttonsEnabled)
                 _instructionalButtonsScaleform.Render2D();
 
             Function.Call((Hash)0xB8A850F20A067EB6, 76, 84);           // Safezone
             Function.Call((Hash)0xF5A2C681787E579D, 0f, 0f, 0f, 0f);   // stuff
 
-            _background.Size = Size > MaxItemsOnScreen + 1 ? new Size(431 + WidthOffset, 38 * (MaxItemsOnScreen + 1)) : new Size(431 + WidthOffset, 38 * Size);
-            _background.Draw();
 
             if (String.IsNullOrWhiteSpace(_customBanner))
             {
@@ -441,13 +446,21 @@ namespace NativeUI
                 Point safe = GetSafezoneBounds();
                 Sprite.DrawTexture(_customBanner, new Point(safe.X + _offset.X, safe.Y + _offset.Y), new Size(431 + WidthOffset, 107));
             }
-            MenuItems[_activeItem % (MenuItems.Count)].Selected = true;
             _mainMenu.Draw();
+            if (MenuItems.Count == 0)
+            {
+                Function.Call((Hash)0xE3A3DB414A373DAB); // Safezone end
+                return;
+            }
+
+            _background.Size = Size > MaxItemsOnScreen + 1 ? new Size(431 + WidthOffset, 38 * (MaxItemsOnScreen + 1)) : new Size(431 + WidthOffset, 38 * Size);
+            _background.Draw();
+            MenuItems[_activeItem % (MenuItems.Count)].Selected = true;
             if (!String.IsNullOrWhiteSpace(MenuItems[_activeItem % (MenuItems.Count)].Description))
             {
+                _descriptionText.Caption = MenuItems[_activeItem % (MenuItems.Count)].Description;
                 RecaulculateDescriptionPosition();
-                _descriptionText.Caption = FormatDescription(MenuItems[_activeItem % (MenuItems.Count)].Description);
-                int numLines = _descriptionText.Caption.Split('\n').Length;
+                int numLines = FormatDescription(_descriptionText.Caption).Split('\n').Length;
                 _descriptionRectangle.Size = new Size(431 + WidthOffset, (numLines * 25) + 15);
 
                 _descriptionBar.Draw();
@@ -497,7 +510,7 @@ namespace NativeUI
         /// Returns the 1080pixels-based screen resolution while mantaining current aspect ratio.
         /// </summary>
         /// <returns></returns>
-        public SizeF GetScreenResolutionMantainRatio()
+        public static SizeF GetScreenResolutionMantainRatio()
         {
             int screenw = Game.ScreenResolution.Width;
             int screenh = Game.ScreenResolution.Height;
@@ -515,7 +528,7 @@ namespace NativeUI
         /// <param name="topLeft">top left point of your rectangle.</param>
         /// <param name="boxSize">size of your rectangle.</param>
         /// <returns></returns>
-        public bool IsMouseInBounds(Point topLeft, Size boxSize)
+        public static bool IsMouseInBounds(Point topLeft, Size boxSize)
         {
             var res = GetScreenResolutionMantainRatio();
 
@@ -559,7 +572,7 @@ namespace NativeUI
         /// Returns the safezone bounds in pixel, relative to the 1080pixel based system.
         /// </summary>
         /// <returns></returns>
-        public Point GetSafezoneBounds()
+        public static Point GetSafezoneBounds()
         {
             float t = Function.Call<float>(Hash._0xBAF107B6BB2C97F0); // Safezone size.
             double g = Math.Round(Convert.ToDouble(t), 2);
@@ -745,8 +758,11 @@ namespace NativeUI
             Visible = false;
             if (ParentMenu != null)
             {
+                var tmp = Cursor.Position;
                 ParentMenu.Visible = true;
                 MenuChangeEv(ParentMenu, false);
+                if (ResetCursorOnOpen)
+                    Cursor.Position = tmp;
             }
             MenuCloseEv();
         }
@@ -786,13 +802,29 @@ namespace NativeUI
         /// </summary>
         public void ProcessMouse()
         {
-            if (!Visible || _justOpened) return;
+            if (!Visible || _justOpened || MenuItems.Count == 0) return;
+
             Point safezoneOffset = GetSafezoneBounds();
             Function.Call(Hash._SHOW_CURSOR_THIS_FRAME);
             int limit = MenuItems.Count - 1;
             int counter = 0;
             if (MenuItems.Count > MaxItemsOnScreen + 1)
                 limit = _maxItem;
+
+            if (IsMouseInBounds(new Point(0, 0), new Size(30, 1080)) && MouseEdgeEnabled)
+            {
+                GameplayCamera.RelativeHeading += 5f;
+                Function.Call(Hash._0x8DB8CFFD58B62552, 6);
+            }
+            else if (IsMouseInBounds(new Point(Convert.ToInt32(GetScreenResolutionMantainRatio().Width - 30f), 0), new Size(30, 1080)) && MouseEdgeEnabled)
+            {
+                GameplayCamera.RelativeHeading -= 5f;
+                Function.Call(Hash._0x8DB8CFFD58B62552, 7);
+            }
+            else if (MouseEdgeEnabled)
+            {
+                Function.Call(Hash._0x8DB8CFFD58B62552, 1);
+            }
 
             for (int i = _minItem; i <= limit; i++)
             {
@@ -1032,6 +1064,13 @@ namespace NativeUI
                 _justOpened = false;
                 return;
             }
+
+            if (HasControlJustBeenReleaseed(MenuControls.Back, key))
+            {
+                //MenuPool.ControllerUsed = Game.IsControlJustPressed(2, (GTA.Control)45);
+                GoBack();
+            }
+            if (MenuItems.Count == 0) return;
             if (IsControlBeingPressed(MenuControls.Up, key) || Game.IsControlJustPressed(0, Control.CursorScrollUp))
             {
                 //MenuPool.ControllerUsed = Game.IsControlJustPressed(2, (GTA.Control)27);
@@ -1042,7 +1081,9 @@ namespace NativeUI
                     GoUp();
                 UpdateScaleform();
             }
-            else if (IsControlBeingPressed(MenuControls.Down, key) || Game.IsControlJustPressed(0, Control.CursorScrollDown))
+
+            else if (IsControlBeingPressed(MenuControls.Down, key) ||
+                     Game.IsControlJustPressed(0, Control.CursorScrollDown))
             {
                 //MenuPool.ControllerUsed = Game.IsControlJustPressed(2, (GTA.Control)8);
                 MenuPool.ControllerUsed = Game.IsControlJustPressed(2, Control.PhoneDown);
@@ -1053,6 +1094,7 @@ namespace NativeUI
                     GoDown();
                 UpdateScaleform();
             }
+
             else if (IsControlBeingPressed(MenuControls.Left, key))
             {
                 //MenuPool.ControllerUsed = Game.IsControlJustPressed(2, (GTA.Control)34);
@@ -1073,11 +1115,6 @@ namespace NativeUI
                 SelectItem();
             }
 
-            else if (HasControlJustBeenReleaseed(MenuControls.Back, key))
-            {
-                //MenuPool.ControllerUsed = Game.IsControlJustPressed(2, (GTA.Control)45);
-                GoBack();
-            }
         }
 
 
@@ -1180,6 +1217,10 @@ namespace NativeUI
                 _visible = value;
                 _justOpened = value;
                 UpdateScaleform();
+                if (ParentMenu != null || !value) return;
+                if (!ResetCursorOnOpen) return;
+                Cursor.Position = new Point(Screen.PrimaryScreen.Bounds.Width / 2, Screen.PrimaryScreen.Bounds.Height / 2);
+                Function.Call(Hash._0x8DB8CFFD58B62552, 1);
             }
         }
 
