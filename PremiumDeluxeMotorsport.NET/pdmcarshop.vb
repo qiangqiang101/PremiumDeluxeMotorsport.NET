@@ -16,10 +16,12 @@ Public Class pdmcarshop
     Private player As Player
     Private playerPed As Ped
     Private simeon As GTA.Math.Vector3
+    Private testDriveVector As GTA.Math.Vector3
     Private simeonBlip As Blip
     Private selectedVehicle As String
     Private vehPreview As Vehicle
     Private simeonDist As Single
+    Private testdriveDist As Single
     Private ModEnable As Boolean = False
     Private curRadius As Integer = 0
     Private PlayerCash As Integer
@@ -29,6 +31,7 @@ Public Class pdmcarshop
     Private enableByDefault As Boolean
     Private Price As Decimal = 0
     Private testDrive As Integer = 1
+    Private hideHud As Boolean = False
     Dim ver As String = My.Application.Info.Version.ToString
 
     Private mainMenu, modMenu, colorMenu, colorMenu2, plateMenu, confirmMenu, colorMenu3 As UIMenu
@@ -70,6 +73,7 @@ Public Class pdmcarshop
     Dim btnOpenDoor As New InstructionalButton(ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "OpenDoorKey"), "Open Doors")
     Dim btnCloseDoor As New InstructionalButton(ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "CloseDoorKey"), "Close Doors")
     Dim btnChangeCam As New InstructionalButton(GTA.Control.NextCamera, "Change Camera")
+    Dim btnConfirm As New InstructionalButton(GTA.Control.Jump, "Checkout")
 
     Private motorcycle As String = Application.StartupPath & "\scripts\PDMCarShop\motorcycle.ini"
     Private compact As String = Application.StartupPath & "\scripts\PDMCarShop\compact.ini"
@@ -151,6 +155,7 @@ Public Class pdmcarshop
             ReadPlate()
 
             AddHandler mainMenu.OnMenuClose, AddressOf MenuCloseHandler
+            AddHandler confirmMenu.OnMenuClose, AddressOf ConfirmCloseHandler
 
             AddHandler mainMenu.OnItemSelect, AddressOf ItemSelectHandler
             AddHandler motorMenu.OnItemSelect, AddressOf MotorItemSelectHandler
@@ -207,6 +212,7 @@ Public Class pdmcarshop
     Public Sub SpawnSimeon()
         Try
             simeon = New GTA.Math.Vector3(-40.3857F, -1108.79F, 25.4375F)
+            testDriveVector = New GTA.Math.Vector3(66.55125F, -1356.585F, 29.08711)
             simeonBlip = World.CreateBlip(simeon)
             simeonBlip.Sprite = BlipSprite.PersonalVehicleCar
             simeonBlip.Color = BlipColor.Red
@@ -227,6 +233,7 @@ Public Class pdmcarshop
 
             motorMenu = New UIMenu("PDM Car Shop", "~r~MOTORCYCLES")
             _menuPool.Add(motorMenu)
+            motorMenu.AddInstructionalButton(btnConfirm)
             motorMenu.AddInstructionalButton(btnRotLeft)
             motorMenu.AddInstructionalButton(btnRotRight)
             motorMenu.AddInstructionalButton(btnOpenDoor)
@@ -243,7 +250,7 @@ Public Class pdmcarshop
                     .Car = format(i)("name")
                 End With
             Next
-            motorMenu.AddItem(itemMotorConfirm)
+            'motorMenu.AddItem(itemMotorConfirm)
             motorMenu.RefreshIndex()
             mainMenu.BindMenuToItem(motorMenu, itemMotor)
         Catch ex As Exception
@@ -261,6 +268,7 @@ Public Class pdmcarshop
 
             compactMenu = New UIMenu("PDM Car Shop", "~r~COMPACTS")
             _menuPool.Add(compactMenu)
+            compactMenu.AddInstructionalButton(btnConfirm)
             compactMenu.AddInstructionalButton(btnRotLeft)
             compactMenu.AddInstructionalButton(btnRotRight)
             compactMenu.AddInstructionalButton(btnOpenDoor)
@@ -277,7 +285,7 @@ Public Class pdmcarshop
                     .Car = format(i)("name")
                 End With
             Next
-            compactMenu.AddItem(itemCompactConfirm)
+            'compactMenu.AddItem(itemCompactConfirm)
             compactMenu.RefreshIndex()
             mainMenu.BindMenuToItem(compactMenu, itemCompact)
         Catch ex As Exception
@@ -295,6 +303,7 @@ Public Class pdmcarshop
 
             coupeMenu = New UIMenu("PDM Car Shop", "~r~COUPES")
             _menuPool.Add(coupeMenu)
+            coupeMenu.AddInstructionalButton(btnConfirm)
             coupeMenu.AddInstructionalButton(btnRotLeft)
             coupeMenu.AddInstructionalButton(btnRotRight)
             coupeMenu.AddInstructionalButton(btnOpenDoor)
@@ -311,7 +320,7 @@ Public Class pdmcarshop
                     .Car = format(i)("name")
                 End With
             Next
-            coupeMenu.AddItem(itemCoupeConfirm)
+            'coupeMenu.AddItem(itemCoupeConfirm)
             coupeMenu.RefreshIndex()
             mainMenu.BindMenuToItem(coupeMenu, itemCoupe)
         Catch ex As Exception
@@ -329,6 +338,7 @@ Public Class pdmcarshop
 
             sedanMenu = New UIMenu("PDM Car Shop", "~r~SEDANS")
             _menuPool.Add(sedanMenu)
+            sedanMenu.AddInstructionalButton(btnConfirm)
             sedanMenu.AddInstructionalButton(btnRotLeft)
             sedanMenu.AddInstructionalButton(btnRotRight)
             sedanMenu.AddInstructionalButton(btnOpenDoor)
@@ -345,7 +355,7 @@ Public Class pdmcarshop
                     .Car = format(i)("name")
                 End With
             Next
-            sedanMenu.AddItem(itemSedanConfirm)
+            'sedanMenu.AddItem(itemSedanConfirm)
             sedanMenu.RefreshIndex()
             mainMenu.BindMenuToItem(sedanMenu, itemSedan)
         Catch ex As Exception
@@ -363,6 +373,7 @@ Public Class pdmcarshop
 
             sportMenu = New UIMenu("PDM Car Shop", "~r~SPORTS")
             _menuPool.Add(sportMenu)
+            sportMenu.AddInstructionalButton(btnConfirm)
             sportMenu.AddInstructionalButton(btnRotLeft)
             sportMenu.AddInstructionalButton(btnRotRight)
             sportMenu.AddInstructionalButton(btnOpenDoor)
@@ -379,7 +390,7 @@ Public Class pdmcarshop
                     .Car = format(i)("name")
                 End With
             Next
-            sportMenu.AddItem(itemSportConfirm)
+            'sportMenu.AddItem(itemSportConfirm)
             sportMenu.RefreshIndex()
             mainMenu.BindMenuToItem(sportMenu, itemSport)
         Catch ex As Exception
@@ -397,6 +408,7 @@ Public Class pdmcarshop
 
             classicMenu = New UIMenu("PDM Car Shop", "~r~CLASSICS")
             _menuPool.Add(classicMenu)
+            classicMenu.AddInstructionalButton(btnConfirm)
             classicMenu.AddInstructionalButton(btnRotLeft)
             classicMenu.AddInstructionalButton(btnRotRight)
             classicMenu.AddInstructionalButton(btnOpenDoor)
@@ -413,7 +425,7 @@ Public Class pdmcarshop
                     .Car = format(i)("name")
                 End With
             Next
-            classicMenu.AddItem(itemClassicConfirm)
+            'classicMenu.AddItem(itemClassicConfirm)
             classicMenu.RefreshIndex()
             mainMenu.BindMenuToItem(classicMenu, itemClassic)
         Catch ex As Exception
@@ -431,6 +443,7 @@ Public Class pdmcarshop
 
             exoticMenu = New UIMenu("PDM Car Shop", "~r~EXOTICS")
             _menuPool.Add(exoticMenu)
+            exoticMenu.AddInstructionalButton(btnConfirm)
             exoticMenu.AddInstructionalButton(btnRotLeft)
             exoticMenu.AddInstructionalButton(btnRotRight)
             exoticMenu.AddInstructionalButton(btnOpenDoor)
@@ -447,7 +460,7 @@ Public Class pdmcarshop
                     .Car = format(i)("name")
                 End With
             Next
-            exoticMenu.AddItem(itemExoticConfirm)
+            'exoticMenu.AddItem(itemExoticConfirm)
             exoticMenu.RefreshIndex()
             mainMenu.BindMenuToItem(exoticMenu, itemExotic)
         Catch ex As Exception
@@ -465,6 +478,7 @@ Public Class pdmcarshop
 
             muscleMenu = New UIMenu("PDM Car Shop", "~r~MUSCLES")
             _menuPool.Add(muscleMenu)
+            muscleMenu.AddInstructionalButton(btnConfirm)
             muscleMenu.AddInstructionalButton(btnRotLeft)
             muscleMenu.AddInstructionalButton(btnRotRight)
             muscleMenu.AddInstructionalButton(btnOpenDoor)
@@ -481,7 +495,7 @@ Public Class pdmcarshop
                     .Car = format(i)("name")
                 End With
             Next
-            muscleMenu.AddItem(itemMuscleConfirm)
+            'muscleMenu.AddItem(itemMuscleConfirm)
             muscleMenu.RefreshIndex()
             mainMenu.BindMenuToItem(muscleMenu, itemMuscle)
         Catch ex As Exception
@@ -499,6 +513,7 @@ Public Class pdmcarshop
 
             offroadMenu = New UIMenu("PDM Car Shop", "~r~OFF-ROAD")
             _menuPool.Add(offroadMenu)
+            offroadMenu.AddInstructionalButton(btnConfirm)
             offroadMenu.AddInstructionalButton(btnRotLeft)
             offroadMenu.AddInstructionalButton(btnRotRight)
             offroadMenu.AddInstructionalButton(btnOpenDoor)
@@ -515,7 +530,7 @@ Public Class pdmcarshop
                     .Car = format(i)("name")
                 End With
             Next
-            offroadMenu.AddItem(itemOffRoadConfirm)
+            'offroadMenu.AddItem(itemOffRoadConfirm)
             offroadMenu.RefreshIndex()
             mainMenu.BindMenuToItem(offroadMenu, itemOffRoad)
         Catch ex As Exception
@@ -533,6 +548,7 @@ Public Class pdmcarshop
 
             suvMenu = New UIMenu("PDM Car Shop", "~r~SUVS")
             _menuPool.Add(suvMenu)
+            suvMenu.AddInstructionalButton(btnConfirm)
             suvMenu.AddInstructionalButton(btnRotLeft)
             suvMenu.AddInstructionalButton(btnRotRight)
             suvMenu.AddInstructionalButton(btnOpenDoor)
@@ -549,7 +565,7 @@ Public Class pdmcarshop
                     .Car = format(i)("name")
                 End With
             Next
-            suvMenu.AddItem(itemSuvConfirm)
+            'suvMenu.AddItem(itemSuvConfirm)
             suvMenu.RefreshIndex()
             mainMenu.BindMenuToItem(suvMenu, itemSuv)
         Catch ex As Exception
@@ -567,6 +583,7 @@ Public Class pdmcarshop
 
             vanMenu = New UIMenu("PDM Car Shop", "~r~VANS")
             _menuPool.Add(vanMenu)
+            vanMenu.AddInstructionalButton(btnConfirm)
             vanMenu.AddInstructionalButton(btnRotLeft)
             vanMenu.AddInstructionalButton(btnRotRight)
             vanMenu.AddInstructionalButton(btnOpenDoor)
@@ -583,7 +600,7 @@ Public Class pdmcarshop
                     .Car = format(i)("name")
                 End With
             Next
-            vanMenu.AddItem(itemVanConfirm)
+            'vanMenu.AddItem(itemVanConfirm)
             vanMenu.RefreshIndex()
             mainMenu.BindMenuToItem(vanMenu, itemVan)
         Catch ex As Exception
@@ -601,6 +618,7 @@ Public Class pdmcarshop
 
             utilityMenu = New UIMenu("PDM Car Shop", "~r~UTILITIES")
             _menuPool.Add(utilityMenu)
+            utilityMenu.AddInstructionalButton(btnConfirm)
             utilityMenu.AddInstructionalButton(btnRotLeft)
             utilityMenu.AddInstructionalButton(btnRotRight)
             utilityMenu.AddInstructionalButton(btnOpenDoor)
@@ -617,7 +635,7 @@ Public Class pdmcarshop
                     .Car = format(i)("name")
                 End With
             Next
-            utilityMenu.AddItem(itemUtilityConfirm)
+            'utilityMenu.AddItem(itemUtilityConfirm)
             utilityMenu.RefreshIndex()
             mainMenu.BindMenuToItem(utilityMenu, itemUtility)
         Catch ex As Exception
@@ -635,6 +653,7 @@ Public Class pdmcarshop
 
             armouredMenu = New UIMenu("PDM Car Shop", "~r~ARMOURED")
             _menuPool.Add(armouredMenu)
+            armouredMenu.AddInstructionalButton(btnConfirm)
             armouredMenu.AddInstructionalButton(btnRotLeft)
             armouredMenu.AddInstructionalButton(btnRotRight)
             armouredMenu.AddInstructionalButton(btnOpenDoor)
@@ -651,7 +670,7 @@ Public Class pdmcarshop
                     .Car = format(i)("name")
                 End With
             Next
-            armouredMenu.AddItem(itemArmouredConfirm)
+            'armouredMenu.AddItem(itemArmouredConfirm)
             armouredMenu.RefreshIndex()
             mainMenu.BindMenuToItem(armouredMenu, itemArmoured)
         Catch ex As Exception
@@ -809,19 +828,19 @@ Public Class pdmcarshop
             confirmMenu.AddItem(New UIMenuItem("Test Drive"))
             confirmMenu.AddItem(New UIMenuItem("Confirm"))
             confirmMenu.RefreshIndex()
-            motorMenu.BindMenuToItem(confirmMenu, itemMotorConfirm)
-            compactMenu.BindMenuToItem(confirmMenu, itemCompactConfirm)
-            coupeMenu.BindMenuToItem(confirmMenu, itemCoupeConfirm)
-            sedanMenu.BindMenuToItem(confirmMenu, itemSedanConfirm)
-            sportMenu.BindMenuToItem(confirmMenu, itemSportConfirm)
-            classicMenu.BindMenuToItem(confirmMenu, itemClassicConfirm)
-            muscleMenu.BindMenuToItem(confirmMenu, itemMuscleConfirm)
-            exoticMenu.BindMenuToItem(confirmMenu, itemExoticConfirm)
-            offroadMenu.BindMenuToItem(confirmMenu, itemOffRoadConfirm)
-            suvMenu.BindMenuToItem(confirmMenu, itemSuvConfirm)
-            vanMenu.BindMenuToItem(confirmMenu, itemVanConfirm)
-            utilityMenu.BindMenuToItem(confirmMenu, itemUtilityConfirm)
-            armouredMenu.BindMenuToItem(confirmMenu, itemArmouredConfirm)
+            'motorMenu.BindMenuToItem(confirmMenu, itemMotorConfirm)
+            'compactMenu.BindMenuToItem(confirmMenu, itemCompactConfirm)
+            'coupeMenu.BindMenuToItem(confirmMenu, itemCoupeConfirm)
+            'sedanMenu.BindMenuToItem(confirmMenu, itemSedanConfirm)
+            'sportMenu.BindMenuToItem(confirmMenu, itemSportConfirm)
+            'classicMenu.BindMenuToItem(confirmMenu, itemClassicConfirm)
+            'muscleMenu.BindMenuToItem(confirmMenu, itemMuscleConfirm)
+            'exoticMenu.BindMenuToItem(confirmMenu, itemExoticConfirm)
+            'offroadMenu.BindMenuToItem(confirmMenu, itemOffRoadConfirm)
+            'suvMenu.BindMenuToItem(confirmMenu, itemSuvConfirm)
+            'vanMenu.BindMenuToItem(confirmMenu, itemVanConfirm)
+            'utilityMenu.BindMenuToItem(confirmMenu, itemUtilityConfirm)
+            'armouredMenu.BindMenuToItem(confirmMenu, itemArmouredConfirm)
         Catch ex As Exception
             logger.Log(ex.Message)
             logger.Log(ex.InnerException)
@@ -851,8 +870,10 @@ Public Class pdmcarshop
                     vehPreview.IsDriveable = True
                     Native.Function.Call(Hash.SET_VEHICLE_DOORS_SHUT, vehPreview, False)
                     Native.Function.Call(Hash.TASK_WARP_PED_INTO_VEHICLE, playerPed, vehPreview, -1)
+                    selectedVehicle = Nothing
                     vehPreview.MarkAsNoLongerNeeded()
                     vehPreview = Nothing
+                    hideHud = False
                     Script.Wait(500)
                     Game.FadeScreenIn(500)
                     UI.DrawTexture(".\Scripts\PDMCarShop\purchase.png", 0, 0, 2000, New Point(CInt(UI.WIDTH * 0.3), 100), New Size(600, 50), 0.0, Color.White)
@@ -871,6 +892,7 @@ Public Class pdmcarshop
                 Native.Function.Call(Hash.SET_VEHICLE_DOORS_SHUT, vehPreview, False)
                 UI.Notify("To quit Test Drive, Leave this vehicle.", True)
                 testDrive = testDrive + 1
+                hideHud = False
                 Script.Wait(500)
                 Game.FadeScreenIn(500)
             End If
@@ -1430,10 +1452,27 @@ Public Class pdmcarshop
     Public Sub MenuCloseHandler(sender As UIMenu)
         Try
             If selectedVehicle IsNot Nothing Then
+                selectedVehicle = Nothing
+                categoryName = Nothing
                 vehPreview.Delete()
             End If
             World.DestroyAllCameras()
             World.RenderingCamera = Nothing
+            hideHud = False
+        Catch ex As Exception
+            logger.Log(ex.Message)
+            logger.Log(ex.InnerException)
+
+            logger.Log(ex.StackTrace)
+        End Try
+    End Sub
+
+    Public Sub ConfirmCloseHandler(sender As UIMenu)
+        Try
+            selectedVehicle = Nothing
+            categoryName = Nothing
+            vehPreview.Delete()
+            mainMenu.Visible = True
         Catch ex As Exception
             logger.Log(ex.Message)
             logger.Log(ex.InnerException)
@@ -1448,6 +1487,7 @@ Public Class pdmcarshop
 
             If ModEnable = True Then
                 simeonDist = GTA.World.GetDistance(Game.Player.Character.Position, simeon)
+                testdriveDist = GTA.World.GetDistance(Game.Player.Character.Position, testDriveVector)
                 player = Game.Player
                 playerPed = Game.Player.Character
                 PlayerCash = player.Money
@@ -1477,10 +1517,33 @@ Public Class pdmcarshop
                 Native.Function.Call(Hash.SET_VEHICLE_DOORS_SHUT, vehPreview, False)
                 Native.Function.Call(Hash.SET_VEHICLE_FIXED, vehPreview)
                 testDrive = 1
+                hideHud = True
+                Script.Wait(500)
+                Game.FadeScreenIn(500)
+            ElseIf ModEnable = True AndAlso testDrive = 3 AndAlso testdriveDist > 450.0F Then
+                Game.FadeScreenOut(500)
+                Script.Wait(&H3E8)
+                Dim penalty As Double = vehiclePrice / 99
+                If vehPreview.HasBeenDamagedBy(playerPed) Then
+                    player.Money = (PlayerCash - (vehiclePrice / 99))
+                    UI.Notify("$" & Math.Round(penalty) & " has been charge for fixing the vehicle.")
+                End If
+                confirmMenu.Visible = True
+                World.RenderingCamera = World.CreateCamera(New GTA.Math.Vector3(-78.79827F, -1103.386F, 26.8126F), New GTA.Math.Vector3(Game.Player.Character.Rotation.X, Game.Player.Character.Rotation.Y, 253.0F), 10.0F)
+                vehPreview.IsDriveable = False
+                Game.Player.Character.Position = New GTA.Math.Vector3(-43.79905F, -1116.247F, 25.43394F)
+                vehPreview.Position = New GTA.Math.Vector3(-56.79958F, -1110.868F, 26.43581F)
+                Native.Function.Call(Hash.SET_VEHICLE_DOORS_SHUT, vehPreview, False)
+                Native.Function.Call(Hash.SET_VEHICLE_FIXED, vehPreview)
+                testDrive = 1
                 Script.Wait(500)
                 Game.FadeScreenIn(500)
             ElseIf ModEnable = True AndAlso testDrive = 2 AndAlso playerPed.IsInVehicle Then
                 testDrive = testDrive + 1
+            End If
+
+            If hideHud Then
+                Native.Function.Call(Hash.HIDE_HUD_AND_RADAR_THIS_FRAME)
             End If
 
         Catch ex As Exception
@@ -1501,8 +1564,30 @@ Public Class pdmcarshop
                 ChangeCamera = 1
                 World.RenderingCamera = World.CreateCamera(New GTA.Math.Vector3(-78.79827F, -1103.386F, 26.8126F), New GTA.Math.Vector3(Game.Player.Character.Rotation.X, Game.Player.Character.Rotation.Y, 253.0F), 10.0F)
                 Game.Player.Character.Position = New GTA.Math.Vector3(-43.79905F, -1116.247F, 25.43394F)
+                hideHud = True
                 Script.Wait(500)
                 Game.FadeScreenIn(500)
+            End If
+
+            If Game.IsControlJustPressed(0, GTA.Control.Jump) AndAlso ModEnable = True AndAlso simeonDist < 40.0F AndAlso Not playerPed.IsInVehicle AndAlso Not selectedVehicle = Nothing Then
+                If armouredMenu.Visible = True Or classicMenu.Visible = True Or compactMenu.Visible = True Or coupeMenu.Visible = True Or exoticMenu.Visible = True Or
+                    motorMenu.Visible = True Or muscleMenu.Visible = True Or offroadMenu.Visible = True Or sedanMenu.Visible = True Or sportMenu.Visible = True Or
+                    suvMenu.Visible = True Or utilityMenu.Visible = True Or vanMenu.Visible = True Then
+                    confirmMenu.Visible = True
+                    armouredMenu.Visible = False
+                    classicMenu.Visible = False
+                    compactMenu.Visible = False
+                    coupeMenu.Visible = False
+                    exoticMenu.Visible = False
+                    motorMenu.Visible = False
+                    muscleMenu.Visible = False
+                    offroadMenu.Visible = False
+                    sedanMenu.Visible = False
+                    sportMenu.Visible = False
+                    suvMenu.Visible = False
+                    utilityMenu.Visible = False
+                    vanMenu.Visible = False
+                End If
             End If
 
             If e.KeyCode = My.Settings.keyModEnable Then
@@ -1545,4 +1630,9 @@ Public Class pdmcarshop
         End Try
     End Sub
 
+    Protected Overrides Sub Dispose(A_0 As Boolean)
+        If (A_0) Then
+            simeonBlip.Remove()
+        End If
+    End Sub
 End Class
