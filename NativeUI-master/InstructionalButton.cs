@@ -1,5 +1,4 @@
-﻿using GTA;
-using GTA.Native;
+﻿using GTA.Native;
 
 namespace PDMCarShopGUI
 {

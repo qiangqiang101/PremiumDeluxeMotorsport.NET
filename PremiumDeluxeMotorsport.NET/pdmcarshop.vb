@@ -29,6 +29,10 @@ Public Class pdmcarshop
     Private categoryName As String = Nothing
     Private ChangeCamera As Integer = 0
     Private enableByDefault As Boolean
+    Private vehPreviewPosition As GTA.Math.Vector3
+    Private cameraPosition As GTA.Math.Vector3
+    Private playerPosition As GTA.Math.Vector3
+    Private showRoom As Boolean
     Private Price As Decimal = 0
     Private testDrive As Integer = 1
     Private hideHud As Boolean = False
@@ -68,10 +72,10 @@ Public Class pdmcarshop
     Dim itemColor3 As New UIMenuItem("Color", "Transform vehicle appearance.")
     Dim itemPlate As New UIMenuItem("Plate", "Customize license plate.")
 
-    Dim btnRotLeft As New InstructionalButton(ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "RotLeftKey"), "Rotate Left")
-    Dim btnRotRight As New InstructionalButton(ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "RotRightKey"), "Rotate Right")
-    Dim btnOpenDoor As New InstructionalButton(ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "OpenDoorKey"), "Open Doors")
-    Dim btnCloseDoor As New InstructionalButton(ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "CloseDoorKey"), "Close Doors")
+    Dim btnRotLeft As New InstructionalButton(GTA.Control.ParachuteBrakeLeft, "Rotate Left")
+    Dim btnRotRight As New InstructionalButton(GTA.Control.ParachuteBrakeRight, "Rotate Right")
+    Dim btnOpenDoor As New InstructionalButton(GTA.Control.SelectWeaponUnarmed, "Open Doors")
+    Dim btnCloseDoor As New InstructionalButton(GTA.Control.SelectWeaponMelee, "Close Doors")
     Dim btnChangeCam As New InstructionalButton(GTA.Control.NextCamera, "Change Camera")
     Dim btnConfirm As New InstructionalButton(GTA.Control.Jump, "Checkout")
 
@@ -109,8 +113,10 @@ Public Class pdmcarshop
 
             _menuPool = New MenuPool()
 
-            modMenu = New UIMenu("PDM Car Shop", "~b~VERSION: " & ver)
-            'modMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, ".\Scripts\PDMCarShop\purchase.png"))
+            modMenu = New UIMenu("", "~b~VERSION: " & ver, New Point(0, 0))
+            modMenu.SetMenuWidthOffset(11)
+            modMenu.MouseEdgeEnabled = False
+            modMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCarShopMod.shopui_title_pdm.png"))
             _menuPool.Add(modMenu)
             modMenu.AddItem(New UIMenuItem("Enable", "Enable Mod"))
             modMenu.AddItem(New UIMenuItem("Disable", "Disable Mod"))
@@ -118,7 +124,9 @@ Public Class pdmcarshop
             modMenu.AddItem(New UIMenuItem("About", "About PDM Car Shop"))
             modMenu.RefreshIndex()
 
-            mainMenu = New UIMenu("PDM Car Shop", "~b~CATEGORIES")
+            mainMenu = New UIMenu("", "~b~CATEGORIES", New Point(0, 0))
+            mainMenu.SetMenuWidthOffset(11)
+            mainMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCarShopMod.shopui_title_pdm.png"))
             _menuPool.Add(mainMenu)
             mainMenu.AddItem(itemMotor)
             mainMenu.AddItem(itemCompact)
@@ -185,13 +193,9 @@ Public Class pdmcarshop
             AddHandler plateMenu.OnIndexChange, AddressOf PlateItemChangeHandler
 
             My.Settings.keyModEnable = [Enum].Parse(GetType(Keys), ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "ModEnableKey"), False)
-            My.Settings.keyRotLeft = [Enum].Parse(GetType(Keys), ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "RotLeftKey"), False)
-            My.Settings.keyRotRight = [Enum].Parse(GetType(Keys), ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "RotRightKey"), False)
-            My.Settings.keyOpenDoor = [Enum].Parse(GetType(Keys), ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "OpenDoorKey"), False)
-            My.Settings.keyCloseDoor = [Enum].Parse(GetType(Keys), ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "CloseDoorKey"), False)
             My.Settings.Save()
 
-            UI.DrawTexture(".\Scripts\PDMCarShop\purchase.png", 0, 0, 10, New Point(CInt(UI.WIDTH * 0.3), 100), New Size(600, 50), 0.0, Color.White)
+            UI.DrawTexture(".\Scripts\PDMCarShop\purchase.png", 0, 0, 1, New Point(CInt(UI.WIDTH * 0.3), 100), New Size(600, 100), 0.0, Color.White)
 
             If ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "DefaultEnable") = True Then
                 ModEnable = True
@@ -200,6 +204,18 @@ Public Class pdmcarshop
                 modMenu.MenuItems(1).SetRightBadge(UIMenuItem.BadgeStyle.None)
             Else
                 modMenu.MenuItems(1).SetRightBadge(UIMenuItem.BadgeStyle.Tick)
+            End If
+
+            If ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "Showroom") = False Then
+                'Outside
+                vehPreviewPosition = New GTA.Math.Vector3(-56.79958F, -1110.868F, 26.43581F)
+                cameraPosition = New GTA.Math.Vector3(-78.79827F, -1103.386F, 26.8126F)
+                playerPosition = New GTA.Math.Vector3(-43.79905F, -1116.247F, 25.43394F)
+            Else
+                'Inside
+                vehPreviewPosition = New GTA.Math.Vector3(-44.142F, -1098.996F, 26.422F)
+                cameraPosition = New GTA.Math.Vector3(-59.76299F, -1093.913F, 26.622F)
+                playerPosition = New GTA.Math.Vector3(-54.16683F, -1088.698F, 25.42233F)
             End If
         Catch ex As Exception
             logger.Log(ex.Message)
@@ -212,7 +228,7 @@ Public Class pdmcarshop
     Public Sub SpawnSimeon()
         Try
             simeon = New GTA.Math.Vector3(-40.3857F, -1108.79F, 25.4375F)
-            testDriveVector = New GTA.Math.Vector3(66.55125F, -1356.585F, 29.08711)
+            testDriveVector = New GTA.Math.Vector3(66.55125F, -1356.585F, 29.08711F)
             simeonBlip = World.CreateBlip(simeon)
             simeonBlip.Sprite = BlipSprite.PersonalVehicleCar
             simeonBlip.Color = BlipColor.Red
@@ -231,7 +247,9 @@ Public Class pdmcarshop
             Dim format As New BTEFormatReader(motorcycle, parameters)
             Dim qty As Integer = format.Count - 1
 
-            motorMenu = New UIMenu("PDM Car Shop", "~r~MOTORCYCLES")
+            motorMenu = New UIMenu("", "~r~MOTORCYCLES", New Point(0, 0))
+            motorMenu.SetMenuWidthOffset(11)
+            motorMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCarShopMod.shopui_title_pdm.png"))
             _menuPool.Add(motorMenu)
             motorMenu.AddInstructionalButton(btnConfirm)
             motorMenu.AddInstructionalButton(btnRotLeft)
@@ -266,7 +284,9 @@ Public Class pdmcarshop
             Dim format As New BTEFormatReader(compact, parameters)
             Dim qty As Integer = format.Count - 1
 
-            compactMenu = New UIMenu("PDM Car Shop", "~r~COMPACTS")
+            compactMenu = New UIMenu("", "~r~COMPACTS", New Point(0, 0))
+            compactMenu.SetMenuWidthOffset(11)
+            compactMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCarShopMod.shopui_title_pdm.png"))
             _menuPool.Add(compactMenu)
             compactMenu.AddInstructionalButton(btnConfirm)
             compactMenu.AddInstructionalButton(btnRotLeft)
@@ -301,7 +321,9 @@ Public Class pdmcarshop
             Dim format As New BTEFormatReader(coupe, parameters)
             Dim qty As Integer = format.Count - 1
 
-            coupeMenu = New UIMenu("PDM Car Shop", "~r~COUPES")
+            coupeMenu = New UIMenu("", "~r~COUPES", New Point(0, 0))
+            coupeMenu.SetMenuWidthOffset(11)
+            coupeMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCarShopMod.shopui_title_pdm.png"))
             _menuPool.Add(coupeMenu)
             coupeMenu.AddInstructionalButton(btnConfirm)
             coupeMenu.AddInstructionalButton(btnRotLeft)
@@ -336,7 +358,9 @@ Public Class pdmcarshop
             Dim format As New BTEFormatReader(sedan, parameters)
             Dim qty As Integer = format.Count - 1
 
-            sedanMenu = New UIMenu("PDM Car Shop", "~r~SEDANS")
+            sedanMenu = New UIMenu("", "~r~SEDANS", New Point(0, 0))
+            sedanMenu.SetMenuWidthOffset(11)
+            sedanMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCarShopMod.shopui_title_pdm.png"))
             _menuPool.Add(sedanMenu)
             sedanMenu.AddInstructionalButton(btnConfirm)
             sedanMenu.AddInstructionalButton(btnRotLeft)
@@ -371,7 +395,9 @@ Public Class pdmcarshop
             Dim format As New BTEFormatReader(sport, parameters)
             Dim qty As Integer = format.Count - 1
 
-            sportMenu = New UIMenu("PDM Car Shop", "~r~SPORTS")
+            sportMenu = New UIMenu("", "~r~SPORTS", New Point(0, 0))
+            sportMenu.SetMenuWidthOffset(11)
+            sportMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCarShopMod.shopui_title_pdm.png"))
             _menuPool.Add(sportMenu)
             sportMenu.AddInstructionalButton(btnConfirm)
             sportMenu.AddInstructionalButton(btnRotLeft)
@@ -406,7 +432,9 @@ Public Class pdmcarshop
             Dim format As New BTEFormatReader(classic, parameters)
             Dim qty As Integer = format.Count - 1
 
-            classicMenu = New UIMenu("PDM Car Shop", "~r~CLASSICS")
+            classicMenu = New UIMenu("", "~r~CLASSICS", New Point(0, 0))
+            classicMenu.SetMenuWidthOffset(11)
+            classicMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCarShopMod.shopui_title_pdm.png"))
             _menuPool.Add(classicMenu)
             classicMenu.AddInstructionalButton(btnConfirm)
             classicMenu.AddInstructionalButton(btnRotLeft)
@@ -441,7 +469,9 @@ Public Class pdmcarshop
             Dim format As New BTEFormatReader(exotic, parameters)
             Dim qty As Integer = format.Count - 1
 
-            exoticMenu = New UIMenu("PDM Car Shop", "~r~EXOTICS")
+            exoticMenu = New UIMenu("", "~r~EXOTICS", New Point(0, 0))
+            exoticMenu.SetMenuWidthOffset(11)
+            exoticMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCarShopMod.shopui_title_pdm.png"))
             _menuPool.Add(exoticMenu)
             exoticMenu.AddInstructionalButton(btnConfirm)
             exoticMenu.AddInstructionalButton(btnRotLeft)
@@ -476,7 +506,9 @@ Public Class pdmcarshop
             Dim format As New BTEFormatReader(muscle, parameters)
             Dim qty As Integer = format.Count - 1
 
-            muscleMenu = New UIMenu("PDM Car Shop", "~r~MUSCLES")
+            muscleMenu = New UIMenu("", "~r~MUSCLES", New Point(0, 0))
+            muscleMenu.SetMenuWidthOffset(11)
+            muscleMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCarShopMod.shopui_title_pdm.png"))
             _menuPool.Add(muscleMenu)
             muscleMenu.AddInstructionalButton(btnConfirm)
             muscleMenu.AddInstructionalButton(btnRotLeft)
@@ -511,7 +543,9 @@ Public Class pdmcarshop
             Dim format As New BTEFormatReader(offroad, parameters)
             Dim qty As Integer = format.Count - 1
 
-            offroadMenu = New UIMenu("PDM Car Shop", "~r~OFF-ROAD")
+            offroadMenu = New UIMenu("", "~r~OFF-ROAD", New Point(0, 0))
+            offroadMenu.SetMenuWidthOffset(11)
+            offroadMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCarShopMod.shopui_title_pdm.png"))
             _menuPool.Add(offroadMenu)
             offroadMenu.AddInstructionalButton(btnConfirm)
             offroadMenu.AddInstructionalButton(btnRotLeft)
@@ -546,7 +580,9 @@ Public Class pdmcarshop
             Dim format As New BTEFormatReader(suv, parameters)
             Dim qty As Integer = format.Count - 1
 
-            suvMenu = New UIMenu("PDM Car Shop", "~r~SUVS")
+            suvMenu = New UIMenu("", "~r~SUVS", New Point(0, 0))
+            suvMenu.SetMenuWidthOffset(11)
+            suvMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCarShopMod.shopui_title_pdm.png"))
             _menuPool.Add(suvMenu)
             suvMenu.AddInstructionalButton(btnConfirm)
             suvMenu.AddInstructionalButton(btnRotLeft)
@@ -581,7 +617,9 @@ Public Class pdmcarshop
             Dim format As New BTEFormatReader(van, parameters)
             Dim qty As Integer = format.Count - 1
 
-            vanMenu = New UIMenu("PDM Car Shop", "~r~VANS")
+            vanMenu = New UIMenu("", "~r~VANS", New Point(0, 0))
+            vanMenu.SetMenuWidthOffset(11)
+            vanMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCarShopMod.shopui_title_pdm.png"))
             _menuPool.Add(vanMenu)
             vanMenu.AddInstructionalButton(btnConfirm)
             vanMenu.AddInstructionalButton(btnRotLeft)
@@ -616,7 +654,9 @@ Public Class pdmcarshop
             Dim format As New BTEFormatReader(utility, parameters)
             Dim qty As Integer = format.Count - 1
 
-            utilityMenu = New UIMenu("PDM Car Shop", "~r~UTILITIES")
+            utilityMenu = New UIMenu("", "~r~UTILITIES", New Point(0, 0))
+            utilityMenu.SetMenuWidthOffset(11)
+            utilityMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCarShopMod.shopui_title_pdm.png"))
             _menuPool.Add(utilityMenu)
             utilityMenu.AddInstructionalButton(btnConfirm)
             utilityMenu.AddInstructionalButton(btnRotLeft)
@@ -651,7 +691,9 @@ Public Class pdmcarshop
             Dim format As New BTEFormatReader(armoured, parameters)
             Dim qty As Integer = format.Count - 1
 
-            armouredMenu = New UIMenu("PDM Car Shop", "~r~ARMOURED")
+            armouredMenu = New UIMenu("", "~r~ARMOURED", New Point(0, 0))
+            armouredMenu.SetMenuWidthOffset(11)
+            armouredMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCarShopMod.shopui_title_pdm.png"))
             _menuPool.Add(armouredMenu)
             armouredMenu.AddInstructionalButton(btnConfirm)
             armouredMenu.AddInstructionalButton(btnRotLeft)
@@ -686,7 +728,9 @@ Public Class pdmcarshop
             Dim format As New BTEFormatReader(colour, paracolors)
             Dim qty As Integer = format.Count - 1
 
-            colorMenu = New UIMenu("PDM Car Shop", "~r~PRIMARY COLOR")
+            colorMenu = New UIMenu("", "~r~PRIMARY COLOR", New Point(0, 0))
+            colorMenu.SetMenuWidthOffset(11)
+            colorMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCarShopMod.shopui_title_pdm.png"))
             _menuPool.Add(colorMenu)
             colorMenu.AddInstructionalButton(btnRotLeft)
             colorMenu.AddInstructionalButton(btnRotRight)
@@ -717,7 +761,9 @@ Public Class pdmcarshop
             Dim format As New BTEFormatReader(colour, paracolors)
             Dim qty As Integer = format.Count - 1
 
-            colorMenu2 = New UIMenu("PDM Car Shop", "~r~SECONDARY COLOR")
+            colorMenu2 = New UIMenu("", "~r~SECONDARY COLOR", New Point(0, 0))
+            colorMenu2.SetMenuWidthOffset(11)
+            colorMenu2.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCarShopMod.shopui_title_pdm.png"))
             _menuPool.Add(colorMenu2)
             colorMenu2.AddInstructionalButton(btnRotLeft)
             colorMenu2.AddInstructionalButton(btnRotRight)
@@ -748,7 +794,9 @@ Public Class pdmcarshop
             Dim format As New BTEFormatReader(colour2, paracolors2)
             Dim qty As Integer = format.Count - 1
 
-            colorMenu3 = New UIMenu("PDM Car Shop", "~r~PRIMARY COLOR")
+            colorMenu3 = New UIMenu("", "~r~COLOR", New Point(0, 0))
+            colorMenu3.SetMenuWidthOffset(11)
+            colorMenu3.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCarShopMod.shopui_title_pdm.png"))
             _menuPool.Add(colorMenu3)
             colorMenu3.AddInstructionalButton(btnRotLeft)
             colorMenu3.AddInstructionalButton(btnRotRight)
@@ -778,7 +826,9 @@ Public Class pdmcarshop
             Dim format As New BTEFormatReader(plate, paraplates)
             Dim qty As Integer = format.Count - 1
 
-            plateMenu = New UIMenu("PDM Car Shop", "~r~PLATE")
+            plateMenu = New UIMenu("", "~r~PLATE", New Point(0, 0))
+            plateMenu.SetMenuWidthOffset(11)
+            plateMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCarShopMod.shopui_title_pdm.png"))
             _menuPool.Add(plateMenu)
             plateMenu.AddInstructionalButton(btnRotLeft)
             plateMenu.AddInstructionalButton(btnRotRight)
@@ -810,7 +860,9 @@ Public Class pdmcarshop
 
     Public Sub ReadConfirm()
         Try
-            confirmMenu = New UIMenu("PDM Car Shop", "~r~PURCHASE ORDER")
+            confirmMenu = New UIMenu("", "~r~PURCHASE ORDER", New Point(0, 0))
+            confirmMenu.SetMenuWidthOffset(11)
+            confirmMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCarShopMod.shopui_title_pdm.png"))
             _menuPool.Add(confirmMenu)
             confirmMenu.AddInstructionalButton(btnRotLeft)
             confirmMenu.AddInstructionalButton(btnRotRight)
@@ -828,19 +880,6 @@ Public Class pdmcarshop
             confirmMenu.AddItem(New UIMenuItem("Test Drive"))
             confirmMenu.AddItem(New UIMenuItem("Confirm"))
             confirmMenu.RefreshIndex()
-            'motorMenu.BindMenuToItem(confirmMenu, itemMotorConfirm)
-            'compactMenu.BindMenuToItem(confirmMenu, itemCompactConfirm)
-            'coupeMenu.BindMenuToItem(confirmMenu, itemCoupeConfirm)
-            'sedanMenu.BindMenuToItem(confirmMenu, itemSedanConfirm)
-            'sportMenu.BindMenuToItem(confirmMenu, itemSportConfirm)
-            'classicMenu.BindMenuToItem(confirmMenu, itemClassicConfirm)
-            'muscleMenu.BindMenuToItem(confirmMenu, itemMuscleConfirm)
-            'exoticMenu.BindMenuToItem(confirmMenu, itemExoticConfirm)
-            'offroadMenu.BindMenuToItem(confirmMenu, itemOffRoadConfirm)
-            'suvMenu.BindMenuToItem(confirmMenu, itemSuvConfirm)
-            'vanMenu.BindMenuToItem(confirmMenu, itemVanConfirm)
-            'utilityMenu.BindMenuToItem(confirmMenu, itemUtilityConfirm)
-            'armouredMenu.BindMenuToItem(confirmMenu, itemArmouredConfirm)
         Catch ex As Exception
             logger.Log(ex.Message)
             logger.Log(ex.InnerException)
@@ -876,7 +915,7 @@ Public Class pdmcarshop
                     hideHud = False
                     Script.Wait(500)
                     Game.FadeScreenIn(500)
-                    UI.DrawTexture(".\Scripts\PDMCarShop\purchase.png", 0, 0, 2000, New Point(CInt(UI.WIDTH * 0.3), 100), New Size(600, 50), 0.0, Color.White)
+                    UI.DrawTexture(".\Scripts\PDMCarShop\purchase.png", 0, 0, 2000, New Point(CInt(UI.WIDTH * 0.3), 100), New Size(600, 100), 0.0, Color.White)
                     Native.Function.Call(Hash.PLAY_SOUND_FRONTEND, -1, "PROPERTY_PURCHASE", "HUD_AWARDS", False)
                 Else
                     UI.Notify("You have insufficient funds to purchase this vehicle.", True)
@@ -893,6 +932,7 @@ Public Class pdmcarshop
                 UI.Notify("To quit Test Drive, Leave this vehicle.", True)
                 testDrive = testDrive + 1
                 hideHud = False
+                vehPreview.Position = New GTA.Math.Vector3(-56.79958F, -1110.868F, 26.43581F)
                 Script.Wait(500)
                 Game.FadeScreenIn(500)
             End If
@@ -904,7 +944,7 @@ Public Class pdmcarshop
                         World.DestroyAllCameras()
                         World.RenderingCamera = Nothing
                     ElseIf ChangeCamera = 1 Then
-                        World.RenderingCamera = World.CreateCamera(New GTA.Math.Vector3(-78.79827F, -1103.386F, 26.8126F), New GTA.Math.Vector3(Game.Player.Character.Rotation.X, Game.Player.Character.Rotation.Y, 253.0F), 10.0F)
+                        World.RenderingCamera = World.CreateCamera(cameraPosition, New GTA.Math.Vector3(Game.Player.Character.Rotation.X, Game.Player.Character.Rotation.Y, 253.0F), 10.0F)
                     End If
                 End If
             ElseIf selectedItem.Text = "Upgrade Vehicle" Then
@@ -986,17 +1026,13 @@ Public Class pdmcarshop
                 sender.MenuItems(0).SetRightBadge(UIMenuItem.BadgeStyle.None)
             ElseIf selectedItem.Text = "Key Settings" Then
                 My.Settings.keyModEnable = [Enum].Parse(GetType(Keys), ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "ModEnableKey"), False)
-                My.Settings.keyRotLeft = [Enum].Parse(GetType(Keys), ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "RotLeftKey"), False)
-                My.Settings.keyRotRight = [Enum].Parse(GetType(Keys), ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "RotRightKey"), False)
-                My.Settings.keyOpenDoor = [Enum].Parse(GetType(Keys), ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "OpenDoorKey"), False)
-                My.Settings.keyCloseDoor = [Enum].Parse(GetType(Keys), ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "CloseDoorKey"), False)
                 My.Settings.Save()
                 modMenu.Visible = False
                 UI.Notify("Keys has been Saved.", True)
             ElseIf selectedItem.Text = "About" Then
                 modMenu.Visible = False
                 UI.Notify("Premium Deluxe Motorsport Car Shop Mod v" & ver, True)
-                UI.Notify("Release Date: 06 Aug 2015", True)
+                UI.Notify("Release Date: 10 Sep 2015", True)
                 UI.Notify("Mod Author: I'm Not MentaL", True)
                 UI.Notify("Special Thanks: Rockstar Games, Alexander Blade, Crosire, Guad, EnergyStyle, LetsPlayOrDy,", True)
                 UI.Notify("Calm, LCBuffalo, Gang1111, Matt_STS, frodzet, leftas & marhex", True)
@@ -1069,10 +1105,10 @@ Public Class pdmcarshop
             Else
                 selectedVehicle = selectedItem.Car
                 If vehPreview = Nothing Then
-                    vehPreview = World.CreateVehicle(selectedItem.Model, New GTA.Math.Vector3(-56.79958F, -1110.868F, 26.43581F), 6.122209F)
+                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
                 Else
                     vehPreview.Delete()
-                    vehPreview = World.CreateVehicle(selectedItem.Model, New GTA.Math.Vector3(-56.79958F, -1110.868F, 26.43581F), 6.122209F)
+                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
                 End If
                 vehPreview.Rotation = New GTA.Math.Vector3(0, 0, curRadius)
                 vehPreview.IsDriveable = False
@@ -1095,10 +1131,10 @@ Public Class pdmcarshop
             Else
                 selectedVehicle = selectedItem.Car
                 If vehPreview = Nothing Then
-                    vehPreview = World.CreateVehicle(selectedItem.Model, New GTA.Math.Vector3(-56.79958F, -1110.868F, 26.43581F), 6.122209F)
+                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
                 Else
                     vehPreview.Delete()
-                    vehPreview = World.CreateVehicle(selectedItem.Model, New GTA.Math.Vector3(-56.79958F, -1110.868F, 26.43581F), 6.122209F)
+                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
                 End If
                 vehPreview.Rotation = New GTA.Math.Vector3(0, 0, curRadius)
                 vehPreview.IsDriveable = False
@@ -1121,10 +1157,10 @@ Public Class pdmcarshop
             Else
                 selectedVehicle = selectedItem.Car
                 If vehPreview = Nothing Then
-                    vehPreview = World.CreateVehicle(selectedItem.Model, New GTA.Math.Vector3(-56.79958F, -1110.868F, 26.43581F), 6.122209F)
+                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
                 Else
                     vehPreview.Delete()
-                    vehPreview = World.CreateVehicle(selectedItem.Model, New GTA.Math.Vector3(-56.79958F, -1110.868F, 26.43581F), 6.122209F)
+                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
                 End If
                 vehPreview.Rotation = New GTA.Math.Vector3(0, 0, curRadius)
                 vehPreview.IsDriveable = False
@@ -1147,10 +1183,10 @@ Public Class pdmcarshop
             Else
                 selectedVehicle = selectedItem.Car
                 If vehPreview = Nothing Then
-                    vehPreview = World.CreateVehicle(selectedItem.Model, New GTA.Math.Vector3(-56.79958F, -1110.868F, 26.43581F), 6.122209F)
+                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
                 Else
                     vehPreview.Delete()
-                    vehPreview = World.CreateVehicle(selectedItem.Model, New GTA.Math.Vector3(-56.79958F, -1110.868F, 26.43581F), 6.122209F)
+                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
                 End If
                 vehPreview.Rotation = New GTA.Math.Vector3(0, 0, curRadius)
                 vehPreview.IsDriveable = False
@@ -1173,10 +1209,10 @@ Public Class pdmcarshop
             Else
                 selectedVehicle = selectedItem.Car
                 If vehPreview = Nothing Then
-                    vehPreview = World.CreateVehicle(selectedItem.Model, New GTA.Math.Vector3(-56.79958F, -1110.868F, 26.43581F), 6.122209F)
+                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
                 Else
                     vehPreview.Delete()
-                    vehPreview = World.CreateVehicle(selectedItem.Model, New GTA.Math.Vector3(-56.79958F, -1110.868F, 26.43581F), 6.122209F)
+                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
                 End If
                 vehPreview.Rotation = New GTA.Math.Vector3(0, 0, curRadius)
                 vehPreview.IsDriveable = False
@@ -1199,10 +1235,10 @@ Public Class pdmcarshop
             Else
                 selectedVehicle = selectedItem.Car
                 If vehPreview = Nothing Then
-                    vehPreview = World.CreateVehicle(selectedItem.Model, New GTA.Math.Vector3(-56.79958F, -1110.868F, 26.43581F), 6.122209F)
+                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
                 Else
                     vehPreview.Delete()
-                    vehPreview = World.CreateVehicle(selectedItem.Model, New GTA.Math.Vector3(-56.79958F, -1110.868F, 26.43581F), 6.122209F)
+                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
                 End If
                 vehPreview.Rotation = New GTA.Math.Vector3(0, 0, curRadius)
                 vehPreview.IsDriveable = False
@@ -1225,10 +1261,10 @@ Public Class pdmcarshop
             Else
                 selectedVehicle = selectedItem.Car
                 If vehPreview = Nothing Then
-                    vehPreview = World.CreateVehicle(selectedItem.Model, New GTA.Math.Vector3(-56.79958F, -1110.868F, 26.43581F), 6.122209F)
+                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
                 Else
                     vehPreview.Delete()
-                    vehPreview = World.CreateVehicle(selectedItem.Model, New GTA.Math.Vector3(-56.79958F, -1110.868F, 26.43581F), 6.122209F)
+                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
                 End If
                 vehPreview.Rotation = New GTA.Math.Vector3(0, 0, curRadius)
                 vehPreview.IsDriveable = False
@@ -1251,10 +1287,10 @@ Public Class pdmcarshop
             Else
                 selectedVehicle = selectedItem.Car
                 If vehPreview = Nothing Then
-                    vehPreview = World.CreateVehicle(selectedItem.Model, New GTA.Math.Vector3(-56.79958F, -1110.868F, 26.43581F), 6.122209F)
+                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
                 Else
                     vehPreview.Delete()
-                    vehPreview = World.CreateVehicle(selectedItem.Model, New GTA.Math.Vector3(-56.79958F, -1110.868F, 26.43581F), 6.122209F)
+                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
                 End If
                 vehPreview.Rotation = New GTA.Math.Vector3(0, 0, curRadius)
                 vehPreview.IsDriveable = False
@@ -1277,10 +1313,10 @@ Public Class pdmcarshop
             Else
                 selectedVehicle = selectedItem.Car
                 If vehPreview = Nothing Then
-                    vehPreview = World.CreateVehicle(selectedItem.Model, New GTA.Math.Vector3(-56.79958F, -1110.868F, 26.43581F), 6.122209F)
+                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
                 Else
                     vehPreview.Delete()
-                    vehPreview = World.CreateVehicle(selectedItem.Model, New GTA.Math.Vector3(-56.79958F, -1110.868F, 26.43581F), 6.122209F)
+                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
                 End If
                 vehPreview.Rotation = New GTA.Math.Vector3(0, 0, curRadius)
                 vehPreview.IsDriveable = False
@@ -1303,10 +1339,10 @@ Public Class pdmcarshop
             Else
                 selectedVehicle = selectedItem.Car
                 If vehPreview = Nothing Then
-                    vehPreview = World.CreateVehicle(selectedItem.Model, New GTA.Math.Vector3(-56.79958F, -1110.868F, 26.43581F), 6.122209F)
+                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
                 Else
                     vehPreview.Delete()
-                    vehPreview = World.CreateVehicle(selectedItem.Model, New GTA.Math.Vector3(-56.79958F, -1110.868F, 26.43581F), 6.122209F)
+                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
                 End If
                 vehPreview.Rotation = New GTA.Math.Vector3(0, 0, curRadius)
                 vehPreview.IsDriveable = False
@@ -1329,10 +1365,10 @@ Public Class pdmcarshop
             Else
                 selectedVehicle = selectedItem.Car
                 If vehPreview = Nothing Then
-                    vehPreview = World.CreateVehicle(selectedItem.Model, New GTA.Math.Vector3(-56.79958F, -1110.868F, 26.43581F), 6.122209F)
+                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
                 Else
                     vehPreview.Delete()
-                    vehPreview = World.CreateVehicle(selectedItem.Model, New GTA.Math.Vector3(-56.79958F, -1110.868F, 26.43581F), 6.122209F)
+                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
                 End If
                 vehPreview.Rotation = New GTA.Math.Vector3(0, 0, curRadius)
                 vehPreview.IsDriveable = False
@@ -1355,10 +1391,10 @@ Public Class pdmcarshop
             Else
                 selectedVehicle = selectedItem.Car
                 If vehPreview = Nothing Then
-                    vehPreview = World.CreateVehicle(selectedItem.Model, New GTA.Math.Vector3(-56.79958F, -1110.868F, 26.43581F), 6.122209F)
+                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
                 Else
                     vehPreview.Delete()
-                    vehPreview = World.CreateVehicle(selectedItem.Model, New GTA.Math.Vector3(-56.79958F, -1110.868F, 26.43581F), 6.122209F)
+                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
                 End If
                 vehPreview.Rotation = New GTA.Math.Vector3(0, 0, curRadius)
                 vehPreview.IsDriveable = False
@@ -1381,10 +1417,10 @@ Public Class pdmcarshop
             Else
                 selectedVehicle = selectedItem.Car
                 If vehPreview = Nothing Then
-                    vehPreview = World.CreateVehicle(selectedItem.Model, New GTA.Math.Vector3(-56.79958F, -1110.868F, 26.43581F), 6.122209F)
+                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
                 Else
                     vehPreview.Delete()
-                    vehPreview = World.CreateVehicle(selectedItem.Model, New GTA.Math.Vector3(-56.79958F, -1110.868F, 26.43581F), 6.122209F)
+                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
                 End If
                 vehPreview.Rotation = New GTA.Math.Vector3(0, 0, curRadius)
                 vehPreview.IsDriveable = False
@@ -1459,6 +1495,26 @@ Public Class pdmcarshop
             World.DestroyAllCameras()
             World.RenderingCamera = Nothing
             hideHud = False
+            armouredMenu.RefreshIndex()
+            classicMenu.RefreshIndex()
+            colorMenu.RefreshIndex()
+            colorMenu2.RefreshIndex()
+            colorMenu3.RefreshIndex()
+            compactMenu.RefreshIndex()
+            confirmMenu.RefreshIndex()
+            coupeMenu.RefreshIndex()
+            exoticMenu.RefreshIndex()
+            mainMenu.RefreshIndex()
+            modMenu.RefreshIndex()
+            motorMenu.RefreshIndex()
+            muscleMenu.RefreshIndex()
+            offroadMenu.RefreshIndex()
+            plateMenu.RefreshIndex()
+            sedanMenu.RefreshIndex()
+            sportMenu.RefreshIndex()
+            suvMenu.RefreshIndex()
+            utilityMenu.RefreshIndex()
+            vanMenu.RefreshIndex()
         Catch ex As Exception
             logger.Log(ex.Message)
             logger.Log(ex.InnerException)
@@ -1473,6 +1529,26 @@ Public Class pdmcarshop
             categoryName = Nothing
             vehPreview.Delete()
             mainMenu.Visible = True
+            armouredMenu.RefreshIndex()
+            classicMenu.RefreshIndex()
+            colorMenu.RefreshIndex()
+            colorMenu2.RefreshIndex()
+            colorMenu3.RefreshIndex()
+            compactMenu.RefreshIndex()
+            confirmMenu.RefreshIndex()
+            coupeMenu.RefreshIndex()
+            exoticMenu.RefreshIndex()
+            mainMenu.RefreshIndex()
+            modMenu.RefreshIndex()
+            motorMenu.RefreshIndex()
+            muscleMenu.RefreshIndex()
+            offroadMenu.RefreshIndex()
+            plateMenu.RefreshIndex()
+            sedanMenu.RefreshIndex()
+            sportMenu.RefreshIndex()
+            suvMenu.RefreshIndex()
+            utilityMenu.RefreshIndex()
+            vanMenu.RefreshIndex()
         Catch ex As Exception
             logger.Log(ex.Message)
             logger.Log(ex.InnerException)
@@ -1510,10 +1586,10 @@ Public Class pdmcarshop
                     UI.Notify("$" & Math.Round(penalty) & " has been charge for fixing the vehicle.")
                 End If
                 confirmMenu.Visible = True
-                World.RenderingCamera = World.CreateCamera(New GTA.Math.Vector3(-78.79827F, -1103.386F, 26.8126F), New GTA.Math.Vector3(Game.Player.Character.Rotation.X, Game.Player.Character.Rotation.Y, 253.0F), 10.0F)
+                World.RenderingCamera = World.CreateCamera(cameraPosition, New GTA.Math.Vector3(Game.Player.Character.Rotation.X, Game.Player.Character.Rotation.Y, 253.0F), 10.0F)
                 vehPreview.IsDriveable = False
-                Game.Player.Character.Position = New GTA.Math.Vector3(-43.79905F, -1116.247F, 25.43394F)
-                vehPreview.Position = New GTA.Math.Vector3(-56.79958F, -1110.868F, 26.43581F)
+                Game.Player.Character.Position = playerPosition
+                vehPreview.Position = vehPreviewPosition
                 Native.Function.Call(Hash.SET_VEHICLE_DOORS_SHUT, vehPreview, False)
                 Native.Function.Call(Hash.SET_VEHICLE_FIXED, vehPreview)
                 testDrive = 1
@@ -1529,10 +1605,10 @@ Public Class pdmcarshop
                     UI.Notify("$" & Math.Round(penalty) & " has been charge for fixing the vehicle.")
                 End If
                 confirmMenu.Visible = True
-                World.RenderingCamera = World.CreateCamera(New GTA.Math.Vector3(-78.79827F, -1103.386F, 26.8126F), New GTA.Math.Vector3(Game.Player.Character.Rotation.X, Game.Player.Character.Rotation.Y, 253.0F), 10.0F)
+                World.RenderingCamera = World.CreateCamera(cameraPosition, New GTA.Math.Vector3(Game.Player.Character.Rotation.X, Game.Player.Character.Rotation.Y, 253.0F), 10.0F)
                 vehPreview.IsDriveable = False
-                Game.Player.Character.Position = New GTA.Math.Vector3(-43.79905F, -1116.247F, 25.43394F)
-                vehPreview.Position = New GTA.Math.Vector3(-56.79958F, -1110.868F, 26.43581F)
+                Game.Player.Character.Position = playerPosition
+                vehPreview.Position = vehPreviewPosition
                 Native.Function.Call(Hash.SET_VEHICLE_DOORS_SHUT, vehPreview, False)
                 Native.Function.Call(Hash.SET_VEHICLE_FIXED, vehPreview)
                 testDrive = 1
@@ -1562,8 +1638,8 @@ Public Class pdmcarshop
                 Script.Wait(&H3E8)
                 mainMenu.Visible = True
                 ChangeCamera = 1
-                World.RenderingCamera = World.CreateCamera(New GTA.Math.Vector3(-78.79827F, -1103.386F, 26.8126F), New GTA.Math.Vector3(Game.Player.Character.Rotation.X, Game.Player.Character.Rotation.Y, 253.0F), 10.0F)
-                Game.Player.Character.Position = New GTA.Math.Vector3(-43.79905F, -1116.247F, 25.43394F)
+                World.RenderingCamera = World.CreateCamera(cameraPosition, New GTA.Math.Vector3(Game.Player.Character.Rotation.X, Game.Player.Character.Rotation.Y, 253.0F), 10.0F)
+                Game.Player.Character.Position = playerPosition
                 hideHud = True
                 Script.Wait(500)
                 Game.FadeScreenIn(500)
@@ -1596,13 +1672,13 @@ Public Class pdmcarshop
                 World.RenderingCamera = Nothing
             End If
 
-            If e.KeyCode = My.Settings.keyRotLeft AndAlso ModEnable = True AndAlso simeonDist < 40.0F Then
-                curRadius = curRadius + 3
+            If Game.IsControlPressed(0, GTA.Control.ParachuteBrakeLeft) AndAlso ModEnable = True AndAlso simeonDist < 40.0F Then
+                curRadius = curRadius + 2
                 vehPreview.Rotation = New GTA.Math.Vector3(0, 0, curRadius)
-            ElseIf e.KeyCode = My.Settings.keyRotRight AndAlso ModEnable = True AndAlso simeonDist < 40.0F Then
-                curRadius = curRadius - 3
+            ElseIf Game.IsControlPressed(0, GTA.Control.ParachuteBrakeRight) AndAlso ModEnable = True AndAlso simeonDist < 40.0F Then
+                curRadius = curRadius - 2
                 vehPreview.Rotation = New GTA.Math.Vector3(0, 0, curRadius)
-            ElseIf e.KeyCode = My.Settings.keyOpenDoor AndAlso ModEnable = True AndAlso simeonDist < 40.0F Then
+            ElseIf Game.IsControlJustPressed(0, GTA.Control.SelectWeaponUnarmed) AndAlso ModEnable = True AndAlso simeonDist < 40.0F Then
                 vehPreview.OpenDoor(VehicleDoor.BackLeftDoor, False, False)
                 vehPreview.OpenDoor(VehicleDoor.BackRightDoor, False, False)
                 vehPreview.OpenDoor(VehicleDoor.FrontLeftDoor, False, False)
@@ -1610,16 +1686,22 @@ Public Class pdmcarshop
                 vehPreview.OpenDoor(VehicleDoor.Hood, False, False)
                 vehPreview.OpenDoor(VehicleDoor.Trunk, False, False)
                 vehPreview.OpenDoor(VehicleDoor.Trunk2, False, False)
-                Native.Function.Call(Hash.LOWER_CONVERTIBLE_ROOF, vehPreview, False)
-            ElseIf e.KeyCode = My.Settings.keyCloseDoor AndAlso ModEnable = True AndAlso simeonDist < 40.0F Then
+            ElseIf Game.IsControlJustPressed(0, GTA.Control.SelectWeaponMelee) AndAlso ModEnable = True AndAlso simeonDist < 40.0F Then
                 Native.Function.Call(Hash.SET_VEHICLE_DOORS_SHUT, vehPreview, False)
-                Native.Function.Call(Hash.RAISE_CONVERTIBLE_ROOF, vehPreview, False)
-            ElseIf Game.IsControlJustPressed(0, GTA.Control.NextCamera) AndAlso ModEnable = True AndAlso simeonDist < 40.0F AndAlso ChangeCamera = 0 Then
+            ElseIf Game.IsControlJustPressed(0, GTA.Control.VehicleRoof) AndAlso ModEnable = True AndAlso simeonDist < 40.0F Then
+                If vehPreview.RoofState = VehicleRoofState.Closed Then
+                    Native.Function.Call(Hash.LOWER_CONVERTIBLE_ROOF, vehPreview, False)
+                Else
+                    Native.Function.Call(Hash.RAISE_CONVERTIBLE_ROOF, vehPreview, False)
+                End If
+            End If
+
+            If Game.IsControlJustPressed(0, GTA.Control.NextCamera) AndAlso ModEnable = True AndAlso simeonDist < 40.0F AndAlso ChangeCamera = 0 Then
                 World.DestroyAllCameras()
                 World.RenderingCamera = Nothing
                 ChangeCamera = (ChangeCamera + 1)
             ElseIf Game.IsControlJustPressed(0, GTA.Control.NextCamera) AndAlso ModEnable = True AndAlso simeonDist < 40.0F AndAlso ChangeCamera = 1 Then
-                World.RenderingCamera = World.CreateCamera(New GTA.Math.Vector3(-78.79827F, -1103.386F, 26.8126F), New GTA.Math.Vector3(Game.Player.Character.Rotation.X, Game.Player.Character.Rotation.Y, 253.0F), 10.0F)
+                World.RenderingCamera = World.CreateCamera(cameraPosition, New GTA.Math.Vector3(Game.Player.Character.Rotation.X, Game.Player.Character.Rotation.Y, 253.0F), 10.0F)
                 ChangeCamera = (ChangeCamera - 1)
             End If
         Catch ex As Exception

@@ -10,7 +10,6 @@ namespace PDMCarShopGUI
     {
         private readonly UIResRectangle _rectangle;
         private readonly UIResText _text;
-        private bool _selected;
         private readonly Sprite _selectedSprite;
 
         private readonly Sprite _badgeLeft;
@@ -64,16 +63,7 @@ namespace PDMCarShopGUI
         /// <summary>
         /// Whether this item is currently selected.
         /// </summary>
-        public virtual bool Selected
-        {
-            get { return _selected; }
-            set
-            {
-                _selected = value;
-
-                _text.Color = Enabled ? value ? Color.Black : Color.WhiteSmoke : Color.FromArgb(163, 159, 148);
-            }
-        }
+        public virtual bool Selected { get; set; }
 
 
         /// <summary>
@@ -137,8 +127,9 @@ namespace PDMCarShopGUI
             }
             if (Selected)
                 _selectedSprite.Draw();
-            if (!Enabled)
-                _text.Color = Color.FromArgb(163, 159, 148);
+
+            _text.Color = Enabled ? Selected ? Color.Black : Color.WhiteSmoke : Color.FromArgb(163, 159, 148);
+
             if (LeftBadge != BadgeStyle.None)
             {
                 _text.Position = new Point(35 + Offset.X, _text.Position.Y);
@@ -160,7 +151,6 @@ namespace PDMCarShopGUI
                 _badgeRight.Color = BadgeToColor(RightBadge, Selected);
                 _badgeRight.Draw();
             }
-            _text.Draw();
 
             if (!String.IsNullOrWhiteSpace(RightLabel))
             {
@@ -169,6 +159,7 @@ namespace PDMCarShopGUI
                 _labelText.Color = _text.Color = Enabled ? Selected ? Color.Black : Color.WhiteSmoke : Color.FromArgb(163, 159, 148);
                 _labelText.Draw();
             }
+            _text.Draw();
         }
 
 

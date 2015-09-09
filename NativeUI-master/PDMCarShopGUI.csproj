@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PDMCarShopGUI</RootNamespace>
     <AssemblyName>PDMCarShopGUI</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -54,6 +54,7 @@
     <Compile Include="MenuPool.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sprite.cs" />
+    <Compile Include="StringMeasurer.cs" />
     <Compile Include="UIMenu.cs" />
     <Compile Include="UIMenuCheckboxItem.cs" />
     <Compile Include="UIMenuItem.cs" />

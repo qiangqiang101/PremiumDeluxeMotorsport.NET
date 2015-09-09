@@ -76,6 +76,8 @@ namespace PDMCarShopGUI
         public bool MouseEdgeEnabled = true;
         public bool ControlDisablingEnabled = true;
         public bool ResetCursorOnOpen = true;
+        public bool FormatDescriptions = true;
+        public bool MouseControlsEnabled = true;
 
         //Events
 
@@ -114,7 +116,7 @@ namespace PDMCarShopGUI
         private readonly Dictionary<MenuControls, Tuple<List<Keys>, List<Tuple<Control, int>>>> _keyDictionary = new Dictionary<MenuControls, Tuple<List<Keys>, List<Tuple<Control, int>>>>();
 
         //Tree structure
-        public Dictionary<UIMenuItem, UIMenu> Children { get; private set; }
+        public Dictionary<UIMenuItem, UIMenu> Children { get; }
 
         /// <summary>
         /// Basic Menu constructor.
@@ -195,7 +197,11 @@ namespace PDMCarShopGUI
 
 
             SetKey(MenuControls.Up, Control.PhoneUp);
+            SetKey(MenuControls.Up, Control.CursorScrollUp);
+
             SetKey(MenuControls.Down, Control.PhoneDown);
+            SetKey(MenuControls.Down, Control.CursorScrollDown);
+
             SetKey(MenuControls.Left, Control.PhoneLeft);
             SetKey(MenuControls.Right, Control.PhoneRight);
             SetKey(MenuControls.Select, Control.FrontendAccept);
@@ -206,7 +212,7 @@ namespace PDMCarShopGUI
 
         private void RecaulculateDescriptionPosition()
         {
-            _descriptionText.WordWrap = new Size(425 + WidthOffset, 0);
+            //_descriptionText.WordWrap = new Size(425 + WidthOffset, 0);
 
             _descriptionBar.Position = new Point(_offset.X, 149 - 37 + _extraYOffset + _offset.Y);
             _descriptionRectangle.Position = new Point(_offset.X, 149 - 37 + _extraYOffset + _offset.Y);
@@ -257,7 +263,7 @@ namespace PDMCarShopGUI
         /// Enable or disable all controls but the necessary to operate a menu.
         /// </summary>
         /// <param name="enable"></param>
-        public void DisEnableControls(bool enable)
+        public static void DisEnableControls(bool enable)
         {
             Hash thehash = enable ? Hash.ENABLE_CONTROL_ACTION : Hash.DISABLE_CONTROL_ACTION;
             foreach (var con in Enum.GetValues(typeof(Control)))
@@ -272,42 +278,52 @@ namespace PDMCarShopGUI
             // -Walk/Move
             // -
 
-            if (!enable)
+            if (enable) return;
+            var list = new List<Control>
             {
-                var list = new List<Control>
+                Control.FrontendAccept,
+                Control.FrontendAxisX,
+                Control.FrontendAxisY,
+                Control.FrontendDown,
+                Control.FrontendUp,
+                Control.FrontendLeft,
+                Control.FrontendRight,
+                Control.FrontendCancel,
+                Control.FrontendSelect,
+                Control.CursorScrollDown,
+                Control.CursorScrollUp,
+                Control.CursorX,
+                Control.CursorY,
+                Control.MoveUpDown,
+                Control.MoveLeftRight,
+                Control.Sprint,
+                Control.Jump,
+                Control.Enter,
+                Control.VehicleExit,
+                Control.VehicleAccelerate,
+                Control.VehicleBrake,
+                Control.VehicleMoveLeftRight,
+                Control.VehicleFlyYawLeft,
+                Control.FlyLeftRight,
+                Control.FlyUpDown,
+                Control.VehicleFlyYawRight,
+                Control.VehicleHandbrake,
+            };
+
+            if (IsUsingController)
+            {
+                list.AddRange(new Control[]
                 {
-                    Control.FrontendAccept,
-                    Control.FrontendAxisX,
-                    Control.FrontendAxisY,
-                    Control.FrontendDown,
-                    Control.FrontendUp,
-                    Control.FrontendLeft,
-                    Control.FrontendRight,
-                    Control.FrontendCancel,
-                    Control.FrontendSelect,
-                    Control.CursorScrollDown,
-                    Control.CursorScrollUp,
-                    Control.CursorX,
-                    Control.CursorY,
-                    Control.MoveUpDown,
-                    Control.MoveLeftRight,
-                    Control.Sprint,
-                    Control.Jump,
-                    Control.Enter,
-                    Control.VehicleExit,
-                    Control.VehicleAccelerate,
-                    Control.VehicleBrake,
-                    Control.VehicleMoveLeftRight,
-                    Control.VehicleFlyYawLeft,
-                    Control.FlyLeftRight,
-                    Control.FlyUpDown,
-                    Control.VehicleFlyYawRight,
-                    Control.VehicleHandbrake,
-                };
-                foreach (var control in list)
-                {
-                    Function.Call(Hash.ENABLE_CONTROL_ACTION, 0, (int)control);
-                }
+                    Control.LookUpDown,
+                    Control.LookLeftRight,
+                    Control.Aim,
+                    Control.Attack,
+                });
+            }
+
+            foreach (var control in list)
+            {
+                Function.Call(Hash.ENABLE_CONTROL_ACTION, 0, (int)control);
             }
         }
 
@@ -438,8 +454,10 @@ namespace PDMCarShopGUI
             {
                 if (_logo != null)
                     _logo.Draw();
-                else if (_tmpRectangle != null)
-                    _tmpRectangle.Draw();
+                else
+                {
+                    _tmpRectangle?.Draw();
+                }
             }
             else
             {
@@ -458,9 +476,13 @@ namespace PDMCarShopGUI
             MenuItems[_activeItem % (MenuItems.Count)].Selected = true;
             if (!String.IsNullOrWhiteSpace(MenuItems[_activeItem % (MenuItems.Count)].Description))
             {
-                _descriptionText.Caption = MenuItems[_activeItem % (MenuItems.Count)].Description;
                 RecaulculateDescriptionPosition();
-                int numLines = FormatDescription(_descriptionText.Caption).Split('\n').Length;
+                string descCaption = MenuItems[_activeItem % (MenuItems.Count)].Description;
+                if (FormatDescriptions)
+                    _descriptionText.Caption = FormatDescription(descCaption);
+                else
+                    _descriptionText.Caption = descCaption;
+                int numLines = _descriptionText.Caption.Split('\n').Length;
                 _descriptionRectangle.Size = new Size(431 + WidthOffset, (numLines * 25) + 15);
 
                 _descriptionBar.Draw();
@@ -547,7 +569,7 @@ namespace PDMCarShopGUI
         /// <param name="topLeft">top left point of the item.</param>
         /// <param name="safezone">safezone size.</param>
         /// <returns>0 - Not in item at all, 1 - In label, 2 - In arrow space.</returns>
-        public int IsMouseInListItemArrows(UIMenuListItem item, Point topLeft, Point safezone)
+        public int IsMouseInListItemArrows(UIMenuListItem item, Point topLeft, Point safezone) // TODO: Ability to scroll left and right
         {
             Function.Call((Hash)0x54CE8AC98E120CAB, "jamyfafi");
             UIResText.AddLongString(item.Text);
@@ -574,7 +596,7 @@ namespace PDMCarShopGUI
         /// <returns></returns>
         public static Point GetSafezoneBounds()
         {
-            float t = Function.Call<float>(Hash._0xBAF107B6BB2C97F0); // Safezone size.
+            float t = Function.Call<float>(Hash.GET_SAFE_ZONE_SIZE); // Safezone size.
             double g = Math.Round(Convert.ToDouble(t), 2);
             g = (g * 100) - 90;
             g = 10 - g;
@@ -802,7 +824,15 @@ namespace PDMCarShopGUI
         /// </summary>
         public void ProcessMouse()
         {
-            if (!Visible || _justOpened || MenuItems.Count == 0) return;
+            if (!Visible || _justOpened || MenuItems.Count == 0 || IsUsingController || !MouseControlsEnabled)
+            {
+                Function.Call(Hash.ENABLE_CONTROL_ACTION, (int)Control.LookUpDown);
+                Function.Call(Hash.ENABLE_CONTROL_ACTION, (int)Control.LookLeftRight);
+                Function.Call(Hash.ENABLE_CONTROL_ACTION, (int)Control.Aim);
+                Function.Call(Hash.ENABLE_CONTROL_ACTION, (int)Control.Attack);
+                MenuItems.Where(i => i.Hovered).ToList().ForEach(i => i.Hovered = false);
+                return;
+            }
 
             Point safezoneOffset = GetSafezoneBounds();
             Function.Call(Hash._SHOW_CURSOR_THIS_FRAME);
@@ -1029,6 +1059,7 @@ namespace PDMCarShopGUI
         {
             List<Keys> tmpKeys = new List<Keys>(_keyDictionary[control].Item1);
             List<Tuple<Control, int>> tmpControls = new List<Tuple<Control, int>>(_keyDictionary[control].Item2);
+            if (HasControlJustBeenReleaseed(control, key)) _controlCounter = 0;
             if (_controlCounter > 0)
             {
                 _controlCounter++;
@@ -1067,14 +1098,11 @@ namespace PDMCarShopGUI
 
             if (HasControlJustBeenReleaseed(MenuControls.Back, key))
             {
-                //MenuPool.ControllerUsed = Game.IsControlJustPressed(2, (GTA.Control)45);
                 GoBack();
             }
             if (MenuItems.Count == 0) return;
-            if (IsControlBeingPressed(MenuControls.Up, key) || Game.IsControlJustPressed(0, Control.CursorScrollUp))
+            if (IsControlBeingPressed(MenuControls.Up, key))
             {
-                //MenuPool.ControllerUsed = Game.IsControlJustPressed(2, (GTA.Control)27);
-                MenuPool.ControllerUsed = Game.IsControlJustPressed(2, Control.PhoneUp);
                 if (Size > MaxItemsOnScreen + 1)
                     GoUpOverflow();
                 else
@@ -1082,12 +1110,8 @@ namespace PDMCarShopGUI
                 UpdateScaleform();
             }
 
-            else if (IsControlBeingPressed(MenuControls.Down, key) ||
-                     Game.IsControlJustPressed(0, Control.CursorScrollDown))
+            else if (IsControlBeingPressed(MenuControls.Down, key))
             {
-                //MenuPool.ControllerUsed = Game.IsControlJustPressed(2, (GTA.Control)8);
-                MenuPool.ControllerUsed = Game.IsControlJustPressed(2, Control.PhoneDown);
-
                 if (Size > MaxItemsOnScreen + 1)
                     GoDownOverflow();
                 else
@@ -1097,21 +1121,16 @@ namespace PDMCarShopGUI
 
             else if (IsControlBeingPressed(MenuControls.Left, key))
             {
-                //MenuPool.ControllerUsed = Game.IsControlJustPressed(2, (GTA.Control)34);
-                MenuPool.ControllerUsed = Game.IsControlJustPressed(2, Control.PhoneLeft);
                 GoLeft();
             }
 
             else if (IsControlBeingPressed(MenuControls.Right, key))
             {
-                //MenuPool.ControllerUsed = Game.IsControlJustPressed(2, (GTA.Control)9);
-                MenuPool.ControllerUsed = Game.IsControlJustPressed(2, Control.PhoneRight);
                 GoRight();
             }
 
             else if (HasControlJustBeenPressed(MenuControls.Select, key))
             {
-                //MenuPool.ControllerUsed = Game.IsControlJustPressed(2, (GTA.Control)18);
                 SelectItem();
             }
 
@@ -1144,30 +1163,23 @@ namespace PDMCarShopGUI
             string[] words = input.Split(' ');
             foreach (string word in words)
             {
-                Function.Call((Hash)0x54CE8AC98E120CAB, "jamyfafi");
-                UIResText.AddLongString(word);
-                int screenw = Game.ScreenResolution.Width;
-                int screenh = Game.ScreenResolution.Height;
-                const float height = 1080f;
-                float ratio = (float)screenw / screenh;
-                var width = height * ratio;
-                int offset = Convert.ToInt32(Function.Call<float>((Hash)0x85F061DA64ED2F67, 0) * width * 0.35f);
-
-                aggregatePixels += Convert.ToInt32(offset);
+                int offset = StringMeasurer.MeasureString(word);
+                aggregatePixels += offset;
                 if (aggregatePixels > maxPixelsPerLine)
                 {
                     output += "\n" + word + " ";
-                    aggregatePixels = Convert.ToInt32(offset);
+                    aggregatePixels = offset + StringMeasurer.MeasureString(" ");
                 }
                 else
                 {
                     output += word + " ";
+                    aggregatePixels += StringMeasurer.MeasureString(" ");
                 }
             }
             return output;
         }
 
-        private List<InstructionalButton> _instructionalButtons = new List<InstructionalButton>();
+        private readonly List<InstructionalButton> _instructionalButtons = new List<InstructionalButton>();
 
         public void AddInstructionalButton(InstructionalButton button)
         {
@@ -1194,13 +1206,10 @@ namespace PDMCarShopGUI
             _instructionalButtonsScaleform.CallFunction("SET_DATA_SLOT", 0, Function.Call<string>(Hash._0x0499D7B09FC9B407, 2, (int)Control.PhoneSelect, 0), "Select");
             _instructionalButtonsScaleform.CallFunction("SET_DATA_SLOT", 1, Function.Call<string>(Hash._0x0499D7B09FC9B407, 2, (int)Control.PhoneCancel, 0), "Back");
             int count = 2;
-            foreach (var button in _instructionalButtons)
+            foreach (var button in _instructionalButtons.Where(button => button.ItemBind == null || MenuItems[CurrentSelection] == button.ItemBind))
             {
-                if (button.ItemBind == null || MenuItems[CurrentSelection] == button.ItemBind)
-                {
-                    _instructionalButtonsScaleform.CallFunction("SET_DATA_SLOT", count, button.GetButtonId(), button.Text);
-                    count++;
-                }
+                _instructionalButtonsScaleform.CallFunction("SET_DATA_SLOT", count, button.GetButtonId(), button.Text);
+                count++;
             }
             _instructionalButtonsScaleform.CallFunction("DRAW_INSTRUCTIONAL_BUTTONS", -1);
         }
@@ -1249,14 +1258,16 @@ namespace PDMCarShopGUI
             }
         }
 
+        /// <summary>
+        /// Returns false if last input was made with mouse and keyboard, true if it was made with a controller.
+        /// </summary>
+        public static bool IsUsingController => !Function.Call<bool>(Hash._GET_LAST_INPUT_METHOD, 2);
+
 
         /// <summary>
         /// Returns the amount of items in the menu.
         /// </summary>
-        public int Size
-        {
-            get { return MenuItems.Count; }
-        }
+        public int Size => MenuItems.Count;
 
 
         /// <summary>

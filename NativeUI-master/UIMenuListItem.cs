@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using GTA;
-using GTA.Native;
+using Font = GTA.Font;
 
 namespace PDMCarShopGUI
 {
@@ -54,12 +54,13 @@ namespace PDMCarShopGUI
         public UIMenuListItem(string text, List<dynamic> items, int index, string description)
             : base(text, description)
         {
-            int y = 0;
+            const int y = 0;
             _items = new List<dynamic>(items);
             _arrowLeft = new Sprite("commonmenu", "arrowleft", new Point(110, 105 + y), new Size(30, 30));
             _arrowRight = new Sprite("commonmenu", "arrowright", new Point(280, 105 + y), new Size(30, 30));
-            _itemText = new UIResText("", new Point(290, y + 104), 0.35f, Color.White, GTA.Font.ChaletLondon, UIResText.Alignment.Left);
-            _itemText.TextAlignment = UIResText.Alignment.Right;
+            _itemText = new UIResText("", new Point(290, y + 104), 0.35f, Color.White, Font.ChaletLondon,
+                UIResText.Alignment.Left)
+            { TextAlignment = UIResText.Alignment.Right };
             Index = index;
         }
 
@@ -106,7 +107,7 @@ namespace PDMCarShopGUI
         {
             base.Draw();
             string caption = _items[Index % _items.Count].ToString();
-            int offset = Convert.ToInt32(UIResText.MeasureStringWidth(caption, GTA.Font.ChaletLondon, 0.35f));
+            int offset = StringMeasurer.MeasureString(caption);
 
             _itemText.Color = Enabled ? Selected ? Color.Black : Color.WhiteSmoke : Color.FromArgb(163, 159, 148);
 
@@ -120,7 +121,7 @@ namespace PDMCarShopGUI
             {
                 _arrowLeft.Draw();
                 _arrowRight.Draw();
-                _itemText.Position = new Point(400 + Offset.X + Parent.WidthOffset, _itemText.Position.Y);
+                _itemText.Position = new Point(405 + Offset.X + Parent.WidthOffset, _itemText.Position.Y);
             }
             else
             {
