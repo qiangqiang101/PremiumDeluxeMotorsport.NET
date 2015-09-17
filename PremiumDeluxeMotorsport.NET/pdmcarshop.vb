@@ -32,13 +32,12 @@ Public Class pdmcarshop
     Private vehPreviewPosition As GTA.Math.Vector3
     Private cameraPosition As GTA.Math.Vector3
     Private playerPosition As GTA.Math.Vector3
-    Private showRoom As Boolean
     Private Price As Decimal = 0
     Private testDrive As Integer = 1
     Private hideHud As Boolean = False
     Dim ver As String = My.Application.Info.Version.ToString
 
-    Private mainMenu, modMenu, colorMenu, colorMenu2, plateMenu, confirmMenu, colorMenu3 As UIMenu
+    Private mainMenu, modMenu, colorMenu, colorMenu2, plateMenu, confirmMenu, colorMenu3, colorMenu4, colorMenu5, rimColorMenu, neonColorMenu, smokeColorMenu As UIMenu
     Private motorMenu, compactMenu, coupeMenu, sedanMenu, sportMenu, classicMenu, exoticMenu, muscleMenu, offroadMenu, suvMenu, vanMenu, utilityMenu, armouredMenu As UIMenu
 
     Dim itemMotor As New UIMenuItem("Motorcycles")
@@ -54,22 +53,14 @@ Public Class pdmcarshop
     Dim itemVan As New UIMenuItem("Vans")
     Dim itemUtility As New UIMenuItem("Utility")
     Dim itemArmoured As New UIMenuItem("Armoured")
-    Dim itemMotorConfirm As New UIMenuItem("Proceed to Checkout")
-    Dim itemCompactConfirm As New UIMenuItem("Proceed to Checkout")
-    Dim itemCoupeConfirm As New UIMenuItem("Proceed to Checkout")
-    Dim itemSedanConfirm As New UIMenuItem("Proceed to Checkout")
-    Dim itemSportConfirm As New UIMenuItem("Proceed to Checkout")
-    Dim itemClassicConfirm As New UIMenuItem("Proceed to Checkout")
-    Dim itemExoticConfirm As New UIMenuItem("Proceed to Checkout")
-    Dim itemMuscleConfirm As New UIMenuItem("Proceed to Checkout")
-    Dim itemOffRoadConfirm As New UIMenuItem("Proceed to Checkout")
-    Dim itemSuvConfirm As New UIMenuItem("Proceed to Checkout")
-    Dim itemVanConfirm As New UIMenuItem("Proceed to Checkout")
-    Dim itemUtilityConfirm As New UIMenuItem("Proceed to Checkout")
-    Dim itemArmouredConfirm As New UIMenuItem("Proceed to Checkout")
     Dim itemColor As New UIMenuItem("Custom Primary Color", "Transform vehicle appearance.")
     Dim itemColor2 As New UIMenuItem("Custom Secondary Color", "Transform vehicle appearance.")
-    Dim itemColor3 As New UIMenuItem("Color", "Transform vehicle appearance.")
+    Dim itemColor3 As New UIMenuItem("Primary Color", "Transform vehicle appearance.")
+    Dim itemColor4 As New UIMenuItem("Secondary Color", "Transform vehicle appearance.")
+    Dim itemColor5 As New UIMenuItem("Pearlescent Color", "Transform vehicle appearance.")
+    Dim itemRimColor As New UIMenuItem("Rim Color", "Transform wheels appearance.")
+    Dim itemNeonColor As New UIMenuItem("Neon Color", "Transform vehicle appearance.")
+    Dim itemSmokeColor As New UIMenuItem("Tyre Smoke Color", "Transform tyre smoke appearance.")
     Dim itemPlate As New UIMenuItem("Plate", "Customize license plate.")
 
     Dim btnRotLeft As New InstructionalButton(GTA.Control.ParachuteBrakeLeft, "Rotate Left")
@@ -100,6 +91,9 @@ Public Class pdmcarshop
     Private paracolors2 As String() = {"[code]", "[type]", "[name]"}
     Private paraplates As String() = {"[index]", "[name]"}
 
+    Private _scaleform As Scaleform
+    Private _displayTimer As Timer
+    Private _fadeTimer As Timer
     Private _menuPool As MenuPool
 
     Public Sub New()
@@ -118,9 +112,13 @@ Public Class pdmcarshop
             modMenu.MouseEdgeEnabled = False
             modMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCarShopMod.shopui_title_pdm.png"))
             _menuPool.Add(modMenu)
-            modMenu.AddItem(New UIMenuItem("Enable", "Enable Mod"))
-            modMenu.AddItem(New UIMenuItem("Disable", "Disable Mod"))
-            modMenu.AddItem(New UIMenuItem("Key Settings", "Refresh Keys After you saving config.ini file."))
+            modMenu.AddItem(New UIMenuItem("Enable Mod", "Enable Premium Deluxe Motorsport Car Shop Mod."))
+            modMenu.AddItem(New UIMenuItem("Disable Mod", "Disable Premium Deluxe Motorsport Car Shop Mod."))
+            modMenu.AddItem(New UIMenuItem("Enable Clear Color", "Color will clear when change Custom Color."))
+            modMenu.AddItem(New UIMenuItem("Disable Clear Color", "Color will not clear when change Custom Color."))
+            modMenu.AddItem(New UIMenuItem("Showroom", "Use the showroom."))
+            modMenu.AddItem(New UIMenuItem("Car Park", "Use the car park."))
+            modMenu.AddItem(New UIMenuItem("Refresh Settings", "Refresh Keys & Settings After you saving config.ini file."))
             modMenu.AddItem(New UIMenuItem("About", "About PDM Car Shop"))
             modMenu.RefreshIndex()
 
@@ -160,6 +158,11 @@ Public Class pdmcarshop
             ReadColor()
             ReadColor2()
             ReadColor3()
+            ReadColor4()
+            ReadColor5()
+            ReadRimColor()
+            ReadNeonColor()
+            ReadSmokeColor()
             ReadPlate()
 
             AddHandler mainMenu.OnMenuClose, AddressOf MenuCloseHandler
@@ -185,17 +188,31 @@ Public Class pdmcarshop
             AddHandler colorMenu.OnItemSelect, AddressOf ColorItemSelectHandler
             AddHandler colorMenu2.OnItemSelect, AddressOf ColorItemSelectHandler2
             AddHandler colorMenu3.OnItemSelect, AddressOf ColorItemSelectHandler3
+            AddHandler colorMenu4.OnItemSelect, AddressOf ColorItemSelectHandler4
+            AddHandler colorMenu5.OnItemSelect, AddressOf ColorItemSelectHandler5
+            AddHandler rimColorMenu.OnItemSelect, AddressOf RimColorItemSelectHandler
+            AddHandler neonColorMenu.OnItemSelect, AddressOf NeonColorItemSelectHandler
+            AddHandler smokeColorMenu.OnItemSelect, AddressOf SmokeColorItemSelectHandler
             AddHandler plateMenu.OnItemSelect, AddressOf PlateItemSelectHandler
 
             AddHandler colorMenu.OnIndexChange, AddressOf ColorItemChangeHandler
             AddHandler colorMenu2.OnIndexChange, AddressOf ColorItemChangeHandler2
             AddHandler colorMenu3.OnIndexChange, AddressOf ColorItemChangeHandler3
+            AddHandler colorMenu4.OnIndexChange, AddressOf ColorItemChangeHandler4
+            AddHandler colorMenu5.OnIndexChange, AddressOf ColorItemChangeHandler5
+            AddHandler rimColorMenu.OnIndexChange, AddressOf RimColorItemChangeHandler
+            AddHandler neonColorMenu.OnIndexChange, AddressOf NeonColorItemChangeHandler
+            AddHandler smokeColorMenu.OnIndexChange, AddressOf SmokeColorItemChangeHandler
             AddHandler plateMenu.OnIndexChange, AddressOf PlateItemChangeHandler
 
             My.Settings.keyModEnable = [Enum].Parse(GetType(Keys), ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "ModEnableKey"), False)
+            My.Settings.showRoom = ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "Showroom")
+            My.Settings.removeColor = ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "ClearColor")
             My.Settings.Save()
 
-            UI.DrawTexture(".\Scripts\PDMCarShop\purchase.png", 0, 0, 1, New Point(CInt(UI.WIDTH * 0.3), 100), New Size(600, 100), 0.0, Color.White)
+            _displayTimer = New Timer(1200)
+            _fadeTimer = New Timer(2000)
+            _scaleform = New Scaleform([Function].[Call](Of Integer)(Hash.REQUEST_SCALEFORM_MOVIE, "MP_BIG_MESSAGE_FREEMODE"))
 
             If ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "DefaultEnable") = True Then
                 ModEnable = True
@@ -206,22 +223,32 @@ Public Class pdmcarshop
                 modMenu.MenuItems(1).SetRightBadge(UIMenuItem.BadgeStyle.Tick)
             End If
 
-            If ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "Showroom") = False Then
+            If ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "ClearColor") = True Then
+                modMenu.MenuItems(2).SetRightBadge(UIMenuItem.BadgeStyle.Tick)
+                modMenu.MenuItems(3).SetRightBadge(UIMenuItem.BadgeStyle.None)
+            Else
+                modMenu.MenuItems(3).SetRightBadge(UIMenuItem.BadgeStyle.Tick)
+                modMenu.MenuItems(2).SetRightBadge(UIMenuItem.BadgeStyle.None)
+            End If
+
+            'If ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "Showroom") = False Then
+            If My.Settings.showRoom = False Then
                 'Outside
                 vehPreviewPosition = New GTA.Math.Vector3(-56.79958F, -1110.868F, 26.43581F)
                 cameraPosition = New GTA.Math.Vector3(-78.79827F, -1103.386F, 26.8126F)
                 playerPosition = New GTA.Math.Vector3(-43.79905F, -1116.247F, 25.43394F)
+                modMenu.MenuItems(5).SetRightBadge(UIMenuItem.BadgeStyle.Tick)
+                modMenu.MenuItems(4).SetRightBadge(UIMenuItem.BadgeStyle.None)
             Else
                 'Inside
                 vehPreviewPosition = New GTA.Math.Vector3(-44.142F, -1098.996F, 26.422F)
                 cameraPosition = New GTA.Math.Vector3(-59.76299F, -1093.913F, 26.622F)
                 playerPosition = New GTA.Math.Vector3(-54.16683F, -1088.698F, 25.42233F)
+                modMenu.MenuItems(4).SetRightBadge(UIMenuItem.BadgeStyle.Tick)
+                modMenu.MenuItems(5).SetRightBadge(UIMenuItem.BadgeStyle.None)
             End If
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -235,10 +262,7 @@ Public Class pdmcarshop
             simeonBlip.IsShortRange = True
             GTA.Native.Function.Call(Hash.SET_BLIP_NAME_FROM_TEXT_FILE, simeonBlip, "BLIP_FRIEND") 'VED_BLIPN, BLIP_FRIEND
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -268,14 +292,10 @@ Public Class pdmcarshop
                     .Car = format(i)("name")
                 End With
             Next
-            'motorMenu.AddItem(itemMotorConfirm)
             motorMenu.RefreshIndex()
             mainMenu.BindMenuToItem(motorMenu, itemMotor)
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -305,14 +325,10 @@ Public Class pdmcarshop
                     .Car = format(i)("name")
                 End With
             Next
-            'compactMenu.AddItem(itemCompactConfirm)
             compactMenu.RefreshIndex()
             mainMenu.BindMenuToItem(compactMenu, itemCompact)
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -342,14 +358,10 @@ Public Class pdmcarshop
                     .Car = format(i)("name")
                 End With
             Next
-            'coupeMenu.AddItem(itemCoupeConfirm)
             coupeMenu.RefreshIndex()
             mainMenu.BindMenuToItem(coupeMenu, itemCoupe)
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -379,14 +391,10 @@ Public Class pdmcarshop
                     .Car = format(i)("name")
                 End With
             Next
-            'sedanMenu.AddItem(itemSedanConfirm)
             sedanMenu.RefreshIndex()
             mainMenu.BindMenuToItem(sedanMenu, itemSedan)
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -416,14 +424,10 @@ Public Class pdmcarshop
                     .Car = format(i)("name")
                 End With
             Next
-            'sportMenu.AddItem(itemSportConfirm)
             sportMenu.RefreshIndex()
             mainMenu.BindMenuToItem(sportMenu, itemSport)
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -453,14 +457,10 @@ Public Class pdmcarshop
                     .Car = format(i)("name")
                 End With
             Next
-            'classicMenu.AddItem(itemClassicConfirm)
             classicMenu.RefreshIndex()
             mainMenu.BindMenuToItem(classicMenu, itemClassic)
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -490,14 +490,10 @@ Public Class pdmcarshop
                     .Car = format(i)("name")
                 End With
             Next
-            'exoticMenu.AddItem(itemExoticConfirm)
             exoticMenu.RefreshIndex()
             mainMenu.BindMenuToItem(exoticMenu, itemExotic)
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -527,14 +523,10 @@ Public Class pdmcarshop
                     .Car = format(i)("name")
                 End With
             Next
-            'muscleMenu.AddItem(itemMuscleConfirm)
             muscleMenu.RefreshIndex()
             mainMenu.BindMenuToItem(muscleMenu, itemMuscle)
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -564,14 +556,10 @@ Public Class pdmcarshop
                     .Car = format(i)("name")
                 End With
             Next
-            'offroadMenu.AddItem(itemOffRoadConfirm)
             offroadMenu.RefreshIndex()
             mainMenu.BindMenuToItem(offroadMenu, itemOffRoad)
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -601,14 +589,10 @@ Public Class pdmcarshop
                     .Car = format(i)("name")
                 End With
             Next
-            'suvMenu.AddItem(itemSuvConfirm)
             suvMenu.RefreshIndex()
             mainMenu.BindMenuToItem(suvMenu, itemSuv)
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -638,14 +622,10 @@ Public Class pdmcarshop
                     .Car = format(i)("name")
                 End With
             Next
-            'vanMenu.AddItem(itemVanConfirm)
             vanMenu.RefreshIndex()
             mainMenu.BindMenuToItem(vanMenu, itemVan)
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -675,14 +655,10 @@ Public Class pdmcarshop
                     .Car = format(i)("name")
                 End With
             Next
-            'utilityMenu.AddItem(itemUtilityConfirm)
             utilityMenu.RefreshIndex()
             mainMenu.BindMenuToItem(utilityMenu, itemUtility)
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -712,14 +688,10 @@ Public Class pdmcarshop
                     .Car = format(i)("name")
                 End With
             Next
-            'armouredMenu.AddItem(itemArmouredConfirm)
             armouredMenu.RefreshIndex()
             mainMenu.BindMenuToItem(armouredMenu, itemArmoured)
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -728,7 +700,7 @@ Public Class pdmcarshop
             Dim format As New BTEFormatReader(colour, paracolors)
             Dim qty As Integer = format.Count - 1
 
-            colorMenu = New UIMenu("", "~r~PRIMARY COLOR", New Point(0, 0))
+            colorMenu = New UIMenu("", "~r~CUSTOM PRIMARY COLOR", New Point(0, 0))
             colorMenu.SetMenuWidthOffset(11)
             colorMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCarShopMod.shopui_title_pdm.png"))
             _menuPool.Add(colorMenu)
@@ -749,10 +721,7 @@ Public Class pdmcarshop
             colorMenu.RefreshIndex()
             confirmMenu.BindMenuToItem(colorMenu, itemColor)
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -761,7 +730,7 @@ Public Class pdmcarshop
             Dim format As New BTEFormatReader(colour, paracolors)
             Dim qty As Integer = format.Count - 1
 
-            colorMenu2 = New UIMenu("", "~r~SECONDARY COLOR", New Point(0, 0))
+            colorMenu2 = New UIMenu("", "~r~CUSTOM SECONDARY COLOR", New Point(0, 0))
             colorMenu2.SetMenuWidthOffset(11)
             colorMenu2.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCarShopMod.shopui_title_pdm.png"))
             _menuPool.Add(colorMenu2)
@@ -782,10 +751,7 @@ Public Class pdmcarshop
             colorMenu2.RefreshIndex()
             confirmMenu.BindMenuToItem(colorMenu2, itemColor2)
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -794,7 +760,7 @@ Public Class pdmcarshop
             Dim format As New BTEFormatReader(colour2, paracolors2)
             Dim qty As Integer = format.Count - 1
 
-            colorMenu3 = New UIMenu("", "~r~COLOR", New Point(0, 0))
+            colorMenu3 = New UIMenu("", "~r~PRIMARY COLOR", New Point(0, 0))
             colorMenu3.SetMenuWidthOffset(11)
             colorMenu3.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCarShopMod.shopui_title_pdm.png"))
             _menuPool.Add(colorMenu3)
@@ -814,10 +780,154 @@ Public Class pdmcarshop
             colorMenu3.RefreshIndex()
             confirmMenu.BindMenuToItem(colorMenu3, itemColor3)
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
+            logger.Log(ex.Message & ex.StackTrace)
+        End Try
+    End Sub
 
-            logger.Log(ex.StackTrace)
+    Public Sub ReadColor4()
+        Try
+            Dim format As New BTEFormatReader(colour2, paracolors2)
+            Dim qty As Integer = format.Count - 1
+
+            colorMenu4 = New UIMenu("", "~r~SECONDARY COLOR", New Point(0, 0))
+            colorMenu4.SetMenuWidthOffset(11)
+            colorMenu4.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCarShopMod.shopui_title_pdm.png"))
+            _menuPool.Add(colorMenu4)
+            colorMenu4.AddInstructionalButton(btnRotLeft)
+            colorMenu4.AddInstructionalButton(btnRotRight)
+            colorMenu4.AddInstructionalButton(btnOpenDoor)
+            colorMenu4.AddInstructionalButton(btnCloseDoor)
+            colorMenu4.AddInstructionalButton(btnChangeCam)
+            For i As Integer = 0 To format.Count - 1
+                Dim item As New UIMenuItem(format(i)("name"))
+                colorMenu4.AddItem(item)
+                With item
+                    .Price = format(i)("code")
+                    .Car = format(i)("type")
+                End With
+            Next
+            colorMenu4.RefreshIndex()
+            confirmMenu.BindMenuToItem(colorMenu4, itemColor4)
+        Catch ex As Exception
+            logger.Log(ex.Message & ex.StackTrace)
+        End Try
+    End Sub
+
+    Public Sub ReadColor5()
+        Try
+            Dim format As New BTEFormatReader(colour2, paracolors2)
+            Dim qty As Integer = format.Count - 1
+
+            colorMenu5 = New UIMenu("", "~r~PEARLESCENT COLOR", New Point(0, 0))
+            colorMenu5.SetMenuWidthOffset(11)
+            colorMenu5.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCarShopMod.shopui_title_pdm.png"))
+            _menuPool.Add(colorMenu5)
+            colorMenu5.AddInstructionalButton(btnRotLeft)
+            colorMenu5.AddInstructionalButton(btnRotRight)
+            colorMenu5.AddInstructionalButton(btnOpenDoor)
+            colorMenu5.AddInstructionalButton(btnCloseDoor)
+            colorMenu5.AddInstructionalButton(btnChangeCam)
+            For i As Integer = 0 To format.Count - 1
+                Dim item As New UIMenuItem(format(i)("name"))
+                colorMenu5.AddItem(item)
+                With item
+                    .Price = format(i)("code")
+                    .Car = format(i)("type")
+                End With
+            Next
+            colorMenu5.RefreshIndex()
+            confirmMenu.BindMenuToItem(colorMenu5, itemColor5)
+        Catch ex As Exception
+            logger.Log(ex.Message & ex.StackTrace)
+        End Try
+    End Sub
+
+    Public Sub ReadRimColor()
+        Try
+            Dim format As New BTEFormatReader(colour2, paracolors2)
+            Dim qty As Integer = format.Count - 1
+
+            rimColorMenu = New UIMenu("", "~r~RIM COLOR", New Point(0, 0))
+            rimColorMenu.SetMenuWidthOffset(11)
+            rimColorMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCarShopMod.shopui_title_pdm.png"))
+            _menuPool.Add(rimColorMenu)
+            rimColorMenu.AddInstructionalButton(btnRotLeft)
+            rimColorMenu.AddInstructionalButton(btnRotRight)
+            rimColorMenu.AddInstructionalButton(btnOpenDoor)
+            rimColorMenu.AddInstructionalButton(btnCloseDoor)
+            rimColorMenu.AddInstructionalButton(btnChangeCam)
+            For i As Integer = 0 To format.Count - 1
+                Dim item As New UIMenuItem(format(i)("name"))
+                rimColorMenu.AddItem(item)
+                With item
+                    .Price = format(i)("code")
+                    .Car = format(i)("type")
+                End With
+            Next
+            rimColorMenu.RefreshIndex()
+            confirmMenu.BindMenuToItem(rimColorMenu, itemRimColor)
+        Catch ex As Exception
+            logger.Log(ex.Message & ex.StackTrace)
+        End Try
+    End Sub
+
+    Public Sub ReadNeonColor()
+        Try
+            Dim format As New BTEFormatReader(colour, paracolors)
+            Dim qty As Integer = format.Count - 1
+
+            neonColorMenu = New UIMenu("", "~r~NEON COLOR", New Point(0, 0))
+            neonColorMenu.SetMenuWidthOffset(11)
+            neonColorMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCarShopMod.shopui_title_pdm.png"))
+            _menuPool.Add(neonColorMenu)
+            neonColorMenu.AddInstructionalButton(btnRotLeft)
+            neonColorMenu.AddInstructionalButton(btnRotRight)
+            neonColorMenu.AddInstructionalButton(btnOpenDoor)
+            neonColorMenu.AddInstructionalButton(btnCloseDoor)
+            neonColorMenu.AddInstructionalButton(btnChangeCam)
+            For i As Integer = 0 To format.Count - 1
+                Dim item As New UIMenuItem(format(i)("name"))
+                neonColorMenu.AddItem(item)
+                With item
+                    .Price = format(i)("red")
+                    .Car = format(i)("green")
+                    .Model = format(i)("blue")
+                End With
+            Next
+            neonColorMenu.RefreshIndex()
+            confirmMenu.BindMenuToItem(neonColorMenu, itemNeonColor)
+        Catch ex As Exception
+            logger.Log(ex.Message & ex.StackTrace)
+        End Try
+    End Sub
+
+    Public Sub ReadSmokeColor()
+        Try
+            Dim format As New BTEFormatReader(colour, paracolors)
+            Dim qty As Integer = format.Count - 1
+
+            smokeColorMenu = New UIMenu("", "~r~TYRE SMOKE COLOR", New Point(0, 0))
+            smokeColorMenu.SetMenuWidthOffset(11)
+            smokeColorMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCarShopMod.shopui_title_pdm.png"))
+            _menuPool.Add(smokeColorMenu)
+            smokeColorMenu.AddInstructionalButton(btnRotLeft)
+            smokeColorMenu.AddInstructionalButton(btnRotRight)
+            smokeColorMenu.AddInstructionalButton(btnOpenDoor)
+            smokeColorMenu.AddInstructionalButton(btnCloseDoor)
+            smokeColorMenu.AddInstructionalButton(btnChangeCam)
+            For i As Integer = 0 To format.Count - 1
+                Dim item As New UIMenuItem(format(i)("name"))
+                smokeColorMenu.AddItem(item)
+                With item
+                    .Price = format(i)("red")
+                    .Car = format(i)("green")
+                    .Model = format(i)("blue")
+                End With
+            Next
+            smokeColorMenu.RefreshIndex()
+            confirmMenu.BindMenuToItem(smokeColorMenu, itemSmokeColor)
+        Catch ex As Exception
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -846,10 +956,7 @@ Public Class pdmcarshop
             plateMenu.RefreshIndex()
             confirmMenu.BindMenuToItem(plateMenu, itemPlate)
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -870,21 +977,21 @@ Public Class pdmcarshop
             confirmMenu.AddInstructionalButton(btnCloseDoor)
             confirmMenu.AddInstructionalButton(btnChangeCam)
             confirmMenu.AddItem(itemColor3)
+            confirmMenu.AddItem(itemColor4)
+            confirmMenu.AddItem(itemColor5)
             confirmMenu.AddItem(itemColor)
             confirmMenu.AddItem(itemColor2)
+            confirmMenu.AddItem(itemRimColor)
+            confirmMenu.AddItem(itemNeonColor)
+            'confirmMenu.AddItem(itemSmokeColor)
             confirmMenu.AddItem(itemPlate)
             confirmMenu.AddItem(New UIMenuItem("Plate Number", "Customize license plate number."))
-            confirmMenu.AddItem(New UIMenuItem("Upgrade Vehicle", "Twice for Maximum upgrade vehicle visual & performance."))
-            confirmMenu.AddItem(New UIMenuItem("Open All Doors", "Open vehicle doors."))
-            confirmMenu.AddItem(New UIMenuItem("Close All Doors", "Close vehicle doors."))
+            confirmMenu.AddItem(New UIMenuItem("Upgrade Vehicle", "Select Twice for Maximum upgrade vehicle visual & performance."))
             confirmMenu.AddItem(New UIMenuItem("Test Drive"))
             confirmMenu.AddItem(New UIMenuItem("Confirm"))
             confirmMenu.RefreshIndex()
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -909,14 +1016,16 @@ Public Class pdmcarshop
                     vehPreview.IsDriveable = True
                     Native.Function.Call(Hash.SET_VEHICLE_DOORS_SHUT, vehPreview, False)
                     Native.Function.Call(Hash.TASK_WARP_PED_INTO_VEHICLE, playerPed, vehPreview, -1)
-                    selectedVehicle = Nothing
                     vehPreview.MarkAsNoLongerNeeded()
                     vehPreview = Nothing
                     hideHud = False
                     Script.Wait(500)
                     Game.FadeScreenIn(500)
-                    UI.DrawTexture(".\Scripts\PDMCarShop\purchase.png", 0, 0, 2000, New Point(CInt(UI.WIDTH * 0.3), 100), New Size(600, 100), 0.0, Color.White)
+                    'Thanks to Camxxcore
                     Native.Function.Call(Hash.PLAY_SOUND_FRONTEND, -1, "PROPERTY_PURCHASE", "HUD_AWARDS", False)
+                    _scaleform.CallFunction("SHOW_MISSION_PASSED_MESSAGE", String.Format("Vehicle Purchased" & vbLf & "~w~{0}", selectedVehicle), "", 100, True, 0, True)
+                    _displayTimer.Start()
+                    selectedVehicle = Nothing
                 Else
                     UI.Notify("You have insufficient funds to purchase this vehicle.", True)
                 End If
@@ -959,14 +1068,21 @@ Public Class pdmcarshop
                 Dim rfender As Integer = getNumVehMod(vehPreview, 9)
                 Dim roof As Integer = getNumVehMod(vehPreview, 10)
                 Dim exhaust As Integer = getNumVehMod(vehPreview, 4)
-                'Dim sport As Integer = Native.Function.Call(Of Integer)(Hash.GET_NUM_VEHICLE_MODS, vehPreview, 0)
+                'Dim highEnd As Integer = Native.Function.Call(Of Integer)(Hash.GET_NUM_VEHICLE_MODS, vehPreview, 0)
                 Dim suspension As Integer = getNumVehMod(vehPreview, 15)
                 Dim engine As Integer = getNumVehMod(vehPreview, 11)
                 Dim brakes As Integer = getNumVehMod(vehPreview, 12)
                 Dim transms As Integer = getNumVehMod(vehPreview, 13)
                 Dim armor As Integer = getNumVehMod(vehPreview, 16)
+                Dim fWheels As Integer = getNumVehMod(vehPreview, 23)
+                Dim bWheels As Integer = getNumVehMod(vehPreview, 24)
 
                 Native.Function.Call(Hash.SET_VEHICLE_MOD_KIT, vehPreview.Handle, 0)
+                Dim motorList As Model() = {"akuma", "bagger", "bati", "bati2", "carbonrs", "daemon", "double", "faggio2", "hexer", "nemesis", "pcj", "ruffian", "sanchez", "sanchez2", "vader", "thrust", "sovereign", "innovation", "hakuchou", "enduro", "lectro", "vindicator"}
+                If Not motorList.Contains(vehPreview.Model) Then
+                    vehPreview.WheelType = VehicleWheelType.HighEnd
+                End If
+                vehPreview.WindowTint = VehicleWindowTint.Limo
                 vehPreview.SetMod(VehicleMod.Spoilers, spoiler, True)
                 vehPreview.SetMod(VehicleMod.FrontBumper, fbumper, True)
                 vehPreview.SetMod(VehicleMod.RearBumper, rbumper, True)
@@ -978,111 +1094,172 @@ Public Class pdmcarshop
                 vehPreview.SetMod(VehicleMod.RightFender, rfender, True)
                 vehPreview.SetMod(VehicleMod.Roof, roof, True)
                 vehPreview.SetMod(VehicleMod.Exhaust, exhaust, True)
-                'vehPreview.SetMod(VehicleWheelType.Sport, sport, True)
+                'vehPreview.SetMod(VehicleWheelType.HighEnd, highEnd, True)
+                vehPreview.SetMod(VehicleMod.FrontWheels, fWheels, True)
+                vehPreview.SetMod(VehicleMod.BackWheels, bWheels, True)
                 vehPreview.SetMod(VehicleMod.Suspension, suspension, True)
                 vehPreview.SetMod(VehicleMod.Engine, engine, True)
                 vehPreview.SetMod(VehicleMod.Brakes, brakes, True)
                 vehPreview.SetMod(VehicleMod.Transmission, transms, True)
                 vehPreview.SetMod(VehicleMod.Armor, armor, True)
-                vehPreview.SetMod(VehicleWindowTint.Limo, 5, True)
+                'vehPreview.SetMod(VehicleWindowTint.Limo, 5, True)
                 vehPreview.SetMod(VehicleToggleMod.XenonHeadlights, 22, True)
                 vehPreview.SetMod(VehicleToggleMod.Turbo, 18, True)
-            ElseIf selectedItem.Text = "Open All Doors" Then
-                vehPreview.OpenDoor(VehicleDoor.BackLeftDoor, False, False)
-                vehPreview.OpenDoor(VehicleDoor.BackRightDoor, False, False)
-                vehPreview.OpenDoor(VehicleDoor.FrontLeftDoor, False, False)
-                vehPreview.OpenDoor(VehicleDoor.FrontRightDoor, False, False)
-                vehPreview.OpenDoor(VehicleDoor.Hood, False, False)
-                vehPreview.OpenDoor(VehicleDoor.Trunk, False, False)
-                vehPreview.OpenDoor(VehicleDoor.Trunk2, False, False)
-                Native.Function.Call(Hash.LOWER_CONVERTIBLE_ROOF, vehPreview, False)
-            ElseIf selectedItem.Text = "Close All Doors" Then
-                Native.Function.Call(Hash.SET_VEHICLE_DOORS_SHUT, vehPreview, False)
-                Native.Function.Call(Hash.RAISE_CONVERTIBLE_ROOF, vehPreview, False)
             End If
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
     Public Sub ItemSelectHandler(sender As UIMenu, selectedItem As UIMenuItem, index As Integer)
         Try
-            If selectedItem.Text = "Enable" Then
+            If selectedItem.Text = "Enable Mod" Then
                 ModEnable = True
                 UI.Notify("~r~Premium Deluxe Motorsport ~w~Mod Enabled.", True)
                 SpawnSimeon()
                 modMenu.Visible = False
                 sender.MenuItems(0).SetRightBadge(UIMenuItem.BadgeStyle.Tick)
                 sender.MenuItems(1).SetRightBadge(UIMenuItem.BadgeStyle.None)
-            ElseIf selectedItem.Text = "Disable" Then
+            ElseIf selectedItem.Text = "Disable Mod" Then
                 ModEnable = False
                 UI.Notify("~r~Premium Deluxe Motorsport ~w~Mod Disabled.", True)
                 simeonBlip.Remove()
                 modMenu.Visible = False
                 sender.MenuItems(1).SetRightBadge(UIMenuItem.BadgeStyle.Tick)
                 sender.MenuItems(0).SetRightBadge(UIMenuItem.BadgeStyle.None)
-            ElseIf selectedItem.Text = "Key Settings" Then
+            ElseIf selectedItem.Text = "Enable Clear Color" Then
+                My.Settings.removeColor = True
+                My.Settings.Save()
+                UI.Notify("~r~Clear Color ~w~Enabled.", True)
+                sender.MenuItems(2).SetRightBadge(UIMenuItem.BadgeStyle.Tick)
+                sender.MenuItems(3).SetRightBadge(UIMenuItem.BadgeStyle.None)
+            ElseIf selectedItem.Text = "Disable Clear Color" Then
+                My.Settings.removeColor = False
+                My.Settings.Save()
+                UI.Notify("~r~Clear Color ~w~Disable.", True)
+                sender.MenuItems(3).SetRightBadge(UIMenuItem.BadgeStyle.Tick)
+                sender.MenuItems(2).SetRightBadge(UIMenuItem.BadgeStyle.None)
+            ElseIf selectedItem.Text = "Showroom" Then
+                My.Settings.showRoom = True
+                My.Settings.Save()
+                UI.Notify("~r~Showroom ~w~Selected.", True)
+                sender.MenuItems(4).SetRightBadge(UIMenuItem.BadgeStyle.Tick)
+                sender.MenuItems(5).SetRightBadge(UIMenuItem.BadgeStyle.None)
+            ElseIf selectedItem.Text = "Car Park" Then
+                My.Settings.showRoom = False
+                My.Settings.Save()
+                UI.Notify("~r~Car Park ~w~Selected.", True)
+                sender.MenuItems(5).SetRightBadge(UIMenuItem.BadgeStyle.Tick)
+                sender.MenuItems(4).SetRightBadge(UIMenuItem.BadgeStyle.None)
+            ElseIf selectedItem.Text = "Refresh Settings" Then
                 My.Settings.keyModEnable = [Enum].Parse(GetType(Keys), ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "ModEnableKey"), False)
+                My.Settings.showRoom = ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "Showroom")
+                My.Settings.removeColor = ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "ClearColor")
                 My.Settings.Save()
                 modMenu.Visible = False
                 UI.Notify("Keys has been Saved.", True)
             ElseIf selectedItem.Text = "About" Then
                 modMenu.Visible = False
                 UI.Notify("Premium Deluxe Motorsport Car Shop Mod v" & ver, True)
-                UI.Notify("Release Date: 10 Sep 2015", True)
+                UI.Notify("Release Date: 17 Sep 2015", True)
                 UI.Notify("Mod Author: I'm Not MentaL", True)
                 UI.Notify("Special Thanks: Rockstar Games, Alexander Blade, Crosire, Guad, EnergyStyle, LetsPlayOrDy,", True)
                 UI.Notify("Calm, LCBuffalo, Gang1111, Matt_STS, frodzet, leftas & marhex", True)
             End If
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
     Public Sub ColorItemSelectHandler(sender As UIMenu, selectedItem As UIMenuItem, index As Integer)
         Try
-            Native.Function.Call(Hash.SET_VEHICLE_COLOURS, vehPreview, 0, 0)
+            If My.Settings.removeColor = True Then
+                Native.Function.Call(Hash.SET_VEHICLE_COLOURS, vehPreview, 0, 0)
+            End If
             vehPreview.CustomPrimaryColor = Color.FromArgb(255, selectedItem.Price, selectedItem.Car, selectedItem.Model)
             colorMenu.GoBack()
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
     Public Sub ColorItemSelectHandler2(sender As UIMenu, selectedItem As UIMenuItem, index As Integer)
         Try
-            Native.Function.Call(Hash.SET_VEHICLE_COLOURS, vehPreview, 0, 0)
+            If My.Settings.removeColor = True Then
+                Native.Function.Call(Hash.SET_VEHICLE_COLOURS, vehPreview, 0, 0)
+            End If
             vehPreview.CustomSecondaryColor = Color.FromArgb(255, selectedItem.Price, selectedItem.Car, selectedItem.Model)
             colorMenu2.GoBack()
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
     Public Sub ColorItemSelectHandler3(sender As UIMenu, selectedItem As UIMenuItem, index As Integer)
         Try
-            Native.Function.Call(Hash.CLEAR_VEHICLE_CUSTOM_PRIMARY_COLOUR, vehPreview)
-            Native.Function.Call(Hash.CLEAR_VEHICLE_CUSTOM_SECONDARY_COLOUR, vehPreview)
-            Native.Function.Call(Hash.SET_VEHICLE_COLOURS, vehPreview, selectedItem.Price, selectedItem.Price)
-            'Native.Function.Call(Hash.SET_VEHICLE_MOD_COLOR_1, vehPreview, selectedItem.Car, selectedItem.Price)
+            If My.Settings.removeColor = True Then
+                Native.Function.Call(Hash.CLEAR_VEHICLE_CUSTOM_PRIMARY_COLOUR, vehPreview)
+                Native.Function.Call(Hash.CLEAR_VEHICLE_CUSTOM_SECONDARY_COLOUR, vehPreview)
+            End If
+            vehPreview.PrimaryColor = selectedItem.Price
             colorMenu3.GoBack()
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
+            logger.Log(ex.Message & ex.StackTrace)
+        End Try
+    End Sub
 
-            logger.Log(ex.StackTrace)
+    Public Sub ColorItemSelectHandler4(sender As UIMenu, selectedItem As UIMenuItem, index As Integer)
+        Try
+            If My.Settings.removeColor = True Then
+                Native.Function.Call(Hash.CLEAR_VEHICLE_CUSTOM_PRIMARY_COLOUR, vehPreview)
+                Native.Function.Call(Hash.CLEAR_VEHICLE_CUSTOM_SECONDARY_COLOUR, vehPreview)
+            End If
+            vehPreview.SecondaryColor = selectedItem.Price
+            colorMenu4.GoBack()
+        Catch ex As Exception
+            logger.Log(ex.Message & ex.StackTrace)
+        End Try
+    End Sub
+
+    Public Sub ColorItemSelectHandler5(sender As UIMenu, selectedItem As UIMenuItem, index As Integer)
+        Try
+            vehPreview.PearlescentColor = selectedItem.Price
+            'Native.Function.Call(Hash.SET_VEHICLE_MOD_COLOR_1, vehPreview, selectedItem.Car, selectedItem.Price)
+            colorMenu5.GoBack()
+        Catch ex As Exception
+            logger.Log(ex.Message & ex.StackTrace)
+        End Try
+    End Sub
+
+    Public Sub RimColorItemSelectHandler(sender As UIMenu, selectedItem As UIMenuItem, index As Integer)
+        Try
+            vehPreview.RimColor = selectedItem.Price
+            rimColorMenu.GoBack()
+        Catch ex As Exception
+            logger.Log(ex.Message & ex.StackTrace)
+        End Try
+    End Sub
+
+    Public Sub NeonColorItemSelectHandler(sender As UIMenu, selectedItem As UIMenuItem, index As Integer)
+        Try
+            vehPreview.SetNeonLightsOn(VehicleNeonLight.Back, True)
+            vehPreview.SetNeonLightsOn(VehicleNeonLight.Front, True)
+            vehPreview.SetNeonLightsOn(VehicleNeonLight.Left, True)
+            vehPreview.SetNeonLightsOn(VehicleNeonLight.Right, True)
+            vehPreview.NeonLightsColor = Color.FromArgb(255, selectedItem.Price, selectedItem.Car, selectedItem.Model)
+            neonColorMenu.GoBack()
+        Catch ex As Exception
+            logger.Log(ex.Message & ex.StackTrace)
+        End Try
+    End Sub
+
+    Public Sub SmokeColorItemSelectHandler(sender As UIMenu, selectedItem As UIMenuItem, index As Integer)
+        Try
+            Native.Function.Call(Hash.SET_VEHICLE_TYRE_SMOKE_COLOR, vehPreview, sender.MenuItems(index).Price, sender.MenuItems(index).Car, sender.MenuItems(index).Model)
+            'vehPreview.TireSmokeColor = Color.FromArgb(255, selectedItem.Price, selectedItem.Car, selectedItem.Model)
+            smokeColorMenu.GoBack()
+        Catch ex As Exception
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -1091,10 +1268,7 @@ Public Class pdmcarshop
             Native.Function.Call(Hash.SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX, vehPreview, selectedItem.Price)
             plateMenu.GoBack()
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -1117,10 +1291,7 @@ Public Class pdmcarshop
                 categoryName = "Motorcycle"
             End If
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -1143,10 +1314,7 @@ Public Class pdmcarshop
                 categoryName = "Armoured"
             End If
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -1169,10 +1337,7 @@ Public Class pdmcarshop
                 categoryName = "Compact"
             End If
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -1195,10 +1360,7 @@ Public Class pdmcarshop
                 categoryName = "Coupe"
             End If
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -1221,10 +1383,7 @@ Public Class pdmcarshop
                 categoryName = "Sedan"
             End If
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -1247,10 +1406,7 @@ Public Class pdmcarshop
                 categoryName = "Sport"
             End If
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -1273,10 +1429,7 @@ Public Class pdmcarshop
                 categoryName = "Classic"
             End If
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -1299,10 +1452,7 @@ Public Class pdmcarshop
                 categoryName = "Exotic"
             End If
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -1325,10 +1475,7 @@ Public Class pdmcarshop
                 categoryName = "Muscle"
             End If
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -1351,10 +1498,7 @@ Public Class pdmcarshop
                 categoryName = "Offroad"
             End If
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -1377,10 +1521,7 @@ Public Class pdmcarshop
                 categoryName = "SUV"
             End If
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -1403,10 +1544,7 @@ Public Class pdmcarshop
                 categoryName = "Van"
             End If
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -1429,10 +1567,7 @@ Public Class pdmcarshop
                 categoryName = "Utility"
             End If
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -1440,48 +1575,91 @@ Public Class pdmcarshop
         Try
             Native.Function.Call(Hash.SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX, vehPreview, sender.MenuItems(index).Price)
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
     Public Sub ColorItemChangeHandler(sender As UIMenu, index As Integer)
         Try
-            Native.Function.Call(Hash.SET_VEHICLE_COLOURS, vehPreview, 0, 0)
+            If My.Settings.removeColor = True Then
+                Native.Function.Call(Hash.SET_VEHICLE_COLOURS, vehPreview, 0, 0)
+            End If
             vehPreview.CustomPrimaryColor = Color.FromArgb(255, sender.MenuItems(index).Price, sender.MenuItems(index).Car, sender.MenuItems(index).Model)
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
     Public Sub ColorItemChangeHandler2(sender As UIMenu, index As Integer)
         Try
-            Native.Function.Call(Hash.SET_VEHICLE_COLOURS, vehPreview, 0, 0)
+            If My.Settings.removeColor = True Then
+                Native.Function.Call(Hash.SET_VEHICLE_COLOURS, vehPreview, 0, 0)
+            End If
             vehPreview.CustomSecondaryColor = Color.FromArgb(255, sender.MenuItems(index).Price, sender.MenuItems(index).Car, sender.MenuItems(index).Model)
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
     Public Sub ColorItemChangeHandler3(sender As UIMenu, index As Integer)
         Try
-            Native.Function.Call(Hash.CLEAR_VEHICLE_CUSTOM_PRIMARY_COLOUR, vehPreview)
-            Native.Function.Call(Hash.CLEAR_VEHICLE_CUSTOM_SECONDARY_COLOUR, vehPreview)
-            Native.Function.Call(Hash.SET_VEHICLE_COLOURS, vehPreview, sender.MenuItems(index).Price, sender.MenuItems(index).Price)
+            If My.Settings.removeColor = True Then
+                Native.Function.Call(Hash.CLEAR_VEHICLE_CUSTOM_PRIMARY_COLOUR, vehPreview)
+                Native.Function.Call(Hash.CLEAR_VEHICLE_CUSTOM_SECONDARY_COLOUR, vehPreview)
+            End If
+            vehPreview.PrimaryColor = sender.MenuItems(index).Price
+        Catch ex As Exception
+            logger.Log(ex.Message & ex.StackTrace)
+        End Try
+    End Sub
+
+    Public Sub ColorItemChangeHandler4(sender As UIMenu, index As Integer)
+        Try
+            If My.Settings.removeColor = True Then
+                Native.Function.Call(Hash.CLEAR_VEHICLE_CUSTOM_PRIMARY_COLOUR, vehPreview)
+                Native.Function.Call(Hash.CLEAR_VEHICLE_CUSTOM_SECONDARY_COLOUR, vehPreview)
+            End If
+            vehPreview.SecondaryColor = sender.MenuItems(index).Price
+        Catch ex As Exception
+            logger.Log(ex.Message & ex.StackTrace)
+        End Try
+    End Sub
+
+    Public Sub ColorItemChangeHandler5(sender As UIMenu, index As Integer)
+        Try
+            vehPreview.PearlescentColor = sender.MenuItems(index).Price
             'Native.Function.Call(Hash.SET_VEHICLE_MOD_COLOR_1, vehPreview, sender.MenuItems(index).Car, sender.MenuItems(index).Price)
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
+            logger.Log(ex.Message & ex.StackTrace)
+        End Try
+    End Sub
 
-            logger.Log(ex.StackTrace)
+    Public Sub RimColorItemChangeHandler(sender As UIMenu, index As Integer)
+        Try
+            vehPreview.RimColor = sender.MenuItems(index).Price
+        Catch ex As Exception
+            logger.Log(ex.Message & ex.StackTrace)
+        End Try
+    End Sub
+
+    Public Sub NeonColorItemChangeHandler(sender As UIMenu, index As Integer)
+        Try
+            vehPreview.SetNeonLightsOn(VehicleNeonLight.Back, True)
+            vehPreview.SetNeonLightsOn(VehicleNeonLight.Front, True)
+            vehPreview.SetNeonLightsOn(VehicleNeonLight.Left, True)
+            vehPreview.SetNeonLightsOn(VehicleNeonLight.Right, True)
+            vehPreview.NeonLightsColor = Color.FromArgb(255, sender.MenuItems(index).Price, sender.MenuItems(index).Car, sender.MenuItems(index).Model)
+        Catch ex As Exception
+            logger.Log(ex.Message & ex.StackTrace)
+        End Try
+    End Sub
+
+    Public Sub SmokeColorItemChangeHandler(sender As UIMenu, index As Integer)
+        Try
+            Native.Function.Call(Hash.SET_VEHICLE_TYRE_SMOKE_COLOR, vehPreview, sender.MenuItems(index).Price, sender.MenuItems(index).Car, sender.MenuItems(index).Model)
+            'vehPreview.TireSmokeColor = Color.FromArgb(255, sender.MenuItems(index).Price, sender.MenuItems(index).Car, sender.MenuItems(index).Model)
+        Catch ex As Exception
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -1500,6 +1678,11 @@ Public Class pdmcarshop
             colorMenu.RefreshIndex()
             colorMenu2.RefreshIndex()
             colorMenu3.RefreshIndex()
+            colorMenu4.RefreshIndex()
+            colorMenu5.RefreshIndex()
+            rimColorMenu.RefreshIndex()
+            neonColorMenu.RefreshIndex()
+            smokeColorMenu.RefreshIndex()
             compactMenu.RefreshIndex()
             confirmMenu.RefreshIndex()
             coupeMenu.RefreshIndex()
@@ -1516,10 +1699,7 @@ Public Class pdmcarshop
             utilityMenu.RefreshIndex()
             vanMenu.RefreshIndex()
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -1534,6 +1714,11 @@ Public Class pdmcarshop
             colorMenu.RefreshIndex()
             colorMenu2.RefreshIndex()
             colorMenu3.RefreshIndex()
+            colorMenu4.RefreshIndex()
+            colorMenu5.RefreshIndex()
+            rimColorMenu.RefreshIndex()
+            neonColorMenu.RefreshIndex()
+            smokeColorMenu.RefreshIndex()
             compactMenu.RefreshIndex()
             confirmMenu.RefreshIndex()
             coupeMenu.RefreshIndex()
@@ -1550,10 +1735,7 @@ Public Class pdmcarshop
             utilityMenu.RefreshIndex()
             vanMenu.RefreshIndex()
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -1622,11 +1804,38 @@ Public Class pdmcarshop
                 Native.Function.Call(Hash.HIDE_HUD_AND_RADAR_THIS_FRAME)
             End If
 
-        Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
+            If My.Settings.showRoom = False Then
+                'Outside
+                vehPreviewPosition = New GTA.Math.Vector3(-56.79958F, -1110.868F, 26.43581F)
+                cameraPosition = New GTA.Math.Vector3(-78.79827F, -1103.386F, 26.8126F)
+                playerPosition = New GTA.Math.Vector3(-43.79905F, -1116.247F, 25.43394F)
+            Else
+                'Inside
+                Native.Function.Call(Hash.CLEAR_AREA_OF_VEHICLES, -44.142F, -1098.996F, 26.422F, 50, True, False, False, False, False)
+                vehPreviewPosition = New GTA.Math.Vector3(-44.142F, -1098.996F, 26.422F)
+                cameraPosition = New GTA.Math.Vector3(-59.76299F, -1093.913F, 26.622F)
+                playerPosition = New GTA.Math.Vector3(-54.16683F, -1088.698F, 25.42233F)
+            End If
 
-            logger.Log(ex.StackTrace)
+            If _displayTimer.Enabled Then
+                _scaleform.Render2D()
+
+                If Game.GameTime > _displayTimer.Waiter Then
+                    _scaleform.CallFunction("TRANSITION_OUT")
+                    _displayTimer.Enabled = False
+                    _fadeTimer.Start()
+                End If
+            End If
+
+            If _fadeTimer.Enabled Then
+                _scaleform.Render2D()
+
+                If Game.GameTime > _fadeTimer.Waiter Then
+                    _fadeTimer.Enabled = False
+                End If
+            End If
+        Catch ex As Exception
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -1672,13 +1881,13 @@ Public Class pdmcarshop
                 World.RenderingCamera = Nothing
             End If
 
-            If Game.IsControlPressed(0, GTA.Control.ParachuteBrakeLeft) AndAlso ModEnable = True AndAlso simeonDist < 40.0F Then
+            If Game.IsControlPressed(0, GTA.Control.ParachuteBrakeLeft) AndAlso ModEnable = True AndAlso simeonDist < 40.0F AndAlso Not playerPed.IsInVehicle Then
                 curRadius = curRadius + 2
                 vehPreview.Rotation = New GTA.Math.Vector3(0, 0, curRadius)
-            ElseIf Game.IsControlPressed(0, GTA.Control.ParachuteBrakeRight) AndAlso ModEnable = True AndAlso simeonDist < 40.0F Then
+            ElseIf Game.IsControlPressed(0, GTA.Control.ParachuteBrakeRight) AndAlso ModEnable = True AndAlso simeonDist < 40.0F AndAlso Not playerPed.IsInVehicle Then
                 curRadius = curRadius - 2
                 vehPreview.Rotation = New GTA.Math.Vector3(0, 0, curRadius)
-            ElseIf Game.IsControlJustPressed(0, GTA.Control.SelectWeaponUnarmed) AndAlso ModEnable = True AndAlso simeonDist < 40.0F Then
+            ElseIf Game.IsControlJustPressed(0, GTA.Control.SelectWeaponUnarmed) AndAlso ModEnable = True AndAlso simeonDist < 40.0F AndAlso Not playerPed.IsInVehicle Then
                 vehPreview.OpenDoor(VehicleDoor.BackLeftDoor, False, False)
                 vehPreview.OpenDoor(VehicleDoor.BackRightDoor, False, False)
                 vehPreview.OpenDoor(VehicleDoor.FrontLeftDoor, False, False)
@@ -1686,7 +1895,7 @@ Public Class pdmcarshop
                 vehPreview.OpenDoor(VehicleDoor.Hood, False, False)
                 vehPreview.OpenDoor(VehicleDoor.Trunk, False, False)
                 vehPreview.OpenDoor(VehicleDoor.Trunk2, False, False)
-            ElseIf Game.IsControlJustPressed(0, GTA.Control.SelectWeaponMelee) AndAlso ModEnable = True AndAlso simeonDist < 40.0F Then
+            ElseIf Game.IsControlJustPressed(0, GTA.Control.SelectWeaponMelee) AndAlso ModEnable = True AndAlso simeonDist < 40.0F AndAlso Not playerPed.IsInVehicle Then
                 Native.Function.Call(Hash.SET_VEHICLE_DOORS_SHUT, vehPreview, False)
             ElseIf Game.IsControlJustPressed(0, GTA.Control.VehicleRoof) AndAlso ModEnable = True AndAlso simeonDist < 40.0F Then
                 If vehPreview.RoofState = VehicleRoofState.Closed Then
@@ -1696,25 +1905,26 @@ Public Class pdmcarshop
                 End If
             End If
 
-            If Game.IsControlJustPressed(0, GTA.Control.NextCamera) AndAlso ModEnable = True AndAlso simeonDist < 40.0F AndAlso ChangeCamera = 0 Then
+            If Game.IsControlJustPressed(0, GTA.Control.NextCamera) AndAlso ModEnable = True AndAlso simeonDist < 40.0F AndAlso ChangeCamera = 0 AndAlso Not playerPed.IsInVehicle Then
                 World.DestroyAllCameras()
                 World.RenderingCamera = Nothing
                 ChangeCamera = (ChangeCamera + 1)
-            ElseIf Game.IsControlJustPressed(0, GTA.Control.NextCamera) AndAlso ModEnable = True AndAlso simeonDist < 40.0F AndAlso ChangeCamera = 1 Then
+            ElseIf Game.IsControlJustPressed(0, GTA.Control.NextCamera) AndAlso ModEnable = True AndAlso simeonDist < 40.0F AndAlso ChangeCamera = 1 AndAlso Not playerPed.IsInVehicle Then
                 World.RenderingCamera = World.CreateCamera(cameraPosition, New GTA.Math.Vector3(Game.Player.Character.Rotation.X, Game.Player.Character.Rotation.Y, 253.0F), 10.0F)
                 ChangeCamera = (ChangeCamera - 1)
             End If
         Catch ex As Exception
-            logger.Log(ex.Message)
-            logger.Log(ex.InnerException)
-
-            logger.Log(ex.StackTrace)
+            logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
     Protected Overrides Sub Dispose(A_0 As Boolean)
         If (A_0) Then
-            simeonBlip.Remove()
+            Try
+                simeonBlip.Remove()
+            Catch ex As Exception
+                logger.Log(ex.Message & ex.StackTrace)
+            End Try
         End If
     End Sub
 End Class

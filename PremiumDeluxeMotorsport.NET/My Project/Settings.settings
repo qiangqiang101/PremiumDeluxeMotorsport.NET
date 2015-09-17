@@ -5,17 +5,11 @@
     <Setting Name="keyModEnable" Type="System.Windows.Forms.Keys" Scope="User">
       <Value Profile="(Default)">F9</Value>
     </Setting>
-    <Setting Name="keyRotLeft" Type="System.Windows.Forms.Keys" Scope="User">
-      <Value Profile="(Default)">1</Value>
+    <Setting Name="showRoom" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="keyRotRight" Type="System.Windows.Forms.Keys" Scope="User">
-      <Value Profile="(Default)">2</Value>
-    </Setting>
-    <Setting Name="keyOpenDoor" Type="System.Windows.Forms.Keys" Scope="User">
-      <Value Profile="(Default)">3</Value>
-    </Setting>
-    <Setting Name="keyCloseDoor" Type="System.Windows.Forms.Keys" Scope="User">
-      <Value Profile="(Default)">4</Value>
+    <Setting Name="removeColor" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>
