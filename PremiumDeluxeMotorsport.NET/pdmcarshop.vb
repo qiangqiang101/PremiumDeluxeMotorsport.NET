@@ -1,13 +1,10 @@
 ﻿Imports System
-Imports System.Collections.Generic
 Imports System.Drawing
 Imports System.Windows.Forms
 Imports GTA
 Imports GTA.Native
+Imports GTA.Math
 Imports PDMCarShopGUI
-Imports System.Linq
-Imports System.Text
-Imports System.Threading.Tasks
 Imports System.Reflection
 
 Public Class pdmcarshop
@@ -15,8 +12,8 @@ Public Class pdmcarshop
 
     Private player As Player
     Private playerPed As Ped
-    Private simeon As GTA.Math.Vector3
-    Private testDriveVector As GTA.Math.Vector3
+    Private simeon As Vector3
+    Private testDriveVector As Vector3
     Private simeonBlip As Blip
     Private selectedVehicle As String
     Private vehPreview As Vehicle
@@ -26,19 +23,16 @@ Public Class pdmcarshop
     Private curRadius As Integer = 0
     Private PlayerCash As Integer
     Private vehiclePrice As Integer
-    Private categoryName As String = Nothing
     Private ChangeCamera As Integer = 0
-    Private enableByDefault As Boolean
-    Private vehPreviewPosition As GTA.Math.Vector3
-    Private cameraPosition As GTA.Math.Vector3
-    Private playerPosition As GTA.Math.Vector3
+    Private vehPreviewPosition As Vector3
+    Private cameraPosition As Vector3
+    Private playerPosition As Vector3
     Private Price As Decimal = 0
     Private testDrive As Integer = 1
     Private hideHud As Boolean = False
-    Dim ver As String = My.Application.Info.Version.ToString
 
     Private mainMenu, modMenu, colorMenu, colorMenu2, plateMenu, confirmMenu, colorMenu3, colorMenu4, colorMenu5, rimColorMenu, neonColorMenu, smokeColorMenu As UIMenu
-    Private motorMenu, compactMenu, coupeMenu, sedanMenu, sportMenu, classicMenu, exoticMenu, muscleMenu, offroadMenu, suvMenu, vanMenu, utilityMenu, armouredMenu As UIMenu
+    Private motorMenu, compactMenu, coupeMenu, sedanMenu, sportMenu, classicMenu, exoticMenu, muscleMenu, offroadMenu, suvMenu, vanMenu, utilityMenu, armouredMenu, lowriderMenu As UIMenu
 
     Dim itemMotor As New UIMenuItem("Motorcycles")
     Dim itemCompact As New UIMenuItem("Compacts")
@@ -47,12 +41,13 @@ Public Class pdmcarshop
     Dim itemSport As New UIMenuItem("Sports")
     Dim itemClassic As New UIMenuItem("Classics")
     Dim itemExotic As New UIMenuItem("Exotics")
-    Dim itemMuscle As New UIMenuItem("Muscle")
+    Dim itemMuscle As New UIMenuItem("Muscles")
     Dim itemOffRoad As New UIMenuItem("Off-Road")
     Dim itemSuv As New UIMenuItem("SUVs")
     Dim itemVan As New UIMenuItem("Vans")
-    Dim itemUtility As New UIMenuItem("Utility")
+    Dim itemUtility As New UIMenuItem("Utilities")
     Dim itemArmoured As New UIMenuItem("Armoured")
+    Dim itemLowrider As New UIMenuItem("Lowriders")
     Dim itemColor As New UIMenuItem("Custom Primary Color", "Transform vehicle appearance.")
     Dim itemColor2 As New UIMenuItem("Custom Secondary Color", "Transform vehicle appearance.")
     Dim itemColor3 As New UIMenuItem("Primary Color", "Transform vehicle appearance.")
@@ -83,6 +78,7 @@ Public Class pdmcarshop
     Private van As String = Application.StartupPath & "\scripts\PDMCarShop\van.ini"
     Private utility As String = Application.StartupPath & "\scripts\PDMCarShop\utility.ini"
     Private armoured As String = Application.StartupPath & "\scripts\PDMCarShop\armoured.ini"
+    Private lowrider As String = Application.StartupPath & "\scripts\PDMCarShop\lowrider.ini"
     Private colour As String = Application.StartupPath & "\scripts\PDMCarShop\color.ini"
     Private colour2 As String = Application.StartupPath & "\scripts\PDMCarShop\color2.ini"
     Private plate As String = Application.StartupPath & "\scripts\PDMCarShop\plate.ini"
@@ -96,6 +92,8 @@ Public Class pdmcarshop
     Private _fadeTimer As Timer
     Private _menuPool As MenuPool
 
+    Private spoiler, fbumper, rbumper, sskirt, frame, grille, hood, fender, rfender, roof, exhaust, suspension, engine, brakes, transms, armor, fWheels, bWheels As Integer
+
     Public Sub New()
         Try
             player = Game.Player
@@ -107,7 +105,7 @@ Public Class pdmcarshop
 
             _menuPool = New MenuPool()
 
-            modMenu = New UIMenu("", "~b~VERSION: " & ver, New Point(0, 0))
+            modMenu = New UIMenu("", "~b~VERSION: " & My.Application.Info.Version.ToString, New Point(0, 0))
             modMenu.SetMenuWidthOffset(11)
             modMenu.MouseEdgeEnabled = False
             modMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCarShopMod.shopui_title_pdm.png"))
@@ -139,6 +137,7 @@ Public Class pdmcarshop
             mainMenu.AddItem(itemVan)
             mainMenu.AddItem(itemUtility)
             mainMenu.AddItem(itemArmoured)
+            mainMenu.AddItem(itemLowrider)
             mainMenu.RefreshIndex()
 
             ReadMotorcycle()
@@ -154,6 +153,7 @@ Public Class pdmcarshop
             ReadVan()
             ReadUtility()
             ReadArmoured()
+            ReadLowrider()
             ReadConfirm()
             ReadColor()
             ReadColor2()
@@ -165,23 +165,25 @@ Public Class pdmcarshop
             ReadSmokeColor()
             ReadPlate()
 
+
             AddHandler mainMenu.OnMenuClose, AddressOf MenuCloseHandler
             AddHandler confirmMenu.OnMenuClose, AddressOf ConfirmCloseHandler
 
             AddHandler mainMenu.OnItemSelect, AddressOf ItemSelectHandler
-            AddHandler motorMenu.OnItemSelect, AddressOf MotorItemSelectHandler
-            AddHandler compactMenu.OnItemSelect, AddressOf CompactItemSelectHandler
-            AddHandler coupeMenu.OnItemSelect, AddressOf CoupeItemSelectHandler
-            AddHandler sedanMenu.OnItemSelect, AddressOf SedanItemSelectHandler
-            AddHandler sportMenu.OnItemSelect, AddressOf SportItemSelectHandler
-            AddHandler classicMenu.OnItemSelect, AddressOf ClassicItemSelectHandler
-            AddHandler exoticMenu.OnItemSelect, AddressOf ExoticItemSelectHandler
-            AddHandler muscleMenu.OnItemSelect, AddressOf MuscleItemSelectHandler
-            AddHandler offroadMenu.OnItemSelect, AddressOf OffroadItemSelectHandler
-            AddHandler suvMenu.OnItemSelect, AddressOf SuvItemSelectHandler
-            AddHandler vanMenu.OnItemSelect, AddressOf VanItemSelectHandler
-            AddHandler utilityMenu.OnItemSelect, AddressOf UtilityItemSelectHandler
-            AddHandler armouredMenu.OnItemSelect, AddressOf ArmouredItemSelectHandler
+            AddHandler motorMenu.OnItemSelect, AddressOf CategoryItemSelectHandler
+            AddHandler compactMenu.OnItemSelect, AddressOf CategoryItemSelectHandler
+            AddHandler coupeMenu.OnItemSelect, AddressOf CategoryItemSelectHandler
+            AddHandler sedanMenu.OnItemSelect, AddressOf CategoryItemSelectHandler
+            AddHandler sportMenu.OnItemSelect, AddressOf CategoryItemSelectHandler
+            AddHandler classicMenu.OnItemSelect, AddressOf CategoryItemSelectHandler
+            AddHandler exoticMenu.OnItemSelect, AddressOf CategoryItemSelectHandler
+            AddHandler muscleMenu.OnItemSelect, AddressOf CategoryItemSelectHandler
+            AddHandler offroadMenu.OnItemSelect, AddressOf CategoryItemSelectHandler
+            AddHandler suvMenu.OnItemSelect, AddressOf CategoryItemSelectHandler
+            AddHandler vanMenu.OnItemSelect, AddressOf CategoryItemSelectHandler
+            AddHandler utilityMenu.OnItemSelect, AddressOf CategoryItemSelectHandler
+            AddHandler armouredMenu.OnItemSelect, AddressOf CategoryItemSelectHandler
+            AddHandler lowriderMenu.OnItemSelect, AddressOf CategoryItemSelectHandler
 
             AddHandler confirmMenu.OnItemSelect, AddressOf ConfirmItemSelectHandler
             AddHandler modMenu.OnItemSelect, AddressOf ItemSelectHandler
@@ -210,7 +212,7 @@ Public Class pdmcarshop
             My.Settings.removeColor = ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "ClearColor")
             My.Settings.Save()
 
-            _displayTimer = New Timer(1200)
+            _displayTimer = New Timer(2200)
             _fadeTimer = New Timer(2000)
             _scaleform = New Scaleform([Function].[Call](Of Integer)(Hash.REQUEST_SCALEFORM_MOVIE, "MP_BIG_MESSAGE_FREEMODE"))
 
@@ -234,16 +236,16 @@ Public Class pdmcarshop
             'If ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "Showroom") = False Then
             If My.Settings.showRoom = False Then
                 'Outside
-                vehPreviewPosition = New GTA.Math.Vector3(-56.79958F, -1110.868F, 26.43581F)
-                cameraPosition = New GTA.Math.Vector3(-78.79827F, -1103.386F, 26.8126F)
-                playerPosition = New GTA.Math.Vector3(-43.79905F, -1116.247F, 25.43394F)
+                vehPreviewPosition = New Vector3(-56.79958F, -1110.868F, 26.43581F)
+                cameraPosition = New Vector3(-78.79827F, -1103.386F, 26.8126F)
+                playerPosition = New Vector3(-43.79905F, -1116.247F, 25.43394F)
                 modMenu.MenuItems(5).SetRightBadge(UIMenuItem.BadgeStyle.Tick)
                 modMenu.MenuItems(4).SetRightBadge(UIMenuItem.BadgeStyle.None)
             Else
                 'Inside
-                vehPreviewPosition = New GTA.Math.Vector3(-44.142F, -1098.996F, 26.422F)
-                cameraPosition = New GTA.Math.Vector3(-59.76299F, -1093.913F, 26.622F)
-                playerPosition = New GTA.Math.Vector3(-54.16683F, -1088.698F, 25.42233F)
+                vehPreviewPosition = New Vector3(-44.142F, -1098.996F, 26.422F)
+                cameraPosition = New Vector3(-59.76299F, -1093.913F, 26.622F)
+                playerPosition = New Vector3(-54.16683F, -1088.698F, 25.42233F)
                 modMenu.MenuItems(4).SetRightBadge(UIMenuItem.BadgeStyle.Tick)
                 modMenu.MenuItems(5).SetRightBadge(UIMenuItem.BadgeStyle.None)
             End If
@@ -254,13 +256,13 @@ Public Class pdmcarshop
 
     Public Sub SpawnSimeon()
         Try
-            simeon = New GTA.Math.Vector3(-40.3857F, -1108.79F, 25.4375F)
-            testDriveVector = New GTA.Math.Vector3(66.55125F, -1356.585F, 29.08711F)
+            simeon = New Vector3(-40.3857F, -1108.79F, 25.4375F)
+            testDriveVector = New Vector3(66.55125F, -1356.585F, 29.08711F)
             simeonBlip = World.CreateBlip(simeon)
             simeonBlip.Sprite = BlipSprite.PersonalVehicleCar
             simeonBlip.Color = BlipColor.Red
             simeonBlip.IsShortRange = True
-            GTA.Native.Function.Call(Hash.SET_BLIP_NAME_FROM_TEXT_FILE, simeonBlip, "BLIP_FRIEND") 'VED_BLIPN, BLIP_FRIEND
+            SetBlipName("Premium Deluxe Motorsport", simeonBlip)
         Catch ex As Exception
             logger.Log(ex.Message & ex.StackTrace)
         End Try
@@ -695,6 +697,39 @@ Public Class pdmcarshop
         End Try
     End Sub
 
+    Public Sub ReadLowrider()
+        Try
+            Dim format As New BTEFormatReader(lowrider, parameters)
+            Dim qty As Integer = format.Count - 1
+
+            lowriderMenu = New UIMenu("", "~r~LOWRIDERS", New Point(0, 0))
+            lowriderMenu.SetMenuWidthOffset(11)
+            lowriderMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCarShopMod.shopui_title_pdm.png"))
+            _menuPool.Add(lowriderMenu)
+            lowriderMenu.AddInstructionalButton(btnConfirm)
+            lowriderMenu.AddInstructionalButton(btnRotLeft)
+            lowriderMenu.AddInstructionalButton(btnRotRight)
+            lowriderMenu.AddInstructionalButton(btnOpenDoor)
+            lowriderMenu.AddInstructionalButton(btnCloseDoor)
+            lowriderMenu.AddInstructionalButton(btnChangeCam)
+            For i As Integer = 0 To format.Count - 1
+                Price = format(i)("price")
+                Dim item As New UIMenuItem(format(i)("name"))
+                lowriderMenu.AddItem(item)
+                With item
+                    .SetRightLabel("$" & Price.ToString("N"))
+                    .Model = format(i)("model")
+                    .Price = format(i)("price")
+                    .Car = format(i)("name")
+                End With
+            Next
+            lowriderMenu.RefreshIndex()
+            mainMenu.BindMenuToItem(lowriderMenu, itemLowrider)
+        Catch ex As Exception
+            logger.Log(ex.Message & ex.StackTrace)
+        End Try
+    End Sub
+
     Public Sub ReadColor()
         Try
             Dim format As New BTEFormatReader(colour, paracolors)
@@ -960,11 +995,6 @@ Public Class pdmcarshop
         End Try
     End Sub
 
-    Private Shared Function InlineAssignHelper(Of T)(ByRef target As T, ByVal value As T) As T
-        target = value
-        Return value
-    End Function
-
     Public Sub ReadConfirm()
         Try
             confirmMenu = New UIMenu("", "~r~PURCHASE ORDER", New Point(0, 0))
@@ -983,16 +1013,31 @@ Public Class pdmcarshop
             confirmMenu.AddItem(itemColor2)
             confirmMenu.AddItem(itemRimColor)
             confirmMenu.AddItem(itemNeonColor)
-            'confirmMenu.AddItem(itemSmokeColor)
+            confirmMenu.AddItem(New UIMenuItem("Upgrade Vehicle", "Select Twice for Maximum upgrade vehicle visual & performance."))
             confirmMenu.AddItem(itemPlate)
             confirmMenu.AddItem(New UIMenuItem("Plate Number", "Customize license plate number."))
-            confirmMenu.AddItem(New UIMenuItem("Upgrade Vehicle", "Select Twice for Maximum upgrade vehicle visual & performance."))
             confirmMenu.AddItem(New UIMenuItem("Test Drive"))
             confirmMenu.AddItem(New UIMenuItem("Confirm"))
             confirmMenu.RefreshIndex()
         Catch ex As Exception
             logger.Log(ex.Message & ex.StackTrace)
         End Try
+    End Sub
+
+    Private Sub DisplayHelpTextThisFrame(ByVal [text] As String)
+        Dim arguments As InputArgument() = New InputArgument() {"STRING"}
+        Native.Function.Call(Hash._0x8509B634FBE7DA11, arguments)
+        Dim argumentArray2 As InputArgument() = New InputArgument() {[text]}
+        Native.Function.Call(Hash._0x6C188BE134E074AA, argumentArray2)
+        Dim argumentArray3 As InputArgument() = New InputArgument() {0, 0, 1, -1}
+        Native.Function.Call(Hash._0x238FFE5C7B0498A6, argumentArray3)
+    End Sub
+
+    Private Sub SetBlipName(ByVal BlipString As String, ByVal BlipName As Blip)
+        Dim arguments As InputArgument() = New InputArgument() {"STRING"}
+        Native.Function.Call(Hash._0xF9113A30DE5C6670, arguments)
+        Native.Function.Call(Hash._ADD_TEXT_COMPONENT_STRING, BlipString)
+        Native.Function.Call(Hash._0xBC38B49BCB83BC9B, BlipName)
     End Sub
 
     Public Function getNumVehMod(_vehicle As Vehicle, _modType As Integer) As Integer
@@ -1004,7 +1049,6 @@ Public Class pdmcarshop
 
     Public Sub ConfirmItemSelectHandler(sender As UIMenu, selectedItem As UIMenuItem, index As Integer)
         Try
-            'UI.Notify("You have selected: ~b~" + selectedItem.Text)
             If selectedItem.Text = "Confirm" Then
                 If PlayerCash > vehiclePrice Then
                     Game.FadeScreenOut(500)
@@ -1021,7 +1065,6 @@ Public Class pdmcarshop
                     hideHud = False
                     Script.Wait(500)
                     Game.FadeScreenIn(500)
-                    'Thanks to Camxxcore
                     Native.Function.Call(Hash.PLAY_SOUND_FRONTEND, -1, "PROPERTY_PURCHASE", "HUD_AWARDS", False)
                     _scaleform.CallFunction("SHOW_MISSION_PASSED_MESSAGE", String.Format("Vehicle Purchased" & vbLf & "~w~{0}", selectedVehicle), "", 100, True, 0, True)
                     _displayTimer.Start()
@@ -1038,10 +1081,10 @@ Public Class pdmcarshop
                 World.RenderingCamera = Nothing
                 vehPreview.IsDriveable = True
                 Native.Function.Call(Hash.SET_VEHICLE_DOORS_SHUT, vehPreview, False)
-                UI.Notify("To quit Test Drive, Leave this vehicle.", True)
+                DisplayHelpTextThisFrame("To quit Test Drive, Leave this vehicle.")
                 testDrive = testDrive + 1
                 hideHud = False
-                vehPreview.Position = New GTA.Math.Vector3(-56.79958F, -1110.868F, 26.43581F)
+                vehPreview.Position = New Vector3(-56.79958F, -1110.868F, 26.43581F)
                 Script.Wait(500)
                 Game.FadeScreenIn(500)
             End If
@@ -1053,29 +1096,29 @@ Public Class pdmcarshop
                         World.DestroyAllCameras()
                         World.RenderingCamera = Nothing
                     ElseIf ChangeCamera = 1 Then
-                        World.RenderingCamera = World.CreateCamera(cameraPosition, New GTA.Math.Vector3(Game.Player.Character.Rotation.X, Game.Player.Character.Rotation.Y, 253.0F), 10.0F)
+                        World.RenderingCamera = World.CreateCamera(cameraPosition, New Vector3(Game.Player.Character.Rotation.X, Game.Player.Character.Rotation.Y, 253.0F), 10.0F)
                     End If
                 End If
-            ElseIf selectedItem.Text = "Upgrade Vehicle" Then
-                Dim spoiler As Integer = getNumVehMod(vehPreview, 0)
-                Dim fbumper As Integer = getNumVehMod(vehPreview, 1)
-                Dim rbumper As Integer = getNumVehMod(vehPreview, 2)
-                Dim sskirt As Integer = getNumVehMod(vehPreview, 3)
-                Dim frame As Integer = getNumVehMod(vehPreview, 5)
-                Dim grille As Integer = getNumVehMod(vehPreview, 6)
-                Dim hood As Integer = getNumVehMod(vehPreview, 7)
-                Dim fender As Integer = getNumVehMod(vehPreview, 8)
-                Dim rfender As Integer = getNumVehMod(vehPreview, 9)
-                Dim roof As Integer = getNumVehMod(vehPreview, 10)
-                Dim exhaust As Integer = getNumVehMod(vehPreview, 4)
-                'Dim highEnd As Integer = Native.Function.Call(Of Integer)(Hash.GET_NUM_VEHICLE_MODS, vehPreview, 0)
-                Dim suspension As Integer = getNumVehMod(vehPreview, 15)
-                Dim engine As Integer = getNumVehMod(vehPreview, 11)
-                Dim brakes As Integer = getNumVehMod(vehPreview, 12)
-                Dim transms As Integer = getNumVehMod(vehPreview, 13)
-                Dim armor As Integer = getNumVehMod(vehPreview, 16)
-                Dim fWheels As Integer = getNumVehMod(vehPreview, 23)
-                Dim bWheels As Integer = getNumVehMod(vehPreview, 24)
+            End If
+            If selectedItem.Text = "Upgrade Vehicle" Then
+                spoiler = getNumVehMod(vehPreview, 0)
+                fbumper = getNumVehMod(vehPreview, 1)
+                rbumper = getNumVehMod(vehPreview, 2)
+                sskirt = getNumVehMod(vehPreview, 3)
+                frame = getNumVehMod(vehPreview, 5)
+                grille = getNumVehMod(vehPreview, 6)
+                hood = getNumVehMod(vehPreview, 7)
+                fender = getNumVehMod(vehPreview, 8)
+                rfender = getNumVehMod(vehPreview, 9)
+                roof = getNumVehMod(vehPreview, 10)
+                exhaust = getNumVehMod(vehPreview, 4)
+                suspension = getNumVehMod(vehPreview, 15)
+                engine = getNumVehMod(vehPreview, 11)
+                brakes = getNumVehMod(vehPreview, 12)
+                transms = getNumVehMod(vehPreview, 13)
+                armor = getNumVehMod(vehPreview, 16)
+                fWheels = getNumVehMod(vehPreview, 23)
+                bWheels = getNumVehMod(vehPreview, 24)
 
                 Native.Function.Call(Hash.SET_VEHICLE_MOD_KIT, vehPreview.Handle, 0)
                 Dim motorList As Model() = {"akuma", "bagger", "bati", "bati2", "carbonrs", "daemon", "double", "faggio2", "hexer", "nemesis", "pcj", "ruffian", "sanchez", "sanchez2", "vader", "thrust", "sovereign", "innovation", "hakuchou", "enduro", "lectro", "vindicator"}
@@ -1094,7 +1137,6 @@ Public Class pdmcarshop
                 vehPreview.SetMod(VehicleMod.RightFender, rfender, True)
                 vehPreview.SetMod(VehicleMod.Roof, roof, True)
                 vehPreview.SetMod(VehicleMod.Exhaust, exhaust, True)
-                'vehPreview.SetMod(VehicleWheelType.HighEnd, highEnd, True)
                 vehPreview.SetMod(VehicleMod.FrontWheels, fWheels, True)
                 vehPreview.SetMod(VehicleMod.BackWheels, bWheels, True)
                 vehPreview.SetMod(VehicleMod.Suspension, suspension, True)
@@ -1102,8 +1144,9 @@ Public Class pdmcarshop
                 vehPreview.SetMod(VehicleMod.Brakes, brakes, True)
                 vehPreview.SetMod(VehicleMod.Transmission, transms, True)
                 vehPreview.SetMod(VehicleMod.Armor, armor, True)
-                'vehPreview.SetMod(VehicleWindowTint.Limo, 5, True)
                 vehPreview.SetMod(VehicleToggleMod.XenonHeadlights, 22, True)
+                vehPreview.ToggleMod(VehicleToggleMod.XenonHeadlights, True)
+                vehPreview.ToggleMod(VehicleToggleMod.Turbo, True)
                 vehPreview.SetMod(VehicleToggleMod.Turbo, 18, True)
             End If
         Catch ex As Exception
@@ -1115,14 +1158,14 @@ Public Class pdmcarshop
         Try
             If selectedItem.Text = "Enable Mod" Then
                 ModEnable = True
-                UI.Notify("~r~Premium Deluxe Motorsport ~w~Mod Enabled.", True)
+                DisplayHelpTextThisFrame("~r~Premium Deluxe Motorsport ~w~Mod Enabled.")
                 SpawnSimeon()
                 modMenu.Visible = False
                 sender.MenuItems(0).SetRightBadge(UIMenuItem.BadgeStyle.Tick)
                 sender.MenuItems(1).SetRightBadge(UIMenuItem.BadgeStyle.None)
             ElseIf selectedItem.Text = "Disable Mod" Then
                 ModEnable = False
-                UI.Notify("~r~Premium Deluxe Motorsport ~w~Mod Disabled.", True)
+                DisplayHelpTextThisFrame("~r~Premium Deluxe Motorsport ~w~Mod Disabled.")
                 simeonBlip.Remove()
                 modMenu.Visible = False
                 sender.MenuItems(1).SetRightBadge(UIMenuItem.BadgeStyle.Tick)
@@ -1130,25 +1173,25 @@ Public Class pdmcarshop
             ElseIf selectedItem.Text = "Enable Clear Color" Then
                 My.Settings.removeColor = True
                 My.Settings.Save()
-                UI.Notify("~r~Clear Color ~w~Enabled.", True)
+                DisplayHelpTextThisFrame("~r~Clear Color ~w~Enabled.")
                 sender.MenuItems(2).SetRightBadge(UIMenuItem.BadgeStyle.Tick)
                 sender.MenuItems(3).SetRightBadge(UIMenuItem.BadgeStyle.None)
             ElseIf selectedItem.Text = "Disable Clear Color" Then
                 My.Settings.removeColor = False
                 My.Settings.Save()
-                UI.Notify("~r~Clear Color ~w~Disable.", True)
+                DisplayHelpTextThisFrame("~r~Clear Color ~w~Disable.")
                 sender.MenuItems(3).SetRightBadge(UIMenuItem.BadgeStyle.Tick)
                 sender.MenuItems(2).SetRightBadge(UIMenuItem.BadgeStyle.None)
             ElseIf selectedItem.Text = "Showroom" Then
                 My.Settings.showRoom = True
                 My.Settings.Save()
-                UI.Notify("~r~Showroom ~w~Selected.", True)
+                DisplayHelpTextThisFrame("~r~Showroom ~w~Selected.")
                 sender.MenuItems(4).SetRightBadge(UIMenuItem.BadgeStyle.Tick)
                 sender.MenuItems(5).SetRightBadge(UIMenuItem.BadgeStyle.None)
             ElseIf selectedItem.Text = "Car Park" Then
                 My.Settings.showRoom = False
                 My.Settings.Save()
-                UI.Notify("~r~Car Park ~w~Selected.", True)
+                DisplayHelpTextThisFrame("~r~Car Park ~w~Selected.")
                 sender.MenuItems(5).SetRightBadge(UIMenuItem.BadgeStyle.Tick)
                 sender.MenuItems(4).SetRightBadge(UIMenuItem.BadgeStyle.None)
             ElseIf selectedItem.Text = "Refresh Settings" Then
@@ -1157,14 +1200,14 @@ Public Class pdmcarshop
                 My.Settings.removeColor = ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "ClearColor")
                 My.Settings.Save()
                 modMenu.Visible = False
-                UI.Notify("Keys has been Saved.", True)
+                DisplayHelpTextThisFrame("Keys has been Saved.")
             ElseIf selectedItem.Text = "About" Then
                 modMenu.Visible = False
-                UI.Notify("Premium Deluxe Motorsport Car Shop Mod v" & ver, True)
-                UI.Notify("Release Date: 17 Sep 2015", True)
+                UI.Notify("Premium Deluxe Motorsport Car Shop Mod v" & My.Application.Info.Version.ToString, True)
+                UI.Notify("Release Date: 26 Oct 2015", True)
                 UI.Notify("Mod Author: I'm Not MentaL", True)
                 UI.Notify("Special Thanks: Rockstar Games, Alexander Blade, Crosire, Guad, EnergyStyle, LetsPlayOrDy,", True)
-                UI.Notify("Calm, LCBuffalo, Gang1111, Matt_STS, frodzet, leftas & marhex", True)
+                UI.Notify("Calm, LCBuffalo, Gang1111, Matt_STS, frodzet, leftas, marhex & CamxxCore", True)
             End If
         Catch ex As Exception
             logger.Log(ex.Message & ex.StackTrace)
@@ -1201,7 +1244,12 @@ Public Class pdmcarshop
                 Native.Function.Call(Hash.CLEAR_VEHICLE_CUSTOM_PRIMARY_COLOUR, vehPreview)
                 Native.Function.Call(Hash.CLEAR_VEHICLE_CUSTOM_SECONDARY_COLOUR, vehPreview)
             End If
-            vehPreview.PrimaryColor = selectedItem.Price
+            If selectedItem.Car = 1 Then
+                vehPreview.PrimaryColor = selectedItem.Price
+                vehPreview.PearlescentColor = selectedItem.Price + 1
+            Else
+                vehPreview.PrimaryColor = selectedItem.Price
+            End If
             colorMenu3.GoBack()
         Catch ex As Exception
             logger.Log(ex.Message & ex.StackTrace)
@@ -1214,7 +1262,12 @@ Public Class pdmcarshop
                 Native.Function.Call(Hash.CLEAR_VEHICLE_CUSTOM_PRIMARY_COLOUR, vehPreview)
                 Native.Function.Call(Hash.CLEAR_VEHICLE_CUSTOM_SECONDARY_COLOUR, vehPreview)
             End If
-            vehPreview.SecondaryColor = selectedItem.Price
+            If selectedItem.Car = 1 Then
+                vehPreview.SecondaryColor = selectedItem.Price
+                vehPreview.PearlescentColor = selectedItem.Price + 1
+            Else
+                vehPreview.SecondaryColor = selectedItem.Price
+            End If
             colorMenu4.GoBack()
         Catch ex As Exception
             logger.Log(ex.Message & ex.StackTrace)
@@ -1272,300 +1325,27 @@ Public Class pdmcarshop
         End Try
     End Sub
 
-    Public Sub MotorItemSelectHandler(sender As UIMenu, selectedItem As UIMenuItem, index As Integer)
+    Private Sub SpoilerItemSelectHandler(sender As UIMenu, selectedItem As UIMenuItem, index As Integer)
         Try
-            If selectedItem.Text = "Proceed to Checkout" Then
-                'spawn nothing
-            Else
-                selectedVehicle = selectedItem.Car
-                If vehPreview = Nothing Then
-                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
-                Else
-                    vehPreview.Delete()
-                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
-                End If
-                vehPreview.Rotation = New GTA.Math.Vector3(0, 0, curRadius)
-                vehPreview.IsDriveable = False
-                vehPreview.DirtLevel = 0F
-                vehiclePrice = selectedItem.Price
-                categoryName = "Motorcycle"
-            End If
+            vehPreview.SetMod(VehicleMod.Spoilers, selectedItem.Price, True)
         Catch ex As Exception
             logger.Log(ex.Message & ex.StackTrace)
         End Try
     End Sub
 
-    Public Sub ArmouredItemSelectHandler(sender As UIMenu, selectedItem As UIMenuItem, index As Integer)
+    Public Sub CategoryItemSelectHandler(sender As UIMenu, selectedItem As UIMenuItem, index As Integer)
         Try
-            If selectedItem.Text = "Proceed to Checkout" Then
-                'spawn nothing
+            selectedVehicle = selectedItem.Car
+            If vehPreview = Nothing Then
+                vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
             Else
-                selectedVehicle = selectedItem.Car
-                If vehPreview = Nothing Then
-                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
-                Else
-                    vehPreview.Delete()
-                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
-                End If
-                vehPreview.Rotation = New GTA.Math.Vector3(0, 0, curRadius)
-                vehPreview.IsDriveable = False
-                vehPreview.DirtLevel = 0F
-                vehiclePrice = selectedItem.Price
-                categoryName = "Armoured"
+                vehPreview.Delete()
+                vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
             End If
-        Catch ex As Exception
-            logger.Log(ex.Message & ex.StackTrace)
-        End Try
-    End Sub
-
-    Public Sub CompactItemSelectHandler(sender As UIMenu, selectedItem As UIMenuItem, index As Integer)
-        Try
-            If selectedItem.Text = "Proceed to Checkout" Then
-                'spawn nothing
-            Else
-                selectedVehicle = selectedItem.Car
-                If vehPreview = Nothing Then
-                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
-                Else
-                    vehPreview.Delete()
-                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
-                End If
-                vehPreview.Rotation = New GTA.Math.Vector3(0, 0, curRadius)
-                vehPreview.IsDriveable = False
-                vehPreview.DirtLevel = 0F
-                vehiclePrice = selectedItem.Price
-                categoryName = "Compact"
-            End If
-        Catch ex As Exception
-            logger.Log(ex.Message & ex.StackTrace)
-        End Try
-    End Sub
-
-    Public Sub CoupeItemSelectHandler(sender As UIMenu, selectedItem As UIMenuItem, index As Integer)
-        Try
-            If selectedItem.Text = "Proceed to Checkout" Then
-                'spawn nothing
-            Else
-                selectedVehicle = selectedItem.Car
-                If vehPreview = Nothing Then
-                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
-                Else
-                    vehPreview.Delete()
-                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
-                End If
-                vehPreview.Rotation = New GTA.Math.Vector3(0, 0, curRadius)
-                vehPreview.IsDriveable = False
-                vehPreview.DirtLevel = 0F
-                vehiclePrice = selectedItem.Price
-                categoryName = "Coupe"
-            End If
-        Catch ex As Exception
-            logger.Log(ex.Message & ex.StackTrace)
-        End Try
-    End Sub
-
-    Public Sub SedanItemSelectHandler(sender As UIMenu, selectedItem As UIMenuItem, index As Integer)
-        Try
-            If selectedItem.Text = "Proceed to Checkout" Then
-                'spawn nothing
-            Else
-                selectedVehicle = selectedItem.Car
-                If vehPreview = Nothing Then
-                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
-                Else
-                    vehPreview.Delete()
-                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
-                End If
-                vehPreview.Rotation = New GTA.Math.Vector3(0, 0, curRadius)
-                vehPreview.IsDriveable = False
-                vehPreview.DirtLevel = 0F
-                vehiclePrice = selectedItem.Price
-                categoryName = "Sedan"
-            End If
-        Catch ex As Exception
-            logger.Log(ex.Message & ex.StackTrace)
-        End Try
-    End Sub
-
-    Public Sub SportItemSelectHandler(sender As UIMenu, selectedItem As UIMenuItem, index As Integer)
-        Try
-            If selectedItem.Text = "Proceed to Checkout" Then
-                'spawn nothing
-            Else
-                selectedVehicle = selectedItem.Car
-                If vehPreview = Nothing Then
-                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
-                Else
-                    vehPreview.Delete()
-                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
-                End If
-                vehPreview.Rotation = New GTA.Math.Vector3(0, 0, curRadius)
-                vehPreview.IsDriveable = False
-                vehPreview.DirtLevel = 0F
-                vehiclePrice = selectedItem.Price
-                categoryName = "Sport"
-            End If
-        Catch ex As Exception
-            logger.Log(ex.Message & ex.StackTrace)
-        End Try
-    End Sub
-
-    Public Sub ClassicItemSelectHandler(sender As UIMenu, selectedItem As UIMenuItem, index As Integer)
-        Try
-            If selectedItem.Text = "Proceed to Checkout" Then
-                'spawn nothing
-            Else
-                selectedVehicle = selectedItem.Car
-                If vehPreview = Nothing Then
-                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
-                Else
-                    vehPreview.Delete()
-                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
-                End If
-                vehPreview.Rotation = New GTA.Math.Vector3(0, 0, curRadius)
-                vehPreview.IsDriveable = False
-                vehPreview.DirtLevel = 0F
-                vehiclePrice = selectedItem.Price
-                categoryName = "Classic"
-            End If
-        Catch ex As Exception
-            logger.Log(ex.Message & ex.StackTrace)
-        End Try
-    End Sub
-
-    Public Sub ExoticItemSelectHandler(sender As UIMenu, selectedItem As UIMenuItem, index As Integer)
-        Try
-            If selectedItem.Text = "Proceed to Checkout" Then
-                'spawn nothing
-            Else
-                selectedVehicle = selectedItem.Car
-                If vehPreview = Nothing Then
-                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
-                Else
-                    vehPreview.Delete()
-                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
-                End If
-                vehPreview.Rotation = New GTA.Math.Vector3(0, 0, curRadius)
-                vehPreview.IsDriveable = False
-                vehPreview.DirtLevel = 0F
-                vehiclePrice = selectedItem.Price
-                categoryName = "Exotic"
-            End If
-        Catch ex As Exception
-            logger.Log(ex.Message & ex.StackTrace)
-        End Try
-    End Sub
-
-    Public Sub MuscleItemSelectHandler(sender As UIMenu, selectedItem As UIMenuItem, index As Integer)
-        Try
-            If selectedItem.Text = "Proceed to Checkout" Then
-                'spawn nothing
-            Else
-                selectedVehicle = selectedItem.Car
-                If vehPreview = Nothing Then
-                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
-                Else
-                    vehPreview.Delete()
-                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
-                End If
-                vehPreview.Rotation = New GTA.Math.Vector3(0, 0, curRadius)
-                vehPreview.IsDriveable = False
-                vehPreview.DirtLevel = 0F
-                vehiclePrice = selectedItem.Price
-                categoryName = "Muscle"
-            End If
-        Catch ex As Exception
-            logger.Log(ex.Message & ex.StackTrace)
-        End Try
-    End Sub
-
-    Public Sub OffroadItemSelectHandler(sender As UIMenu, selectedItem As UIMenuItem, index As Integer)
-        Try
-            If selectedItem.Text = "Proceed to Checkout" Then
-                'spawn nothing
-            Else
-                selectedVehicle = selectedItem.Car
-                If vehPreview = Nothing Then
-                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
-                Else
-                    vehPreview.Delete()
-                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
-                End If
-                vehPreview.Rotation = New GTA.Math.Vector3(0, 0, curRadius)
-                vehPreview.IsDriveable = False
-                vehPreview.DirtLevel = 0F
-                vehiclePrice = selectedItem.Price
-                categoryName = "Offroad"
-            End If
-        Catch ex As Exception
-            logger.Log(ex.Message & ex.StackTrace)
-        End Try
-    End Sub
-
-    Public Sub SuvItemSelectHandler(sender As UIMenu, selectedItem As UIMenuItem, index As Integer)
-        Try
-            If selectedItem.Text = "Proceed to Checkout" Then
-                'spawn nothing
-            Else
-                selectedVehicle = selectedItem.Car
-                If vehPreview = Nothing Then
-                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
-                Else
-                    vehPreview.Delete()
-                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
-                End If
-                vehPreview.Rotation = New GTA.Math.Vector3(0, 0, curRadius)
-                vehPreview.IsDriveable = False
-                vehPreview.DirtLevel = 0F
-                vehiclePrice = selectedItem.Price
-                categoryName = "SUV"
-            End If
-        Catch ex As Exception
-            logger.Log(ex.Message & ex.StackTrace)
-        End Try
-    End Sub
-
-    Public Sub VanItemSelectHandler(sender As UIMenu, selectedItem As UIMenuItem, index As Integer)
-        Try
-            If selectedItem.Text = "Proceed to Checkout" Then
-                'spawn nothing
-            Else
-                selectedVehicle = selectedItem.Car
-                If vehPreview = Nothing Then
-                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
-                Else
-                    vehPreview.Delete()
-                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
-                End If
-                vehPreview.Rotation = New GTA.Math.Vector3(0, 0, curRadius)
-                vehPreview.IsDriveable = False
-                vehPreview.DirtLevel = 0F
-                vehiclePrice = selectedItem.Price
-                categoryName = "Van"
-            End If
-        Catch ex As Exception
-            logger.Log(ex.Message & ex.StackTrace)
-        End Try
-    End Sub
-
-    Public Sub UtilityItemSelectHandler(sender As UIMenu, selectedItem As UIMenuItem, index As Integer)
-        Try
-            If selectedItem.Text = "Proceed to Checkout" Then
-                'spawn nothing
-            Else
-                selectedVehicle = selectedItem.Car
-                If vehPreview = Nothing Then
-                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
-                Else
-                    vehPreview.Delete()
-                    vehPreview = World.CreateVehicle(selectedItem.Model, vehPreviewPosition, 6.122209F)
-                End If
-                vehPreview.Rotation = New GTA.Math.Vector3(0, 0, curRadius)
-                vehPreview.IsDriveable = False
-                vehPreview.DirtLevel = 0F
-                vehiclePrice = selectedItem.Price
-                categoryName = "Utility"
-            End If
+            vehPreview.Rotation = New Vector3(0, 0, curRadius)
+            vehPreview.IsDriveable = False
+            vehPreview.DirtLevel = 0F
+            vehiclePrice = selectedItem.Price
         Catch ex As Exception
             logger.Log(ex.Message & ex.StackTrace)
         End Try
@@ -1667,7 +1447,6 @@ Public Class pdmcarshop
         Try
             If selectedVehicle IsNot Nothing Then
                 selectedVehicle = Nothing
-                categoryName = Nothing
                 vehPreview.Delete()
             End If
             World.DestroyAllCameras()
@@ -1706,7 +1485,6 @@ Public Class pdmcarshop
     Public Sub ConfirmCloseHandler(sender As UIMenu)
         Try
             selectedVehicle = Nothing
-            categoryName = Nothing
             vehPreview.Delete()
             mainMenu.Visible = True
             armouredMenu.RefreshIndex()
@@ -1751,12 +1529,31 @@ Public Class pdmcarshop
                 PlayerCash = player.Money
 
                 If Not playerPed.IsInVehicle AndAlso Not playerPed.IsDead AndAlso simeonDist < 3.0F AndAlso player.WantedLevel = 0 Then
-                    'mainMenu.Visible = True
-                    'UI.Notify("Welcome to ~h~~r~Premium Deluxe Motorsport~h~~s~, Please press " & ReadIniValue(".\Scripts\PDMCarShop\config.ini", "OPTIONS", "UseKey") & " to browse Vehicles.", True)
-                    Native.Function.Call(Hash.DISPLAY_HELP_TEXT_THIS_FRAME, New InputArgument() {"SHR_MENU", 0})
+                    DisplayHelpTextThisFrame("Press ~INPUT_CONTEXT~ to enter Premium Deluxe Motorsport.")
                 ElseIf Not playerPed.IsInVehicle AndAlso Not playerPed.IsDead AndAlso simeonDist < 3.0F AndAlso player.WantedLevel >= 1 Then
                     Native.Function.Call(Hash.DISPLAY_HELP_TEXT_THIS_FRAME, New InputArgument() {"LOSE_WANTED", 0})
                 End If
+            End If
+
+            If ModEnable = True And Not vehPreview = Nothing Then
+                spoiler = getNumVehMod(vehPreview, 0)
+                fbumper = getNumVehMod(vehPreview, 1)
+                rbumper = getNumVehMod(vehPreview, 2)
+                sskirt = getNumVehMod(vehPreview, 3)
+                frame = getNumVehMod(vehPreview, 5)
+                grille = getNumVehMod(vehPreview, 6)
+                hood = getNumVehMod(vehPreview, 7)
+                fender = getNumVehMod(vehPreview, 8)
+                rfender = getNumVehMod(vehPreview, 9)
+                roof = getNumVehMod(vehPreview, 10)
+                exhaust = getNumVehMod(vehPreview, 4)
+                suspension = getNumVehMod(vehPreview, 15)
+                engine = getNumVehMod(vehPreview, 11)
+                brakes = getNumVehMod(vehPreview, 12)
+                transms = getNumVehMod(vehPreview, 13)
+                armor = getNumVehMod(vehPreview, 16)
+                fWheels = getNumVehMod(vehPreview, 23)
+                bWheels = getNumVehMod(vehPreview, 24)
             End If
 
             If ModEnable = True AndAlso testDrive = 3 AndAlso Not playerPed.IsInVehicle Then
@@ -1768,7 +1565,7 @@ Public Class pdmcarshop
                     UI.Notify("$" & Math.Round(penalty) & " has been charge for fixing the vehicle.")
                 End If
                 confirmMenu.Visible = True
-                World.RenderingCamera = World.CreateCamera(cameraPosition, New GTA.Math.Vector3(Game.Player.Character.Rotation.X, Game.Player.Character.Rotation.Y, 253.0F), 10.0F)
+                World.RenderingCamera = World.CreateCamera(cameraPosition, New Vector3(Game.Player.Character.Rotation.X, Game.Player.Character.Rotation.Y, 253.0F), 10.0F)
                 vehPreview.IsDriveable = False
                 Game.Player.Character.Position = playerPosition
                 vehPreview.Position = vehPreviewPosition
@@ -1787,13 +1584,14 @@ Public Class pdmcarshop
                     UI.Notify("$" & Math.Round(penalty) & " has been charge for fixing the vehicle.")
                 End If
                 confirmMenu.Visible = True
-                World.RenderingCamera = World.CreateCamera(cameraPosition, New GTA.Math.Vector3(Game.Player.Character.Rotation.X, Game.Player.Character.Rotation.Y, 253.0F), 10.0F)
+                World.RenderingCamera = World.CreateCamera(cameraPosition, New Vector3(Game.Player.Character.Rotation.X, Game.Player.Character.Rotation.Y, 253.0F), 10.0F)
                 vehPreview.IsDriveable = False
                 Game.Player.Character.Position = playerPosition
                 vehPreview.Position = vehPreviewPosition
                 Native.Function.Call(Hash.SET_VEHICLE_DOORS_SHUT, vehPreview, False)
                 Native.Function.Call(Hash.SET_VEHICLE_FIXED, vehPreview)
                 testDrive = 1
+                hideHud = True
                 Script.Wait(500)
                 Game.FadeScreenIn(500)
             ElseIf ModEnable = True AndAlso testDrive = 2 AndAlso playerPed.IsInVehicle Then
@@ -1806,15 +1604,15 @@ Public Class pdmcarshop
 
             If My.Settings.showRoom = False Then
                 'Outside
-                vehPreviewPosition = New GTA.Math.Vector3(-56.79958F, -1110.868F, 26.43581F)
-                cameraPosition = New GTA.Math.Vector3(-78.79827F, -1103.386F, 26.8126F)
-                playerPosition = New GTA.Math.Vector3(-43.79905F, -1116.247F, 25.43394F)
+                vehPreviewPosition = New Vector3(-56.79958F, -1110.868F, 26.43581F)
+                cameraPosition = New Vector3(-78.79827F, -1103.386F, 26.8126F)
+                playerPosition = New Vector3(-43.79905F, -1116.247F, 25.43394F)
             Else
                 'Inside
                 Native.Function.Call(Hash.CLEAR_AREA_OF_VEHICLES, -44.142F, -1098.996F, 26.422F, 50, True, False, False, False, False)
-                vehPreviewPosition = New GTA.Math.Vector3(-44.142F, -1098.996F, 26.422F)
-                cameraPosition = New GTA.Math.Vector3(-59.76299F, -1093.913F, 26.622F)
-                playerPosition = New GTA.Math.Vector3(-54.16683F, -1088.698F, 25.42233F)
+                vehPreviewPosition = New Vector3(-44.142F, -1098.996F, 26.422F)
+                cameraPosition = New Vector3(-59.76299F, -1093.913F, 26.622F)
+                playerPosition = New Vector3(-54.16683F, -1088.698F, 25.42233F)
             End If
 
             If _displayTimer.Enabled Then
@@ -1847,7 +1645,7 @@ Public Class pdmcarshop
                 Script.Wait(&H3E8)
                 mainMenu.Visible = True
                 ChangeCamera = 1
-                World.RenderingCamera = World.CreateCamera(cameraPosition, New GTA.Math.Vector3(Game.Player.Character.Rotation.X, Game.Player.Character.Rotation.Y, 253.0F), 10.0F)
+                World.RenderingCamera = World.CreateCamera(cameraPosition, New Vector3(Game.Player.Character.Rotation.X, Game.Player.Character.Rotation.Y, 253.0F), 10.0F)
                 Game.Player.Character.Position = playerPosition
                 hideHud = True
                 Script.Wait(500)
@@ -1857,7 +1655,7 @@ Public Class pdmcarshop
             If Game.IsControlJustPressed(0, GTA.Control.Jump) AndAlso ModEnable = True AndAlso simeonDist < 40.0F AndAlso Not playerPed.IsInVehicle AndAlso Not selectedVehicle = Nothing Then
                 If armouredMenu.Visible = True Or classicMenu.Visible = True Or compactMenu.Visible = True Or coupeMenu.Visible = True Or exoticMenu.Visible = True Or
                     motorMenu.Visible = True Or muscleMenu.Visible = True Or offroadMenu.Visible = True Or sedanMenu.Visible = True Or sportMenu.Visible = True Or
-                    suvMenu.Visible = True Or utilityMenu.Visible = True Or vanMenu.Visible = True Then
+                    suvMenu.Visible = True Or utilityMenu.Visible = True Or vanMenu.Visible = True Or lowriderMenu.Visible = True Then
                     confirmMenu.Visible = True
                     armouredMenu.Visible = False
                     classicMenu.Visible = False
@@ -1872,6 +1670,7 @@ Public Class pdmcarshop
                     suvMenu.Visible = False
                     utilityMenu.Visible = False
                     vanMenu.Visible = False
+                    lowriderMenu.Visible = False
                 End If
             End If
 
@@ -1879,14 +1678,17 @@ Public Class pdmcarshop
                 modMenu.Visible = Not mainMenu.Visible
                 World.DestroyAllCameras()
                 World.RenderingCamera = Nothing
+            ElseIf e.KeyCode = Keys.NumPad1 Then
+                Dim spoiler As Integer = getNumVehMod(vehPreview, 0)
+                UI.Notify(spoiler)
             End If
 
             If Game.IsControlPressed(0, GTA.Control.ParachuteBrakeLeft) AndAlso ModEnable = True AndAlso simeonDist < 40.0F AndAlso Not playerPed.IsInVehicle Then
                 curRadius = curRadius + 2
-                vehPreview.Rotation = New GTA.Math.Vector3(0, 0, curRadius)
+                vehPreview.Rotation = New Vector3(0, 0, curRadius)
             ElseIf Game.IsControlPressed(0, GTA.Control.ParachuteBrakeRight) AndAlso ModEnable = True AndAlso simeonDist < 40.0F AndAlso Not playerPed.IsInVehicle Then
                 curRadius = curRadius - 2
-                vehPreview.Rotation = New GTA.Math.Vector3(0, 0, curRadius)
+                vehPreview.Rotation = New Vector3(0, 0, curRadius)
             ElseIf Game.IsControlJustPressed(0, GTA.Control.SelectWeaponUnarmed) AndAlso ModEnable = True AndAlso simeonDist < 40.0F AndAlso Not playerPed.IsInVehicle Then
                 vehPreview.OpenDoor(VehicleDoor.BackLeftDoor, False, False)
                 vehPreview.OpenDoor(VehicleDoor.BackRightDoor, False, False)
@@ -1910,7 +1712,7 @@ Public Class pdmcarshop
                 World.RenderingCamera = Nothing
                 ChangeCamera = (ChangeCamera + 1)
             ElseIf Game.IsControlJustPressed(0, GTA.Control.NextCamera) AndAlso ModEnable = True AndAlso simeonDist < 40.0F AndAlso ChangeCamera = 1 AndAlso Not playerPed.IsInVehicle Then
-                World.RenderingCamera = World.CreateCamera(cameraPosition, New GTA.Math.Vector3(Game.Player.Character.Rotation.X, Game.Player.Character.Rotation.Y, 253.0F), 10.0F)
+                World.RenderingCamera = World.CreateCamera(cameraPosition, New Vector3(Game.Player.Character.Rotation.X, Game.Player.Character.Rotation.Y, 253.0F), 10.0F)
                 ChangeCamera = (ChangeCamera - 1)
             End If
         Catch ex As Exception

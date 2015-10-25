@@ -8,10 +8,10 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("Premium Deluxe Motorsport Car Shop Mod")>
+<Assembly: AssemblyTitle("Premium Deluxe Motorsport Car Dealership Mod")>
 <Assembly: AssemblyDescription("")>
 <Assembly: AssemblyCompany("Zettabyte Technology")>
-<Assembly: AssemblyProduct("Premium Deluxe Motorsport Car Shop Mod")>
+<Assembly: AssemblyProduct("Premium Deluxe Motorsport Car Dealership Mod")>
 <Assembly: AssemblyCopyright("Copyright © 2015 Zettabyte Technology")>
 <Assembly: AssemblyTrademark("")> 
 
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("2.7.2.0")>
-<Assembly: AssemblyFileVersion("2.7.2.0")>
+<Assembly: AssemblyVersion("2.8.0.0")>
+<Assembly: AssemblyFileVersion("2.8.0.0")>
