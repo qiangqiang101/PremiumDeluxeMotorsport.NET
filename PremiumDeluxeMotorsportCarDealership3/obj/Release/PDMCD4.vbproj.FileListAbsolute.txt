@@ -11,3 +11,16 @@ D:\GTAV Mods\PremiumDeluxeMotorsportCarDealership3\PremiumDeluxeMotorsportCarDea
 D:\GTAV Mods\PremiumDeluxeMotorsportCarDealership3\PremiumDeluxeMotorsportCarDealership3\obj\Release\PDMCD4.dll
 D:\GTAV Mods\PremiumDeluxeMotorsportCarDealership3\PremiumDeluxeMotorsportCarDealership3\obj\Release\PDMCD4.xml
 D:\GTAV Mods\PremiumDeluxeMotorsportCarDealership3\PremiumDeluxeMotorsportCarDealership3\obj\Release\PDMCD4.pdb
+F:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\bin\Release\PDMCD4.dll.config
+F:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\bin\Release\PDMCD4.dll
+F:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\bin\Release\PDMCD4.pdb
+F:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\bin\Release\PDMCD4.xml
+F:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\bin\Release\INMNativeUI.dll
+F:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\bin\Release\ScriptHookVDotNet2.dll
+F:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\bin\Release\ScriptHookVDotNet2.xml
+F:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\obj\Release\PDMCD4.vbprojResolveAssemblyReference.cache
+F:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\obj\Release\PDMCD4.Resources.resources
+F:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\obj\Release\PDMCD4.vbproj.GenerateResource.Cache
+F:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\obj\Release\PDMCD4.dll
+F:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\obj\Release\PDMCD4.xml
+F:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\obj\Release\PDMCD4.pdb

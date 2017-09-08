@@ -182,16 +182,15 @@ Public Class PDMMenu
                 Dim item As New UIMenuItem(GetGXTEntry(Format(i)("make")) & " " & GetGXTEntry(Format(i)("gxt")))
                 With item
                     If .Text.Contains("NULL") Then .Text = GetGXTEntry(Format(i)("gxt"))
+                    If .Text.Contains("NULL") Then .Text = Format(i)("name")
                     .SetRightLabel("$" & Price.ToString("###,###"))
                     .SubString1 = Format(i)("model")
                     .SubInteger1 = Format(i)("price")
                     .SubString2 = GetGXTEntry(Format(i)("make")) & " " & GetGXTEntry(Format(i)("gxt"))
                     .SubString3 = Format(i)("make")
                 End With
-                If Not item.Text.Contains("NULL") Then
-                    VehicleMenu.AddItem(item)
-                Else
-                    item.Text = Format(i)("name")
+                Dim vmodel As Model = New Model(item.SubString1)
+                If vmodel.IsInCdImage AndAlso vmodel.IsValid Then
                     VehicleMenu.AddItem(item)
                 End If
             Next

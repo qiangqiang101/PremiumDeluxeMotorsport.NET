@@ -14,7 +14,7 @@ Public Class PDM
 
     Public Shared playerHash, SelectedVehicle As String, PlayerCash, VehiclePrice As Integer, VehPreview As Vehicle, PdmBlip As Blip
     Public Shared Price As Decimal = 0, Radius As Integer = 120, TestDrive As Integer = 1, VehicleName As String = Nothing
-    Public Shared HideHud As Boolean = False, DrawSpotLight As Boolean = False, VehicleSpin As Boolean = True, ShowVehicleName As Boolean = False
+    Public Shared HideHud As Boolean = False, DrawSpotLight As Boolean = False, ShowVehicleName As Boolean = False
     Public Shared PdmDoor, testDriveVector, VehPreviewPos As Vector3, GPC As Ped, GP As Player
     Public Shared CameraPos, CameraRot As Vector3
     Public Shared PlayerHeading, PdmDoorDist, TestDriveDist As Single
@@ -108,7 +108,7 @@ Public Class PDM
                         chair = props
                         chair.FreezePosition = True
                     Next
-                    pdmPed = World.CreatePed(PedHash.CarDesignFemale01, PdmDoor, 219.5891)
+                    pdmPed = World.CreatePed(PedHash.Hipster01AFY, PdmDoor, 219.5891)
                     pdmPed.IsPersistent = True
                     pdmPed.Task.StartScenario("PROP_HUMAN_SEAT_CHAIR_UPRIGHT", New Vector3(chair.Position.X, chair.Position.Y, chair.Position.Z + 0.46))
                     'AttachTo(pdmPed, chair, 0, New Vector3(0, 0, 1), Vector3.Zero)
@@ -117,7 +117,7 @@ Public Class PDM
                 pdmPed.AlwaysKeepTask = True
             End If
         Catch ex As Exception
-
+            logger.Log("Error Create Ped " & ex.Message & " " & ex.StackTrace)
         End Try
 
         Try
@@ -219,7 +219,11 @@ Public Class PDM
                 VehPreview.DirtLevel = 0
                 PDMMenu.MainMenu.Visible = True
             End If
+        Catch ex As Exception
+            logger.Log("Error keypress Context " & ex.Message & " " & ex.StackTrace)
+        End Try
 
+        Try
             If IsControlJustReleased(0, GTA.Control.ParachuteBrakeLeft) AndAlso GetInteriorID(VehPreview.Position) = pdmIntID AndAlso Not GPC.IsInVehicle AndAlso TaskScriptStatus = 0 Then
                 Native.Function.Call(Hash.SET_VEHICLE_DOORS_SHUT, VehPreview, False)
             ElseIf IsControlJustReleased(0, GTA.Control.ParachuteBrakeRight) AndAlso GetInteriorID(VehPreview.Position) = pdmIntID AndAlso Not GPC.IsInVehicle AndAlso TaskScriptStatus = 0 Then
@@ -229,10 +233,6 @@ Public Class PDM
                 VehPreview.OpenDoor(VehicleDoor.FrontRightDoor, False, False)
                 VehPreview.OpenDoor(VehicleDoor.Hood, False, False)
                 VehPreview.OpenDoor(VehicleDoor.Trunk, False, False)
-            ElseIf IsControlJustReleased(0, GTA.Control.ParachuteBrakeLeft) AndAlso GetInteriorID(VehPreview.Position) = pdmIntID AndAlso Not GPC.IsInVehicle AndAlso TaskScriptStatus = 0 Then
-                VehicleSpin = True
-            ElseIf IsControlJustReleased(0, GTA.Control.ParachuteBrakeRight) AndAlso GetInteriorID(VehPreview.Position) = pdmIntID AndAlso Not GPC.IsInVehicle AndAlso TaskScriptStatus = 0 Then
-                VehicleSpin = True
             ElseIf IsControlJustPressed(0, GTA.Control.VehicleRoof) AndAlso GetInteriorID(VehPreview.Position) = pdmIntID AndAlso TaskScriptStatus = 0 Then
                 If VehPreview.RoofState = VehicleRoofState.Closed Then
                     Native.Function.Call(Hash.LOWER_CONVERTIBLE_ROOF, VehPreview, False)
@@ -240,7 +240,11 @@ Public Class PDM
                     Native.Function.Call(Hash.RAISE_CONVERTIBLE_ROOF, VehPreview, False)
                 End If
             End If
+        Catch ex As Exception
+            logger.Log("Error keypress Door Control " & ex.Message & " " & ex.StackTrace)
+        End Try
 
+        Try
             If IsControlJustReleased(0, GTA.Control.VehicleHandbrake) AndAlso GetInteriorID(VehPreview.Position) = pdmIntID AndAlso Not GPC.IsInVehicle Then
                 If camera.MainCameraPosition = CameraPosition.Car Then
                     camera.MainCameraPosition = CameraPosition.Interior
@@ -249,7 +253,7 @@ Public Class PDM
                 End If
             End If
         Catch ex As Exception
-            logger.Log("Error keypress " & ex.Message & " " & ex.StackTrace)
+            logger.Log("Error keypress Change Cam " & ex.Message & " " & ex.StackTrace)
         End Try
 
         Try
@@ -278,7 +282,7 @@ Public Class PDM
                 End If
             End If
         Catch ex As Exception
-            logger.Log("Error Spin Car Name " & ex.Message & " " & ex.StackTrace)
+            logger.Log("Error Car Name " & ex.Message & " " & ex.StackTrace)
         End Try
     End Sub
 
