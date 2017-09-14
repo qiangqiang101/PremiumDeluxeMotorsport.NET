@@ -289,7 +289,7 @@ Public Class PDM
     Public Shared Sub PlayStatScaleform()
         If Not pdmStats.IsLoaded Then pdmStats = New Scaleform("mp_car_stats_02")
         Dim menuLogo As String = PDMMenu.optLastVehMake
-        Dim resLogo As String = Resources.GetCarMakeNames(VehPreview)
+        Dim resLogo As String = GetVehicleMakeName(VehPreview.Model.Hash)
         Dim finalLogo As String = Nothing
 
         If menuLogo = Nothing Then
