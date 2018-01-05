@@ -15,7 +15,7 @@ Public Class PDM
     Public Shared playerHash, SelectedVehicle As String, PlayerCash, VehiclePrice As Integer, VehPreview As Vehicle, PdmBlip As Blip
     Public Shared Price As Decimal = 0, Radius As Integer = 120, TestDrive As Integer = 1, VehicleName As String = Nothing
     Public Shared HideHud As Boolean = False, DrawSpotLight As Boolean = False, ShowVehicleName As Boolean = False
-    Public Shared PdmDoor, testDriveVector, VehPreviewPos As Vector3, GPC As Ped, GP As Player
+    Public Shared PdmDoor, testDriveVector, VehPreviewPos, PlayerLastPos As Vector3, GPC As Ped, GP As Player
     Public Shared CameraPos, CameraRot As Vector3
     Public Shared PlayerHeading, PdmDoorDist, TestDriveDist As Single
     Public Shared camera As WorkshopCamera
@@ -143,6 +143,7 @@ Public Class PDM
                 VehPreview.Heading = Radius
                 Native.Function.Call(Hash.SET_VEHICLE_DOORS_SHUT, VehPreview, False)
                 Native.Function.Call(Hash.SET_VEHICLE_FIXED, VehPreview)
+                GPC.Position = PlayerLastPos
                 TestDrive = 1
                 HideHud = True
                 Wait(500)
@@ -164,6 +165,7 @@ Public Class PDM
                 VehPreview.Heading = Radius
                 Native.Function.Call(Hash.SET_VEHICLE_DOORS_SHUT, VehPreview, False)
                 Native.Function.Call(Hash.SET_VEHICLE_FIXED, VehPreview)
+                GPC.Position = PlayerLastPos
                 TestDrive = 1
                 HideHud = True
                 Wait(500)
@@ -204,6 +206,7 @@ Public Class PDM
                 Wait(500)
                 FadeScreenIn(500)
                 SelectedVehicle = PDMMenu.optLastVehName
+                PlayerLastPos = GPC.Position
                 If VehPreview = Nothing Then
                     VehPreview = CreateVehicleFromHash(PDMMenu.optLastVehHash, VehPreviewPos, 6.122209)
                 Else

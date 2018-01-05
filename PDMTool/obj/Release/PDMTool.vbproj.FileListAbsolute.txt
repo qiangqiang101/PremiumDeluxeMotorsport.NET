@@ -11,3 +11,16 @@ D:\GTAV Mods\PremiumDeluxeMotorsportCarDealership3\PDMTool\obj\Release\PDMTool.v
 D:\GTAV Mods\PremiumDeluxeMotorsportCarDealership3\PDMTool\obj\Release\PDMTool.exe
 D:\GTAV Mods\PremiumDeluxeMotorsportCarDealership3\PDMTool\obj\Release\PDMTool.xml
 D:\GTAV Mods\PremiumDeluxeMotorsportCarDealership3\PDMTool\obj\Release\PDMTool.pdb
+F:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\bin\Release\PDMTool.exe.config
+F:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\bin\Release\PDMTool.exe
+F:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\bin\Release\PDMTool.pdb
+F:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\bin\Release\PDMTool.xml
+F:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\obj\Release\PDMTool.vbprojResolveAssemblyReference.cache
+F:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\obj\Release\PDMTool.frmDealer.resources
+F:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\obj\Release\PDMTool.frmDEdit.resources
+F:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\obj\Release\PDMTool.frmImport.resources
+F:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\obj\Release\PDMTool.Resources.resources
+F:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\obj\Release\PDMTool.vbproj.GenerateResource.Cache
+F:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\obj\Release\PDMTool.exe
+F:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\obj\Release\PDMTool.xml
+F:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\obj\Release\PDMTool.pdb
