@@ -44,7 +44,7 @@ Public Class PDMMenu
     Public Shared BtnRotLeft As New InstructionalButton(GTA.Control.ParachuteBrakeLeft, GetLangEntry("BTN_OPEN_DOOR"))
     Public Shared BtnRotRight As New InstructionalButton(GTA.Control.ParachuteBrakeRight, GetLangEntry("BTN_CLOSE_DOOR"))
     Public Shared BtnCamera As New InstructionalButton(GTA.Control.VehicleHandbrake, GetLangEntry("BTN_CHANGE_CAM"))
-    Public Shared BtnStat As New InstructionalButton(GTA.Control.MultiplayerInfo, GetLangEntry("BTN_SHOW_STAT"))
+    'Public Shared BtnStat As New InstructionalButton(GTA.Control.MultiplayerInfo, GetLangEntry("BTN_SHOW_STAT"))
 
     Public Shared Parameters As String() = {"[name]", "[price]", "[model]", "[gxt]", "[make]"}
 
@@ -108,10 +108,10 @@ Public Class PDMMenu
     Public Shared Sub CreateCategoryMenu()
         Try
             If optRemoveImg = 0 Then
-                MainMenu = New UIMenu("", GetLangEntry("CATEGORY"))
+                MainMenu = New UIMenu("", GetLangEntry("CATEGORY"), True)
                 MainMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCD4.shopui_title_pdm.png"))
             Else
-                MainMenu = New UIMenu("", GetLangEntry("CATEGORY"), New Point(0, -107))
+                MainMenu = New UIMenu("", GetLangEntry("CATEGORY"), New Point(0, -107)) With {.EnableStats = True}
                 MainMenu.SetBannerType(Rectangle)
             End If
             MainMenu.MouseEdgeEnabled = False
@@ -119,7 +119,7 @@ Public Class PDMMenu
             MainMenu.AddInstructionalButton(BtnRotLeft)
             MainMenu.AddInstructionalButton(BtnRotRight)
             MainMenu.AddInstructionalButton(BtnCamera)
-            MainMenu.AddInstructionalButton(BtnStat)
+            'MainMenu.AddInstructionalButton(BtnStat)
             For Each file As String In IO.Directory.GetFiles(Application.StartupPath & "\scripts\PremiumDeluxeMotorsport\Vehicles\", "*.ini")
                 If IO.File.Exists(file) Then
                     itemCat = New UIMenuItem(GetLangEntry(IO.Path.GetFileNameWithoutExtension(file)))
@@ -163,10 +163,10 @@ Public Class PDMMenu
             Dim Format As New Reader(File, Parameters)
 
             If optRemoveImg = 0 Then
-                VehicleMenu = New UIMenu("", Subtitle.ToUpper)
+                VehicleMenu = New UIMenu("", Subtitle.ToUpper, True)
                 VehicleMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCD4.shopui_title_pdm.png"))
             Else
-                VehicleMenu = New UIMenu("", Subtitle.ToUpper, New Point(0, -107))
+                VehicleMenu = New UIMenu("", Subtitle.ToUpper, New Point(0, -107)) With {.EnableStats = True}
                 VehicleMenu.SetBannerType(Rectangle)
             End If
 
@@ -175,7 +175,7 @@ Public Class PDMMenu
             VehicleMenu.AddInstructionalButton(BtnRotLeft)
             VehicleMenu.AddInstructionalButton(BtnRotRight)
             VehicleMenu.AddInstructionalButton(BtnCamera)
-            VehicleMenu.AddInstructionalButton(BtnStat)
+            'VehicleMenu.AddInstructionalButton(BtnStat)
 
             For i As Integer = 0 To Format.Count - 1
                 Price = Format(i)("price")
@@ -205,10 +205,10 @@ Public Class PDMMenu
 
     Public Shared Sub ReadCustomize()
         If optRemoveImg = 0 Then
-            CustomiseMenu = New UIMenu("", "~r~" & GetLangEntry("BTN_CUSTOMIZE").ToUpper)
+            CustomiseMenu = New UIMenu("", "~r~" & GetLangEntry("BTN_CUSTOMIZE").ToUpper, True)
             CustomiseMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCD4.shopui_title_pdm.png"))
         Else
-            CustomiseMenu = New UIMenu("", "~r~" & GetLangEntry("BTN_CUSTOMIZE").ToUpper, New Point(0, -107))
+            CustomiseMenu = New UIMenu("", "~r~" & GetLangEntry("BTN_CUSTOMIZE").ToUpper, New Point(0, -107)) With {.EnableStats = True}
             CustomiseMenu.SetBannerType(Rectangle)
         End If
         CustomiseMenu.MouseEdgeEnabled = False
@@ -227,10 +227,10 @@ Public Class PDMMenu
 
     Public Shared Sub ReadColorCategory()
         If optRemoveImg = 0 Then
-            ColorMenu = New UIMenu("", "~r~" & GetLangEntry("BTN_COLOR_NAME").ToUpper)
+            ColorMenu = New UIMenu("", "~r~" & GetLangEntry("BTN_COLOR_NAME").ToUpper, True)
             ColorMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCD4.shopui_title_pdm.png"))
         Else
-            ColorMenu = New UIMenu("", "~r~" & GetLangEntry("BTN_COLOR_NAME").ToUpper, New Point(0, -107))
+            ColorMenu = New UIMenu("", "~r~" & GetLangEntry("BTN_COLOR_NAME").ToUpper, New Point(0, -107)) With {.EnableStats = True}
             ColorMenu.SetBannerType(Rectangle)
         End If
         ColorMenu.MouseEdgeEnabled = False
@@ -248,10 +248,10 @@ Public Class PDMMenu
 
     Public Shared Sub ReadColorPrimary()
         If optRemoveImg = 0 Then
-            PriColorMenu = New UIMenu("", "~r~" & GetLangEntry("BTN_PRIMARY_COLOR").ToUpper)
+            PriColorMenu = New UIMenu("", "~r~" & GetLangEntry("BTN_PRIMARY_COLOR").ToUpper, True)
             PriColorMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCD4.shopui_title_pdm.png"))
         Else
-            PriColorMenu = New UIMenu("", "~r~" & GetLangEntry("BTN_PRIMARY_COLOR").ToUpper, New Point(0, -107))
+            PriColorMenu = New UIMenu("", "~r~" & GetLangEntry("BTN_PRIMARY_COLOR").ToUpper, New Point(0, -107)) With {.EnableStats = True}
             PriColorMenu.SetBannerType(Rectangle)
         End If
         PriColorMenu.MouseEdgeEnabled = False
@@ -271,10 +271,10 @@ Public Class PDMMenu
 
     Public Shared Sub ReadColorSecondary()
         If optRemoveImg = 0 Then
-            SecColorMenu = New UIMenu("", "~r~" & GetLangEntry("BTN_SECONDARY_COLOR").ToUpper)
+            SecColorMenu = New UIMenu("", "~r~" & GetLangEntry("BTN_SECONDARY_COLOR").ToUpper, True)
             SecColorMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCD4.shopui_title_pdm.png"))
         Else
-            SecColorMenu = New UIMenu("", "~r~" & GetLangEntry("BTN_SECONDARY_COLOR").ToUpper, New Point(0, -107))
+            SecColorMenu = New UIMenu("", "~r~" & GetLangEntry("BTN_SECONDARY_COLOR").ToUpper, New Point(0, -107)) With {.EnableStats = True}
             SecColorMenu.SetBannerType(Rectangle)
         End If
         SecColorMenu.MouseEdgeEnabled = False
@@ -293,10 +293,10 @@ Public Class PDMMenu
 
     Public Shared Sub ReadConfirm()
         If optRemoveImg = 0 Then
-            ConfirmMenu = New UIMenu("", "~r~" & GetLangEntry("PURCHASE_ORDER"))
+            ConfirmMenu = New UIMenu("", "~r~" & GetLangEntry("PURCHASE_ORDER"), True)
             ConfirmMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCD4.shopui_title_pdm.png"))
         Else
-            ConfirmMenu = New UIMenu("", "~r~" & GetLangEntry("PURCHASE_ORDER"), New Point(0, -107))
+            ConfirmMenu = New UIMenu("", "~r~" & GetLangEntry("PURCHASE_ORDER"), New Point(0, -107)) With {.EnableStats = True}
             ConfirmMenu.SetBannerType(Rectangle)
         End If
         ConfirmMenu.MouseEdgeEnabled = False
@@ -318,8 +318,8 @@ Public Class PDMMenu
             If SelectedVehicle IsNot Nothing Then
                 SelectedVehicle = Nothing
                 VehPreview.Delete()
-                zTimer.Enabled = False
-                pdmStats.Dispose()
+                'zTimer.Enabled = False
+                'pdmStats.Dispose()
             End If
             PDM.camera.Stop()
             DrawSpotLight = False
@@ -377,26 +377,26 @@ Public Class PDMMenu
                     If optFade = 1 Then
                         FadeScreenOut(200)
                         Wait(200)
-                        VehPreview = CreateVehicle(selectedItem.SubString1, VehPreviewPos, 6.122209)
+                        VehPreview = CreateVehicle(selectedItem.SubString1, VehPreviewPos, Radius)
                         Wait(200)
                         FadeScreenIn(200)
                     Else
-                        VehPreview = CreateVehicle(selectedItem.SubString1, VehPreviewPos, 6.122209)
+                        VehPreview = CreateVehicle(selectedItem.SubString1, VehPreviewPos, Radius)
                     End If
                 End If
             Else
                 VehPreview.Delete()
-                zTimer.Enabled = False
-                pdmStats.Dispose()
+                'zTimer.Enabled = False
+                'pdmStats.Dispose()
                 If Not selectedItem.Text.Contains("NULL") Then
                     If optFade = 1 Then
                         FadeScreenOut(200)
                         Wait(200)
-                        VehPreview = CreateVehicle(selectedItem.SubString1, VehPreviewPos, 6.122209)
+                        VehPreview = CreateVehicle(selectedItem.SubString1, VehPreviewPos, Radius)
                         Wait(200)
                         FadeScreenIn(200)
                     Else
-                        VehPreview = CreateVehicle(selectedItem.SubString1, VehPreviewPos, 6.122209)
+                        VehPreview = CreateVehicle(selectedItem.SubString1, VehPreviewPos, Radius)
                     End If
                 End If
             End If
@@ -436,26 +436,26 @@ Public Class PDMMenu
                     If optFade = 1 Then
                         FadeScreenOut(200)
                         Wait(200)
-                        VehPreview = CreateVehicle(sender.MenuItems(index).SubString1, VehPreviewPos, 6.122209)
+                        VehPreview = CreateVehicle(sender.MenuItems(index).SubString1, VehPreviewPos, Radius)
                         Wait(200)
                         FadeScreenIn(200)
                     Else
-                        VehPreview = CreateVehicle(sender.MenuItems(index).SubString1, VehPreviewPos, 6.122209)
+                        VehPreview = CreateVehicle(sender.MenuItems(index).SubString1, VehPreviewPos, Radius)
                     End If
                 End If
             Else
                 VehPreview.Delete()
-                zTimer.Enabled = False
-                pdmStats.Dispose()
+                'zTimer.Enabled = False
+                'pdmStats.Dispose()
                 If Not sender.MenuItems(index).Text.Contains("NULL") Then
                     If optFade = 1 Then
                         FadeScreenOut(200)
                         Wait(200)
-                        VehPreview = CreateVehicle(sender.MenuItems(index).SubString1, VehPreviewPos, 6.122209)
+                        VehPreview = CreateVehicle(sender.MenuItems(index).SubString1, VehPreviewPos, Radius)
                         Wait(200)
                         FadeScreenIn(200)
                     Else
-                        VehPreview = CreateVehicle(sender.MenuItems(index).SubString1, VehPreviewPos, 6.122209)
+                        VehPreview = CreateVehicle(sender.MenuItems(index).SubString1, VehPreviewPos, Radius)
                     End If
                 End If
             End If
@@ -493,8 +493,8 @@ Public Class PDMMenu
         Try
             If selectedItem.Text = GetLangEntry("BTN_CONFIRM") Then
                 If PlayerCash > VehiclePrice Then
-                    FadeScreenOut(500)
-                    Wait(&H3E8)
+                    FadeScreenOut(200)
+                    Wait(200)
                     GP.Money = (PlayerCash - VehiclePrice)
                     ConfirmMenu.Visible = False
                     PDM.camera.Stop()
@@ -507,8 +507,8 @@ Public Class PDMMenu
                     VehPreview.MarkAsNoLongerNeeded()
                     VehPreview = Nothing
                     HideHud = False
-                    Wait(500)
-                    FadeScreenIn(500)
+                    Wait(200)
+                    FadeScreenIn(200)
                     Native.Function.Call(Hash.PLAY_SOUND_FRONTEND, -1, "PROPERTY_PURCHASE", "HUD_AWARDS", False)
                     BigMessageThread.MessageInstance.ShowWeaponPurchasedMessage("~y~" & GetLangEntry("VEHICLE_PURCHASED"), "~w~" & SelectedVehicle, Nothing)
                     SelectedVehicle = Nothing
@@ -527,8 +527,8 @@ Public Class PDMMenu
                     End If
                 End If
             ElseIf selectedItem.Text = GetLangEntry("BTN_TEST_DRIVE") Then
-                FadeScreenOut(500)
-                Wait(&H3E8)
+                FadeScreenOut(200)
+                Wait(200)
                 Native.Function.Call(Hash.TASK_WARP_PED_INTO_VEHICLE, GPC, VehPreview, -1)
                 ConfirmMenu.Visible = False
                 PDM.camera.Stop()
@@ -540,8 +540,8 @@ Public Class PDMMenu
                 TestDrive = TestDrive + 1
                 HideHud = False
                 VehPreview.Position = New Vector3(-56.79958, -1110.868, 26.43581)
-                Wait(500)
-                FadeScreenIn(500)
+                Wait(200)
+                FadeScreenIn(200)
                 ShowVehicleName = False
             End If
 
@@ -571,6 +571,7 @@ Public Class PDMMenu
     Public Shared Sub OnTick(o As Object, e As EventArgs) Handles Me.Tick
         Try
             _menuPool.ProcessMenus()
+            _menuPool.UpdateStats(GetVehTopSpeed(VehPreview), GetVehAcceleration(VehPreview), GetVehBraking(VehPreview), GetVehTraction(VehPreview))
 
             If _menuPool.IsAnyMenuOpen Then
                 Game.DisableControlThisFrame(0, GTA.Control.MoveUpDown)
@@ -595,10 +596,10 @@ Public Class PDMMenu
     Public Shared Sub CreateModMenuFor(ByRef parentMenu As UIMenu, ByRef parentItem As UIMenuItem, ByRef menu As UIMenu, ByRef title As String)
         Try
             If optRemoveImg = 0 Then
-                menu = New UIMenu("", "~r~" & title.ToUpper)
+                menu = New UIMenu("", "~r~" & title.ToUpper, True)
                 menu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCD4.shopui_title_pdm.png"))
             Else
-                menu = New UIMenu("", "~r~" & title, New Point(0, -107))
+                menu = New UIMenu("", "~r~" & title, New Point(0, -107)) With {.EnableStats = True}
                 menu.SetBannerType(Rectangle)
             End If
             menu.MouseEdgeEnabled = False

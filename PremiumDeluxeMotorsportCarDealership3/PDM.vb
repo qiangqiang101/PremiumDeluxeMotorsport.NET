@@ -23,8 +23,8 @@ Public Class PDM
     Public Shared pdmIntID As Integer
     Public Shared lastVehMemory As Memory
     Public Shared TaskScriptStatus As Integer = -1
-    Public Shared pdmStats As Scaleform = New Scaleform("mp_car_stats_02")
-    Public Shared zTimer As Timer = New Timer(10000)
+    'Public Shared pdmStats As Scaleform = New Scaleform("mp_car_stats_02")
+    'Public Shared zTimer As Timer = New Timer(10000)
     Public Shared pdmPed As Ped
 
     Public Sub New()
@@ -128,8 +128,8 @@ Public Class PDM
             End If
 
             If TestDrive = 3 AndAlso Not GPC.IsInVehicle Then
-                FadeScreenOut(500)
-                Wait(&H3E8)
+                FadeScreenOut(200)
+                Wait(200)
                 Dim penalty As Double = VehiclePrice / 99
                 If VehPreview.HasBeenDamagedBy(GPC) Then
                     GP.Money = (PlayerCash - (VehiclePrice / 99))
@@ -146,13 +146,13 @@ Public Class PDM
                 GPC.Position = PlayerLastPos
                 TestDrive = 1
                 HideHud = True
-                Wait(500)
-                FadeScreenIn(500)
+                Wait(200)
+                FadeScreenIn(200)
                 ShowVehicleName = True
                 camera.RepositionFor(VehPreview)
             ElseIf TestDrive = 3 AndAlso TestDriveDist > 450.0 Then
-                FadeScreenOut(500)
-                Wait(&H3E8)
+                FadeScreenOut(200)
+                Wait(200)
                 Dim penalty As Double = VehiclePrice / 99
                 If VehPreview.HasBeenDamagedBy(GPC) Then
                     GP.Money = (PlayerCash - (VehiclePrice / 99))
@@ -168,8 +168,8 @@ Public Class PDM
                 GPC.Position = PlayerLastPos
                 TestDrive = 1
                 HideHud = True
-                Wait(500)
-                FadeScreenIn(500)
+                Wait(200)
+                FadeScreenIn(200)
                 ShowVehicleName = True
                 camera.RepositionFor(VehPreview)
             ElseIf TestDrive = 2 AndAlso GPC.IsInVehicle Then
@@ -203,8 +203,8 @@ Public Class PDM
                 TaskScriptStatus = 0
 
                 HideHud = True
-                Wait(500)
-                FadeScreenIn(500)
+                Wait(200)
+                FadeScreenIn(200)
                 SelectedVehicle = PDMMenu.optLastVehName
                 PlayerLastPos = GPC.Position
                 If VehPreview = Nothing Then
@@ -270,51 +270,51 @@ Public Class PDM
                         DrawText(GetClassDisplayName(VehPreview.ClassType), New Point(0, 550), 2.0, Color.DodgerBlue, GTAFont.Script, GTAFontAlign.Right, GTAFontStyleOptions.DropShadow)
                 End Select
 
-                If Game.IsControlJustPressed(0, GTA.Control.MultiplayerInfo) Then
-                    zTimer.Start()
-                End If
+                'If Game.IsControlJustPressed(0, GTA.Control.MultiplayerInfo) Then
+                '    zTimer.Start()
+                'End If
 
             End If
 
-            If zTimer.Enabled Then
-                PlayStatScaleform()
+            'If zTimer.Enabled Then
+            '    PlayStatScaleform()
 
-                If Game.GameTime > zTimer.Waiter Then
-                    zTimer.Enabled = False
-                    pdmStats.Dispose()
-                End If
-            End If
+            '    If Game.GameTime > zTimer.Waiter Then
+            '        zTimer.Enabled = False
+            '        pdmStats.Dispose()
+            '    End If
+            'End If
         Catch ex As Exception
             logger.Log("Error Car Name " & ex.Message & " " & ex.StackTrace)
         End Try
     End Sub
 
-    Public Shared Sub PlayStatScaleform()
-        If Not pdmStats.IsLoaded Then pdmStats = New Scaleform("mp_car_stats_02")
-        Dim menuLogo As String = PDMMenu.optLastVehMake
-        Dim resLogo As String = GetVehicleMakeName(VehPreview.Model.Hash)
-        Dim finalLogo As String = Nothing
+    'Public Shared Sub PlayStatScaleform()
+    '    If Not pdmStats.IsLoaded Then pdmStats = New Scaleform("mp_car_stats_02")
+    '    Dim menuLogo As String = PDMMenu.optLastVehMake
+    '    Dim resLogo As String = GetVehicleMakeName(VehPreview.Model.Hash)
+    '    Dim finalLogo As String = Nothing
 
-        If menuLogo = Nothing Then
-            finalLogo = resLogo
-        Else
-            finalLogo = menuLogo
-        End If
+    '    If menuLogo = Nothing Then
+    '        finalLogo = resLogo
+    '    Else
+    '        finalLogo = menuLogo
+    '    End If
 
-        Dim acceleration As Integer = Native.Function.Call(Of Integer)(Hash.GET_VEHICLE_ACCELERATION, VehPreview)
-        Dim braking As Integer = Native.Function.Call(Of Integer)(Hash.GET_VEHICLE_MAX_BRAKING, VehPreview)
-        Dim traction As Integer = Native.Function.Call(Of Integer)(Hash.GET_VEHICLE_MAX_TRACTION, VehPreview)
-        Dim topspeed As Integer = Native.Function.Call(Of Integer)(Hash._0x53AF99BAA671CA47, VehPreview)
+    '    Dim acceleration As Integer = Native.Function.Call(Of Integer)(Hash.GET_VEHICLE_ACCELERATION, VehPreview)
+    '    Dim braking As Integer = Native.Function.Call(Of Integer)(Hash.GET_VEHICLE_MAX_BRAKING, VehPreview)
+    '    Dim traction As Integer = Native.Function.Call(Of Integer)(Hash.GET_VEHICLE_MAX_TRACTION, VehPreview)
+    '    Dim topspeed As Integer = Native.Function.Call(Of Integer)(Hash._0x53AF99BAA671CA47, VehPreview)
 
-        pdmStats.CallFunction("SET_VEHICLE_INFOR_AND_STATS", VehPreview.FriendlyName, Game.GetGXTEntry(finalLogo), "MPCarHUD", finalLogo, Game.GetGXTEntry("CMOD_STAT_0"), Game.GetGXTEntry("CMOD_STAT_1"), Game.GetGXTEntry("CMOD_STAT_2"), Game.GetGXTEntry("CMOD_STAT_3"), topspeed Mod 100, acceleration Mod 100, braking Mod 100, traction Mod 100) 'topspeed, acceleration, braking, traction
-        pdmStats.Render3D(VehPreview.Position + New Vector3(0.0, 0.0, VehPreview.Model.GetDimensions().Z + 1.5), camera.Rotation, New Vector3(8, 4.5, 1))
-        'UI.ShowSubtitle(String.Format("ACC: {0} | BRK: {1} | TRK: {2} | TSP: {3}", acceleration, braking, traction, topspeed))
-    End Sub
+    '    pdmStats.CallFunction("SET_VEHICLE_INFOR_AND_STATS", VehPreview.FriendlyName, Game.GetGXTEntry(finalLogo), "MPCarHUD", finalLogo, Game.GetGXTEntry("CMOD_STAT_0"), Game.GetGXTEntry("CMOD_STAT_1"), Game.GetGXTEntry("CMOD_STAT_2"), Game.GetGXTEntry("CMOD_STAT_3"), topspeed Mod 100, acceleration Mod 100, braking Mod 100, traction Mod 100) 'topspeed, acceleration, braking, traction
+    '    pdmStats.Render3D(VehPreview.Position + New Vector3(0.0, 0.0, VehPreview.Model.GetDimensions().Z + 1.5), camera.Rotation, New Vector3(8, 4.5, 1))
+    '    'UI.ShowSubtitle(String.Format("ACC: {0} | BRK: {1} | TRK: {2} | TSP: {3}", acceleration, braking, traction, topspeed))
+    'End Sub
 
     Public Sub OnAborted() Handles MyBase.Aborted
         Try
             PdmBlip.Remove()
-            Game.FadeScreenIn(500)
+            Game.FadeScreenIn(200)
             If Not pdmPed = Nothing Then pdmPed.Delete()
         Catch ex As Exception
             logger.Log(ex.Message & ex.StackTrace)

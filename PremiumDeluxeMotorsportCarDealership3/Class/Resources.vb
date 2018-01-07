@@ -654,4 +654,28 @@ Public Class Resources
     Public Shared Sub AttachTo(entity1 As Entity, entity2 As Entity, boneindex As Integer, position As Vector3, rotation As Vector3)
         Native.Function.Call(Hash.ATTACH_ENTITY_TO_ENTITY, entity1.Handle, entity2.Handle, boneindex, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, False, False, True, False, 2, True)
     End Sub
+
+    Public Shared Function GetVehAcceleration(veh As Vehicle) As Single
+        Dim result As Single = (Native.Function.Call(Of Single)(Hash.GET_VEHICLE_ACCELERATION, veh) * 100) * 4.4
+        If result >= 200 Then result = 200
+        Return result
+    End Function
+
+    Public Shared Function GetVehTopSpeed(veh As Vehicle) As Single
+        Dim result As Single = (((Native.Function.Call(Of Single)(Hash._0x53AF99BAA671CA47, veh) * 3600) / 1609.344) * 1.9)
+        If result >= 200 Then result = 200
+        Return result
+    End Function
+
+    Public Shared Function GetVehBraking(veh As Vehicle) As Single
+        Dim result As Single = (Native.Function.Call(Of Single)(Hash.GET_VEHICLE_MAX_BRAKING, veh) * 70)
+        If result >= 200 Then result = 200
+        Return result
+    End Function
+
+    Public Shared Function GetVehTraction(veh As Vehicle) As Single
+        Dim result As Single = Native.Function.Call(Of Single)(Hash.GET_VEHICLE_MAX_TRACTION, veh) * 6.5
+        If result >= 200 Then result = 200
+        Return result
+    End Function
 End Class
