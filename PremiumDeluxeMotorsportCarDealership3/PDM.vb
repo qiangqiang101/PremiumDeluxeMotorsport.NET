@@ -15,23 +15,32 @@ Public Class PDM
     Public Shared playerHash, SelectedVehicle As String, PlayerCash, VehiclePrice As Integer, VehPreview As Vehicle, PdmBlip As Blip
     Public Shared Price As Decimal = 0, Radius As Integer = 120, TestDrive As Integer = 1, VehicleName As String = Nothing
     Public Shared HideHud As Boolean = False, DrawSpotLight As Boolean = False, ShowVehicleName As Boolean = False
-    Public Shared PdmDoor, testDriveVector, VehPreviewPos, PlayerLastPos As Vector3, GPC As Ped, GP As Player
+    Public Shared PdmDoor, VehPreviewPos, PlayerLastPos As Vector3, GPC As Ped, GP As Player
     Public Shared CameraPos, CameraRot As Vector3
-    Public Shared PlayerHeading, PdmDoorDist, TestDriveDist As Single
+    Public Shared PlayerHeading, PdmDoorDist As Single
     Public Shared camera As WorkshopCamera
     Public Shared cutCamera As Camera
-    Public Shared pdmIntID As Integer
     Public Shared lastVehMemory As Memory
     Public Shared TaskScriptStatus As Integer = -1
     'Public Shared pdmStats As Scaleform = New Scaleform("mp_car_stats_02")
     'Public Shared zTimer As Timer = New Timer(10000)
     Public Shared pdmPed As Ped
+    Public Shared poly As Interior = New Interior(), testDeivePoly As Interior = New Interior()
 
     Public Sub New()
         Try
             PDMMenu.LoadSettings()
 
-            pdmIntID = GetInteriorID(New Vector3(-44.45501, -1096.976, 26.42235))
+            poly.Add(New Vector3(-71.54493, -1060.757, 27.5556))
+            poly.Add(New Vector3(-94.17564, -1126.55, 25.79746))
+            poly.Add(New Vector3(-17.57518, -1125.392, 27.11017))
+            poly.Add(New Vector3(-3.737129, -1081.494, 26.67219))
+
+            testDeivePoly.Add(New Vector3(-123.3222, -1155.505, 25.70785))
+            testDeivePoly.Add(New Vector3(76.87627, -1143.797, 29.22843))
+            testDeivePoly.Add(New Vector3(129.4713, -989.3712, 29.30896))
+            testDeivePoly.Add(New Vector3(-55.58704, -921.9064, 29.28478))
+
             playerHash = Game.Player.Character.Model.GetHashCode().ToString
             GP = Game.Player
             GPC = Game.Player.Character
@@ -61,7 +70,6 @@ Public Class PDM
 
     Public Shared Sub CreateEntrance()
         PdmDoor = New Vector3(-55.99228, -1098.51, 25.423)
-        testDriveVector = New Vector3(66.55125, -1356.585, 29.08711)
         PdmBlip = World.CreateBlip(PdmDoor)
         PdmBlip.Sprite = BlipSprite.PersonalVehicleCar
         PdmBlip.Color = BlipColor.Red
@@ -81,9 +89,7 @@ Public Class PDM
         End Try
 
         Try
-            pdmIntID = GetInteriorID(New Vector3(-44.45501, -1096.976, 26.42235))
             PdmDoorDist = World.GetDistance(GPC.Position, PdmDoor)
-            TestDriveDist = World.GetDistance(GPC.Position, testDriveVector)
             playerHash = Game.Player.Character.Model.GetHashCode().ToString
             GP = Game.Player
             GPC = Game.Player.Character
@@ -100,7 +106,7 @@ Public Class PDM
         End Try
 
         Try
-            If PdmDoorDist < 10.0 Then
+            If poly.IsInInterior(Game.Player.Character.Position) Then
                 If pdmPed = Nothing Then
                     Dim chairs As Prop() = World.GetNearbyProps(PdmDoor, 3.0, "v_corp_offchair")
                     Dim chair As Prop = Nothing
@@ -150,7 +156,7 @@ Public Class PDM
                 FadeScreenIn(200)
                 ShowVehicleName = True
                 camera.RepositionFor(VehPreview)
-            ElseIf TestDrive = 3 AndAlso TestDriveDist > 450.0 Then
+            ElseIf TestDrive = 3 AndAlso Not testDeivePoly.IsInInterior(GPC.Position) Then
                 FadeScreenOut(200)
                 Wait(200)
                 Dim penalty As Double = VehiclePrice / 99
@@ -227,16 +233,16 @@ Public Class PDM
         End Try
 
         Try
-            If IsControlJustReleased(0, GTA.Control.ParachuteBrakeLeft) AndAlso GetInteriorID(VehPreview.Position) = pdmIntID AndAlso Not GPC.IsInVehicle AndAlso TaskScriptStatus = 0 Then
+            If IsControlJustReleased(0, GTA.Control.ParachuteBrakeLeft) AndAlso poly.IsInInterior(VehPreview.Position) AndAlso Not GPC.IsInVehicle AndAlso TaskScriptStatus = 0 Then
                 Native.Function.Call(Hash.SET_VEHICLE_DOORS_SHUT, VehPreview, False)
-            ElseIf IsControlJustReleased(0, GTA.Control.ParachuteBrakeRight) AndAlso GetInteriorID(VehPreview.Position) = pdmIntID AndAlso Not GPC.IsInVehicle AndAlso TaskScriptStatus = 0 Then
+            ElseIf IsControlJustReleased(0, GTA.Control.ParachuteBrakeRight) AndAlso poly.IsInInterior(VehPreview.Position) AndAlso Not GPC.IsInVehicle AndAlso TaskScriptStatus = 0 Then
                 VehPreview.OpenDoor(VehicleDoor.BackLeftDoor, False, False)
                 VehPreview.OpenDoor(VehicleDoor.BackRightDoor, False, False)
                 VehPreview.OpenDoor(VehicleDoor.FrontLeftDoor, False, False)
                 VehPreview.OpenDoor(VehicleDoor.FrontRightDoor, False, False)
                 VehPreview.OpenDoor(VehicleDoor.Hood, False, False)
                 VehPreview.OpenDoor(VehicleDoor.Trunk, False, False)
-            ElseIf IsControlJustPressed(0, GTA.Control.VehicleRoof) AndAlso GetInteriorID(VehPreview.Position) = pdmIntID AndAlso TaskScriptStatus = 0 Then
+            ElseIf IsControlJustPressed(0, GTA.Control.VehicleRoof) AndAlso poly.IsInInterior(VehPreview.Position) AndAlso TaskScriptStatus = 0 Then
                 If VehPreview.RoofState = VehicleRoofState.Closed Then
                     Native.Function.Call(Hash.LOWER_CONVERTIBLE_ROOF, VehPreview, False)
                 Else
@@ -248,7 +254,7 @@ Public Class PDM
         End Try
 
         Try
-            If IsControlJustReleased(0, GTA.Control.VehicleHandbrake) AndAlso GetInteriorID(VehPreview.Position) = pdmIntID AndAlso Not GPC.IsInVehicle Then
+            If IsControlJustReleased(0, GTA.Control.VehicleHandbrake) AndAlso poly.IsInInterior(VehPreview.Position) AndAlso Not GPC.IsInVehicle Then
                 If camera.MainCameraPosition = CameraPosition.Car Then
                     camera.MainCameraPosition = CameraPosition.Interior
                 Else
@@ -260,7 +266,7 @@ Public Class PDM
         End Try
 
         Try
-            If ShowVehicleName = True AndAlso Not VehicleName = Nothing AndAlso GetInteriorID(VehPreview.Position) = pdmIntID AndAlso TaskScriptStatus = 0 Then
+            If ShowVehicleName = True AndAlso Not VehicleName = Nothing AndAlso poly.IsInInterior(VehPreview.Position) AndAlso TaskScriptStatus = 0 Then
                 Select Case Game.Language.ToString
                     Case "Chinese", "Korean", "Japanese"
                         DrawText(VehicleName, New Point(0, 500), 2.0, Color.White, GTAFont.UIDefault, GTAFontAlign.Right, GTAFontStyleOptions.DropShadow)
@@ -269,47 +275,11 @@ Public Class PDM
                         DrawText(VehicleName, New Point(0, 500), 2.0, Color.White, GTAFont.Title, GTAFontAlign.Right, GTAFontStyleOptions.DropShadow)
                         DrawText(GetClassDisplayName(VehPreview.ClassType), New Point(0, 550), 2.0, Color.DodgerBlue, GTAFont.Script, GTAFontAlign.Right, GTAFontStyleOptions.DropShadow)
                 End Select
-
-                'If Game.IsControlJustPressed(0, GTA.Control.MultiplayerInfo) Then
-                '    zTimer.Start()
-                'End If
-
             End If
-
-            'If zTimer.Enabled Then
-            '    PlayStatScaleform()
-
-            '    If Game.GameTime > zTimer.Waiter Then
-            '        zTimer.Enabled = False
-            '        pdmStats.Dispose()
-            '    End If
-            'End If
         Catch ex As Exception
             logger.Log("Error Car Name " & ex.Message & " " & ex.StackTrace)
         End Try
     End Sub
-
-    'Public Shared Sub PlayStatScaleform()
-    '    If Not pdmStats.IsLoaded Then pdmStats = New Scaleform("mp_car_stats_02")
-    '    Dim menuLogo As String = PDMMenu.optLastVehMake
-    '    Dim resLogo As String = GetVehicleMakeName(VehPreview.Model.Hash)
-    '    Dim finalLogo As String = Nothing
-
-    '    If menuLogo = Nothing Then
-    '        finalLogo = resLogo
-    '    Else
-    '        finalLogo = menuLogo
-    '    End If
-
-    '    Dim acceleration As Integer = Native.Function.Call(Of Integer)(Hash.GET_VEHICLE_ACCELERATION, VehPreview)
-    '    Dim braking As Integer = Native.Function.Call(Of Integer)(Hash.GET_VEHICLE_MAX_BRAKING, VehPreview)
-    '    Dim traction As Integer = Native.Function.Call(Of Integer)(Hash.GET_VEHICLE_MAX_TRACTION, VehPreview)
-    '    Dim topspeed As Integer = Native.Function.Call(Of Integer)(Hash._0x53AF99BAA671CA47, VehPreview)
-
-    '    pdmStats.CallFunction("SET_VEHICLE_INFOR_AND_STATS", VehPreview.FriendlyName, Game.GetGXTEntry(finalLogo), "MPCarHUD", finalLogo, Game.GetGXTEntry("CMOD_STAT_0"), Game.GetGXTEntry("CMOD_STAT_1"), Game.GetGXTEntry("CMOD_STAT_2"), Game.GetGXTEntry("CMOD_STAT_3"), topspeed Mod 100, acceleration Mod 100, braking Mod 100, traction Mod 100) 'topspeed, acceleration, braking, traction
-    '    pdmStats.Render3D(VehPreview.Position + New Vector3(0.0, 0.0, VehPreview.Model.GetDimensions().Z + 1.5), camera.Rotation, New Vector3(8, 4.5, 1))
-    '    'UI.ShowSubtitle(String.Format("ACC: {0} | BRK: {1} | TRK: {2} | TSP: {3}", acceleration, braking, traction, topspeed))
-    'End Sub
 
     Public Sub OnAborted() Handles MyBase.Aborted
         Try

@@ -74,6 +74,7 @@
     <Compile Include="Class\CameraClamp.vb" />
     <Compile Include="Class\CFGRead.vb" />
     <Compile Include="Class\CutsceneManager.vb" />
+    <Compile Include="Class\Interior.vb" />
     <Compile Include="Class\Logger.vb" />
     <Compile Include="Class\Memory.vb" />
     <Compile Include="Class\Reader.vb" />
@@ -124,7 +125,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
-    <PostBuildEvent>COPY "$(TargetDir)$(TargetFileName)" "F:\Program Files\Steam\SteamApps\common\Grand Theft Auto V\scripts"</PostBuildEvent>
+    <PostBuildEvent>COPY "$(TargetDir)$(TargetFileName)" "E:\Program Files (x86)\Steam\SteamApps\common\Grand Theft Auto V\scripts"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

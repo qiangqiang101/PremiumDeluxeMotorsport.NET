@@ -25,3 +25,15 @@ F:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeM
 F:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\obj\Release\PDMCD4.xml
 F:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\obj\Release\PDMCD4.pdb
 F:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\bin\Release\INMNativeUI.pdb
+E:\Users\Barry\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\bin\Release\PDMCD4.dll.config
+E:\Users\Barry\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\bin\Release\PDMCD4.dll
+E:\Users\Barry\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\bin\Release\PDMCD4.pdb
+E:\Users\Barry\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\bin\Release\PDMCD4.xml
+E:\Users\Barry\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\bin\Release\INMNativeUI.pdb
+E:\Users\Barry\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\bin\Release\ScriptHookVDotNet2.xml
+E:\Users\Barry\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\obj\Release\PDMCD4.vbprojResolveAssemblyReference.cache
+E:\Users\Barry\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\obj\Release\PDMCD4.Resources.resources
+E:\Users\Barry\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\obj\Release\PDMCD4.vbproj.GenerateResource.Cache
+E:\Users\Barry\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\obj\Release\PDMCD4.dll
+E:\Users\Barry\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\obj\Release\PDMCD4.xml
+E:\Users\Barry\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\obj\Release\PDMCD4.pdb

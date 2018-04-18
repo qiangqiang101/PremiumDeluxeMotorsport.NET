@@ -18,6 +18,7 @@ Public Class PDMMenu
     Public Shared itemCat As UIMenuItem
     Public Shared PriColorMenu, ClassicColorMenu, MetallicColorMenu, MetalColorMenu, MatteColorMenu, ChromeColorMenu, PeaColorMenu, CPriColorMenu As UIMenu
     Public Shared ColorMenu, SecColorMenu, ClassicColorMenu2, MetallicColorMenu2, MetalColorMenu2, MatteColorMenu2, ChromeColorMenu2, CSecColorMenu, PlateMenu As UIMenu
+    Public Shared PriceList As Dictionary(Of Model, Integer) = New Dictionary(Of Model, Integer)
 
     Public Shared ItemCustomize As New UIMenuItem(GetLangEntry("BTN_CUSTOMIZE"))
     Public Shared ItenConfirm As New UIMenuItem(GetLangEntry("BTN_CONFIRM"))
@@ -60,6 +61,7 @@ Public Class PDMMenu
     Public Shared optLastVehHash As Integer = 0
     Public Shared optLastVehName As String = Nothing
     Public Shared optLastVehMake As String = Nothing
+    Public Shared optLogging As Integer = 1
 
     Public Shared Sub LoadSettings()
         optRemoveColor = config.GetValue(Of Integer)("SETTINGS", "REMOVECOLOR", 1)
@@ -68,6 +70,7 @@ Public Class PDMMenu
         optFade = config.GetValue(Of Integer)("SETTINGS", "FADEEFFECT", 1)
         optLastVehHash = config.GetValue(Of Integer)("SETTINGS", "LASTVEHHASH", -2022483795)
         optLastVehName = config.GetValue(Of String)("SETTINGS", "LASTVEHNAME", "Pfister Comet Retro Custom")
+        optLogging = config.GetValue(Of Integer)("SETTINGS", "LOGGING", 1)
     End Sub
 
     Public Sub New()
@@ -192,6 +195,7 @@ Public Class PDMMenu
                 Dim vmodel As Model = New Model(item.SubString1)
                 If vmodel.IsInCdImage AndAlso vmodel.IsValid Then
                     VehicleMenu.AddItem(item)
+                    PriceList.Add(vmodel, Price)
                 End If
             Next
             VehicleMenu.RefreshIndex()
@@ -205,10 +209,10 @@ Public Class PDMMenu
 
     Public Shared Sub ReadCustomize()
         If optRemoveImg = 0 Then
-            CustomiseMenu = New UIMenu("", "~r~" & GetLangEntry("BTN_CUSTOMIZE").ToUpper, True)
+            CustomiseMenu = New UIMenu("", GetLangEntry("BTN_CUSTOMIZE").ToUpper, True)
             CustomiseMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCD4.shopui_title_pdm.png"))
         Else
-            CustomiseMenu = New UIMenu("", "~r~" & GetLangEntry("BTN_CUSTOMIZE").ToUpper, New Point(0, -107)) With {.EnableStats = True}
+            CustomiseMenu = New UIMenu("", GetLangEntry("BTN_CUSTOMIZE").ToUpper, New Point(0, -107)) With {.EnableStats = True}
             CustomiseMenu.SetBannerType(Rectangle)
         End If
         CustomiseMenu.MouseEdgeEnabled = False
@@ -227,10 +231,10 @@ Public Class PDMMenu
 
     Public Shared Sub ReadColorCategory()
         If optRemoveImg = 0 Then
-            ColorMenu = New UIMenu("", "~r~" & GetLangEntry("BTN_COLOR_NAME").ToUpper, True)
+            ColorMenu = New UIMenu("", GetLangEntry("BTN_COLOR_NAME").ToUpper, True)
             ColorMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCD4.shopui_title_pdm.png"))
         Else
-            ColorMenu = New UIMenu("", "~r~" & GetLangEntry("BTN_COLOR_NAME").ToUpper, New Point(0, -107)) With {.EnableStats = True}
+            ColorMenu = New UIMenu("", GetLangEntry("BTN_COLOR_NAME").ToUpper, New Point(0, -107)) With {.EnableStats = True}
             ColorMenu.SetBannerType(Rectangle)
         End If
         ColorMenu.MouseEdgeEnabled = False
@@ -248,10 +252,10 @@ Public Class PDMMenu
 
     Public Shared Sub ReadColorPrimary()
         If optRemoveImg = 0 Then
-            PriColorMenu = New UIMenu("", "~r~" & GetLangEntry("BTN_PRIMARY_COLOR").ToUpper, True)
+            PriColorMenu = New UIMenu("", GetLangEntry("BTN_PRIMARY_COLOR").ToUpper, True)
             PriColorMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCD4.shopui_title_pdm.png"))
         Else
-            PriColorMenu = New UIMenu("", "~r~" & GetLangEntry("BTN_PRIMARY_COLOR").ToUpper, New Point(0, -107)) With {.EnableStats = True}
+            PriColorMenu = New UIMenu("", GetLangEntry("BTN_PRIMARY_COLOR").ToUpper, New Point(0, -107)) With {.EnableStats = True}
             PriColorMenu.SetBannerType(Rectangle)
         End If
         PriColorMenu.MouseEdgeEnabled = False
@@ -271,10 +275,10 @@ Public Class PDMMenu
 
     Public Shared Sub ReadColorSecondary()
         If optRemoveImg = 0 Then
-            SecColorMenu = New UIMenu("", "~r~" & GetLangEntry("BTN_SECONDARY_COLOR").ToUpper, True)
+            SecColorMenu = New UIMenu("", GetLangEntry("BTN_SECONDARY_COLOR").ToUpper, True)
             SecColorMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCD4.shopui_title_pdm.png"))
         Else
-            SecColorMenu = New UIMenu("", "~r~" & GetLangEntry("BTN_SECONDARY_COLOR").ToUpper, New Point(0, -107)) With {.EnableStats = True}
+            SecColorMenu = New UIMenu("", GetLangEntry("BTN_SECONDARY_COLOR").ToUpper, New Point(0, -107)) With {.EnableStats = True}
             SecColorMenu.SetBannerType(Rectangle)
         End If
         SecColorMenu.MouseEdgeEnabled = False
@@ -293,10 +297,10 @@ Public Class PDMMenu
 
     Public Shared Sub ReadConfirm()
         If optRemoveImg = 0 Then
-            ConfirmMenu = New UIMenu("", "~r~" & GetLangEntry("PURCHASE_ORDER"), True)
+            ConfirmMenu = New UIMenu("", GetLangEntry("PURCHASE_ORDER"), True)
             ConfirmMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCD4.shopui_title_pdm.png"))
         Else
-            ConfirmMenu = New UIMenu("", "~r~" & GetLangEntry("PURCHASE_ORDER"), New Point(0, -107)) With {.EnableStats = True}
+            ConfirmMenu = New UIMenu("", GetLangEntry("PURCHASE_ORDER"), New Point(0, -107)) With {.EnableStats = True}
             ConfirmMenu.SetBannerType(Rectangle)
         End If
         ConfirmMenu.MouseEdgeEnabled = False
