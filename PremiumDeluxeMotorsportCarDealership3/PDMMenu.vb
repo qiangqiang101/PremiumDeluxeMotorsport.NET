@@ -18,7 +18,6 @@ Public Class PDMMenu
     Public Shared itemCat As UIMenuItem
     Public Shared PriColorMenu, ClassicColorMenu, MetallicColorMenu, MetalColorMenu, MatteColorMenu, ChromeColorMenu, PeaColorMenu, CPriColorMenu As UIMenu
     Public Shared ColorMenu, SecColorMenu, ClassicColorMenu2, MetallicColorMenu2, MetalColorMenu2, MatteColorMenu2, ChromeColorMenu2, CSecColorMenu, PlateMenu As UIMenu
-    Public Shared PriceList As Dictionary(Of Model, Integer) = New Dictionary(Of Model, Integer)
 
     Public Shared ItemCustomize As New UIMenuItem(GetLangEntry("BTN_CUSTOMIZE"))
     Public Shared ItenConfirm As New UIMenuItem(GetLangEntry("BTN_CONFIRM"))
@@ -195,7 +194,6 @@ Public Class PDMMenu
                 Dim vmodel As Model = New Model(item.SubString1)
                 If vmodel.IsInCdImage AndAlso vmodel.IsValid Then
                     VehicleMenu.AddItem(item)
-                    PriceList.Add(vmodel, Price)
                 End If
             Next
             VehicleMenu.RefreshIndex()
