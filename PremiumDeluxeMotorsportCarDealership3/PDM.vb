@@ -106,7 +106,7 @@ Public Class PDM
         End Try
 
         Try
-            If poly.IsInInterior(Game.Player.Character.Position) Then
+            If PdmDoorDist < 10.0 Then
                 If pdmPed = Nothing Then
                     Dim chairs As Prop() = World.GetNearbyProps(PdmDoor, 3.0, "v_corp_offchair")
                     Dim chair As Prop = Nothing
@@ -123,6 +123,10 @@ Public Class PDM
                 pdmPed.AlwaysKeepTask = True
             End If
         Catch ex As Exception
+            Try
+                pdmPed.Delete()
+            Catch exe As Exception
+            End Try
             logger.Log("Error Create Ped " & ex.Message & " " & ex.StackTrace)
         End Try
 

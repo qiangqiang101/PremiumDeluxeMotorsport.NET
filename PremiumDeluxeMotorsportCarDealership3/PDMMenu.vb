@@ -52,6 +52,7 @@ Public Class PDMMenu
     Public Shared Rectangle = New UIResRectangle()
 
     Public Shared config As ScriptSettings = ScriptSettings.Load("scripts\PremiumDeluxeMotorsport\config.ini")
+    Public Shared hiddenSave As ScriptSettings = ScriptSettings.Load("scripts\PremiumDeluxeMotorsport\database.ini")
     Public Shared optAddOnCars As Integer = 0
     Public Shared optRemoveColor As Integer = 1
     Public Shared optRemoveImg As Integer = 0
@@ -179,7 +180,8 @@ Public Class PDMMenu
             VehicleMenu.AddInstructionalButton(BtnCamera)
             'VehicleMenu.AddInstructionalButton(BtnStat)
 
-            For i As Integer = 0 To Format.Count - 1
+            For ii As Integer = 0 To Format.Count - 1
+                Dim i As Integer = (Format.Count - 1) - ii
                 Price = Format(i)("price")
                 Dim item As New UIMenuItem(GetGXTEntry(Format(i)("make")) & " " & GetGXTEntry(Format(i)("gxt")))
                 With item
@@ -190,6 +192,11 @@ Public Class PDMMenu
                     .SubInteger1 = Format(i)("price")
                     .SubString2 = GetGXTEntry(Format(i)("make")) & " " & GetGXTEntry(Format(i)("gxt"))
                     .SubString3 = Format(i)("make")
+                    Dim model As Model = New Model(.SubString1)
+                    If hiddenSave.GetValue(Of Integer)("VEHICLES", model.Hash, 0) = 0 Then
+                        hiddenSave.SetValue(Of Integer)("VEHICLES", VehPreview.Model.Hash, 0)
+                        .SetLeftBadge(UIMenuItem.BadgeStyle.Star)
+                    End If
                 End With
                 Dim vmodel As Model = New Model(item.SubString1)
                 If vmodel.IsInCdImage AndAlso vmodel.IsValid Then
@@ -486,6 +493,11 @@ Public Class PDMMenu
             config.SetValue(Of Integer)("SETTINGS", "LastVehHash", VehPreview.Model.Hash)
             config.SetValue(Of String)("SETTINGS", "LastVehName", VehicleName)
             config.Save()
+
+            If hiddenSave.GetValue(Of Integer)("VEHICLES", VehPreview.Model.Hash, 0) = 0 Then
+                hiddenSave.SetValue(Of Integer)("VEHICLES", VehPreview.Model.Hash, 1)
+                hiddenSave.Save()
+            End If
         Catch ex As Exception
             logger.Log(ex.Message & " " & ex.StackTrace)
         End Try
