@@ -41,9 +41,10 @@ Public Class PDMMenu
     Public Shared ItemPeaColor As New UIMenuItem(GetLangEntry("BTN_PEARLESCENT_COLOR"), GetLangEntry("BTN_COLOR_DESC"))
     Public Shared ItemPlate As New UIMenuItem(GetLangEntry("BTN_PLATE_STYLE"), GetLangEntry("BTN_COLOR_DESC"))
 
-    Public Shared BtnRotLeft As New InstructionalButton(GTA.Control.ParachuteBrakeLeft, GetLangEntry("BTN_OPEN_DOOR"))
-    Public Shared BtnRotRight As New InstructionalButton(GTA.Control.ParachuteBrakeRight, GetLangEntry("BTN_CLOSE_DOOR"))
-    Public Shared BtnCamera As New InstructionalButton(GTA.Control.VehicleHandbrake, GetLangEntry("BTN_CHANGE_CAM"))
+    Public Shared BtnRotLeft As New InstructionalButton(GTA.Control.ParachuteBrakeLeft, GetLangEntry("BTN_DOOR"))
+    Public Shared BtnRotRight As New InstructionalButton(GTA.Control.VehicleRoof, GetLangEntry("BTN_ROOF"))
+    Public Shared BtnCamera As New InstructionalButton(GTA.Control.VehiclePushbikeSprint, GetLangEntry("BTN_CHANGE_CAM"))
+    Public Shared BtnZoom As New InstructionalButton(GTA.Control.VehicleSubAscend, GetLangEntry("BTN_ZOOM"))
     'Public Shared BtnStat As New InstructionalButton(GTA.Control.MultiplayerInfo, GetLangEntry("BTN_SHOW_STAT"))
 
     Public Shared Parameters As String() = {"[name]", "[price]", "[model]", "[gxt]", "[make]"}
@@ -122,6 +123,7 @@ Public Class PDMMenu
             MainMenu.AddInstructionalButton(BtnRotLeft)
             MainMenu.AddInstructionalButton(BtnRotRight)
             MainMenu.AddInstructionalButton(BtnCamera)
+            MainMenu.AddInstructionalButton(BtnZoom)
             'MainMenu.AddInstructionalButton(BtnStat)
             For Each file As String In IO.Directory.GetFiles(Application.StartupPath & "\scripts\PremiumDeluxeMotorsport\Vehicles\", "*.ini")
                 If IO.File.Exists(file) Then
@@ -178,6 +180,7 @@ Public Class PDMMenu
             VehicleMenu.AddInstructionalButton(BtnRotLeft)
             VehicleMenu.AddInstructionalButton(BtnRotRight)
             VehicleMenu.AddInstructionalButton(BtnCamera)
+            VehicleMenu.AddInstructionalButton(BtnZoom)
             'VehicleMenu.AddInstructionalButton(BtnStat)
 
             For ii As Integer = 0 To Format.Count - 1
@@ -225,6 +228,7 @@ Public Class PDMMenu
         CustomiseMenu.AddInstructionalButton(BtnRotLeft)
         CustomiseMenu.AddInstructionalButton(BtnRotRight)
         CustomiseMenu.AddInstructionalButton(BtnCamera)
+        CustomiseMenu.AddInstructionalButton(BtnZoom)
         CustomiseMenu.AddItem(ItemColor)
         CustomiseMenu.AddItem(New UIMenuItem(GetLangEntry("BTN_UPGRADE_NAME"), GetLangEntry("BTN_UPGRADE_DESC")))
         CustomiseMenu.AddItem(New UIMenuItem(GetLangEntry("BTN_PLATE_NUMBER_NAME"), GetLangEntry("BTN_PLATE_NUMBER_DESC")))
@@ -247,6 +251,7 @@ Public Class PDMMenu
         ColorMenu.AddInstructionalButton(BtnRotLeft)
         ColorMenu.AddInstructionalButton(BtnRotRight)
         ColorMenu.AddInstructionalButton(BtnCamera)
+        ColorMenu.AddInstructionalButton(BtnZoom)
         ColorMenu.AddItem(ItemPriColor)
         ColorMenu.AddItem(ItemSecColor)
         ColorMenu.AddItem(ItemCPriColor)
@@ -268,6 +273,7 @@ Public Class PDMMenu
         PriColorMenu.AddInstructionalButton(BtnRotLeft)
         PriColorMenu.AddInstructionalButton(BtnRotRight)
         PriColorMenu.AddInstructionalButton(BtnCamera)
+        PriColorMenu.AddInstructionalButton(BtnZoom)
         PriColorMenu.AddItem(ItemClassicColor)
         PriColorMenu.AddItem(ItemMetallicColor)
         PriColorMenu.AddItem(ItemMatteColor)
@@ -291,6 +297,7 @@ Public Class PDMMenu
         SecColorMenu.AddInstructionalButton(BtnRotLeft)
         SecColorMenu.AddInstructionalButton(BtnRotRight)
         SecColorMenu.AddInstructionalButton(BtnCamera)
+        SecColorMenu.AddInstructionalButton(BtnZoom)
         SecColorMenu.AddItem(ItemClassicColor2)
         SecColorMenu.AddItem(ItemMetallicColor2)
         SecColorMenu.AddItem(ItemMatteColor2)
@@ -313,6 +320,7 @@ Public Class PDMMenu
         ConfirmMenu.AddInstructionalButton(BtnRotLeft)
         ConfirmMenu.AddInstructionalButton(BtnRotRight)
         ConfirmMenu.AddInstructionalButton(BtnCamera)
+        ConfirmMenu.AddInstructionalButton(BtnZoom)
         ConfirmMenu.AddItem(ItemCustomize)
         ConfirmMenu.AddItem(New UIMenuItem(GetLangEntry("BTN_TEST_DRIVE")))
         ConfirmMenu.AddItem(New UIMenuItem(GetLangEntry("BTN_CONFIRM")))

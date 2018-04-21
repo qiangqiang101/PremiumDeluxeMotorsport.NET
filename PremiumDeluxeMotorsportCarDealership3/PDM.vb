@@ -238,19 +238,42 @@ Public Class PDM
 
         Try
             If IsControlJustReleased(0, GTA.Control.ParachuteBrakeLeft) AndAlso poly.IsInInterior(VehPreview.Position) AndAlso Not GPC.IsInVehicle AndAlso TaskScriptStatus = 0 Then
-                Native.Function.Call(Hash.SET_VEHICLE_DOORS_SHUT, VehPreview, False)
-            ElseIf IsControlJustReleased(0, GTA.Control.ParachuteBrakeRight) AndAlso poly.IsInInterior(VehPreview.Position) AndAlso Not GPC.IsInVehicle AndAlso TaskScriptStatus = 0 Then
-                VehPreview.OpenDoor(VehicleDoor.BackLeftDoor, False, False)
-                VehPreview.OpenDoor(VehicleDoor.BackRightDoor, False, False)
-                VehPreview.OpenDoor(VehicleDoor.FrontLeftDoor, False, False)
-                VehPreview.OpenDoor(VehicleDoor.FrontRightDoor, False, False)
-                VehPreview.OpenDoor(VehicleDoor.Hood, False, False)
-                VehPreview.OpenDoor(VehicleDoor.Trunk, False, False)
+                If VehPreview.IsDoorOpen(VehicleDoor.FrontLeftDoor) Then
+                    Native.Function.Call(Hash.SET_VEHICLE_DOORS_SHUT, VehPreview, False)
+                Else
+                    VehPreview.OpenDoor(VehicleDoor.BackLeftDoor, False, False)
+                    VehPreview.OpenDoor(VehicleDoor.BackRightDoor, False, False)
+                    VehPreview.OpenDoor(VehicleDoor.FrontLeftDoor, False, False)
+                    VehPreview.OpenDoor(VehicleDoor.FrontRightDoor, False, False)
+                    VehPreview.OpenDoor(VehicleDoor.Hood, False, False)
+                    VehPreview.OpenDoor(VehicleDoor.Trunk, False, False)
+                End If
+                'ElseIf IsControlJustReleased(0, GTA.Control.ParachuteBrakeRight) AndAlso poly.IsInInterior(VehPreview.Position) AndAlso Not GPC.IsInVehicle AndAlso TaskScriptStatus = 0 Then
+                'VehPreview.OpenDoor(VehicleDoor.BackLeftDoor, False, False)
+                'VehPreview.OpenDoor(VehicleDoor.BackRightDoor, False, False)
+                'VehPreview.OpenDoor(VehicleDoor.FrontLeftDoor, False, False)
+                'VehPreview.OpenDoor(VehicleDoor.FrontRightDoor, False, False)
+                'VehPreview.OpenDoor(VehicleDoor.Hood, False, False)
+                'VehPreview.OpenDoor(VehicleDoor.Trunk, False, False)
             ElseIf IsControlJustPressed(0, GTA.Control.VehicleRoof) AndAlso poly.IsInInterior(VehPreview.Position) AndAlso TaskScriptStatus = 0 Then
                 If VehPreview.RoofState = VehicleRoofState.Closed Then
                     Native.Function.Call(Hash.LOWER_CONVERTIBLE_ROOF, VehPreview, False)
                 Else
                     Native.Function.Call(Hash.RAISE_CONVERTIBLE_ROOF, VehPreview, False)
+                End If
+            ElseIf IsControlJustPressed(0, GTA.Control.VehicleSubAscend) AndAlso poly.IsInInterior(VehPreview.Position) AndAlso TaskScriptStatus = 0 Then
+                If camera.MainCameraPosition = CameraPosition.Car Then
+                    If camera.CameraZoom = 5.0 Then
+                        Do While camera.CameraZoom > 3.5
+                            Wait(1)
+                            camera.CameraZoom -= 0.1
+                        Loop
+                    Else
+                        Do While camera.CameraZoom < 5.0
+                            Wait(1)
+                            camera.CameraZoom += 0.1
+                        Loop
+                    End If
                 End If
             End If
         Catch ex As Exception
@@ -258,11 +281,13 @@ Public Class PDM
         End Try
 
         Try
-            If IsControlJustReleased(0, GTA.Control.VehicleHandbrake) AndAlso poly.IsInInterior(VehPreview.Position) AndAlso Not GPC.IsInVehicle Then
-                If camera.MainCameraPosition = CameraPosition.Car Then
-                    camera.MainCameraPosition = CameraPosition.Interior
-                Else
-                    camera.MainCameraPosition = CameraPosition.Car
+            If IsControlJustReleased(0, GTA.Control.VehiclePushbikeSprint) AndAlso poly.IsInInterior(VehPreview.Position) AndAlso Not GPC.IsInVehicle Then
+                If Not VehPreview.ClassType = VehicleClass.Motorcycles Then
+                    If camera.MainCameraPosition = CameraPosition.Car Then
+                        camera.MainCameraPosition = CameraPosition.Interior
+                    Else
+                        camera.MainCameraPosition = CameraPosition.Car
+                    End If
                 End If
             End If
         Catch ex As Exception

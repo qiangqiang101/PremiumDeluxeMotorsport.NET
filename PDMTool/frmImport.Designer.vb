@@ -203,7 +203,7 @@ Partial Class frmImport
         '
         'ofDialog
         '
-        Me.ofDialog.Filter = "META file|*.meta"
+        Me.ofDialog.Filter = "VEHICLES.META file|*.meta"
         '
         'frmImport
         '
