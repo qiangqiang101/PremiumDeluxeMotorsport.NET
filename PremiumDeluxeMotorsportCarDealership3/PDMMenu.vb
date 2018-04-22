@@ -618,10 +618,10 @@ Public Class PDMMenu
     Public Shared Sub CreateModMenuFor(ByRef parentMenu As UIMenu, ByRef parentItem As UIMenuItem, ByRef menu As UIMenu, ByRef title As String)
         Try
             If optRemoveImg = 0 Then
-                menu = New UIMenu("", "~r~" & title.ToUpper, True)
+                menu = New UIMenu("", title.ToUpper, True)
                 menu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCD4.shopui_title_pdm.png"))
             Else
-                menu = New UIMenu("", "~r~" & title, New Point(0, -107)) With {.EnableStats = True}
+                menu = New UIMenu("", title, New Point(0, -107)) With {.EnableStats = True}
                 menu.SetBannerType(Rectangle)
             End If
             menu.MouseEdgeEnabled = False
@@ -809,6 +809,12 @@ Public Class PDMMenu
                 VehPreview.SecondaryColor = selectedItem.SubInteger1
                 selectedItem.SetRightBadge(UIMenuItem.BadgeStyle.Car)
                 lastVehMemory.SecondaryColor = selectedItem.SubInteger1
+            ElseIf sender Is MetallicColorMenu2 Then
+                VehPreview.SecondaryColor = selectedItem.SubInteger1
+                VehPreview.PearlescentColor = selectedItem.SubInteger1
+                selectedItem.SetRightBadge(UIMenuItem.BadgeStyle.Car)
+                lastVehMemory.SecondaryColor = selectedItem.SubInteger1
+                lastVehMemory.PearlescentColor = selectedItem.SubInteger1
             ElseIf sender Is CPriColorMenu Then
                 VehPreview.CustomPrimaryColor = Color.FromArgb(selectedItem.SubInteger1, selectedItem.SubInteger2, selectedItem.SubInteger3)
                 selectedItem.SetRightBadge(UIMenuItem.BadgeStyle.Car)
@@ -850,6 +856,9 @@ Public Class PDMMenu
                 VehPreview.PearlescentColor = sender.MenuItems(index).SubInteger1
             ElseIf (sender Is ClassicColorMenu2) Or (sender Is ChromeColorMenu2) Or (sender Is MatteColorMenu2) Or (sender Is MetalColorMenu2) Then
                 VehPreview.SecondaryColor = sender.MenuItems(index).SubInteger1
+            ElseIf sender Is MetallicColorMenu2 Then
+                VehPreview.SecondaryColor = sender.MenuItems(index).SubInteger1
+                VehPreview.PearlescentColor = sender.MenuItems(index).SubInteger1
             ElseIf sender Is CPriColorMenu Then
                 VehPreview.CustomPrimaryColor = Color.FromArgb(sender.MenuItems(index).SubInteger1, sender.MenuItems(index).SubInteger2, sender.MenuItems(index).SubInteger3)
             ElseIf sender Is CSecColorMenu Then
