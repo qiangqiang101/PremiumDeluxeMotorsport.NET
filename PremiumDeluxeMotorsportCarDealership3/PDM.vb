@@ -12,7 +12,7 @@ Imports PDMCD4.Resources
 Public Class PDM
     Inherits Script
 
-    Public Shared playerHash, SelectedVehicle As String, PlayerCash, VehiclePrice As Integer, VehPreview As Vehicle, PdmBlip As Blip
+    Public Shared SelectedVehicle As String, PlayerCash, VehiclePrice As Integer, VehPreview As Vehicle, PdmBlip As Blip
     Public Shared Price As Decimal = 0, Radius As Integer = 120, TestDrive As Integer = 1, VehicleName As String = Nothing
     Public Shared HideHud As Boolean = False, DrawSpotLight As Boolean = False, ShowVehicleName As Boolean = False
     Public Shared PdmDoor, VehPreviewPos, PlayerLastPos As Vector3, GPC As Ped, GP As Player
@@ -22,8 +22,6 @@ Public Class PDM
     Public Shared cutCamera As Camera
     Public Shared lastVehMemory As Memory
     Public Shared TaskScriptStatus As Integer = -1
-    'Public Shared pdmStats As Scaleform = New Scaleform("mp_car_stats_02")
-    'Public Shared zTimer As Timer = New Timer(10000)
     Public Shared pdmPed As Ped
     Public Shared poly As Interior = New Interior(), testDeivePoly As Interior = New Interior()
 
@@ -41,16 +39,13 @@ Public Class PDM
             testDeivePoly.Add(New Vector3(129.4713, -989.3712, 29.30896))
             testDeivePoly.Add(New Vector3(-55.58704, -921.9064, 29.28478))
 
-            playerHash = Game.Player.Character.Model.GetHashCode().ToString
             GP = Game.Player
             GPC = Game.Player.Character
-            Select Case playerHash
-                Case "1885233650"
-                    PlayerCash = 1999999999
-                Case "-1667301416"
-                    PlayerCash = 1999999999
-                Case Else
+            Select Case GPC.Name
+                Case "Michael", "Franklin", "Trevor"
                     PlayerCash = Game.Player.Money
+                Case Else
+                    PlayerCash = 1999999999
             End Select
 
             camera = New WorkshopCamera
@@ -90,16 +85,13 @@ Public Class PDM
 
         Try
             PdmDoorDist = World.GetDistance(GPC.Position, PdmDoor)
-            playerHash = Game.Player.Character.Model.GetHashCode().ToString
             GP = Game.Player
             GPC = Game.Player.Character
-            Select Case playerHash
-                Case "1885233650"
-                    PlayerCash = 1999999999
-                Case "-1667301416"
-                    PlayerCash = 1999999999
-                Case Else
+            Select Case GPC.Name
+                Case "Michael", "Franklin", "Trevor"
                     PlayerCash = Game.Player.Money
+                Case Else
+                    PlayerCash = 1999999999
             End Select
         Catch ex As Exception
             logger.Log("Error Get Info " & ex.Message & " " & ex.StackTrace)
@@ -117,7 +109,6 @@ Public Class PDM
                     pdmPed = World.CreatePed(PedHash.Hipster01AFY, PdmDoor, 219.5891)
                     pdmPed.IsPersistent = True
                     pdmPed.Task.StartScenario("PROP_HUMAN_SEAT_CHAIR_UPRIGHT", New Vector3(chair.Position.X, chair.Position.Y, chair.Position.Z + 0.46))
-                    'AttachTo(pdmPed, chair, 0, New Vector3(0, 0, 1), Vector3.Zero)
                 End If
                 pdmPed.Task.LookAt(GPC)
                 pdmPed.AlwaysKeepTask = True
@@ -191,7 +182,6 @@ Public Class PDM
 
         Try
             If HideHud Then
-                'Native.Function.Call(Hash.HIDE_HUD_AND_RADAR_THIS_FRAME)
                 Native.Function.Call(Hash.HIDE_HUD_AND_RADAR_THIS_FRAME)
                 Native.Function.Call(Hash.SHOW_HUD_COMPONENT_THIS_FRAME, 3)
                 Native.Function.Call(Hash.SHOW_HUD_COMPONENT_THIS_FRAME, 4)
@@ -248,13 +238,6 @@ Public Class PDM
                     VehPreview.OpenDoor(VehicleDoor.Hood, False, False)
                     VehPreview.OpenDoor(VehicleDoor.Trunk, False, False)
                 End If
-                'ElseIf IsControlJustReleased(0, GTA.Control.ParachuteBrakeRight) AndAlso poly.IsInInterior(VehPreview.Position) AndAlso Not GPC.IsInVehicle AndAlso TaskScriptStatus = 0 Then
-                'VehPreview.OpenDoor(VehicleDoor.BackLeftDoor, False, False)
-                'VehPreview.OpenDoor(VehicleDoor.BackRightDoor, False, False)
-                'VehPreview.OpenDoor(VehicleDoor.FrontLeftDoor, False, False)
-                'VehPreview.OpenDoor(VehicleDoor.FrontRightDoor, False, False)
-                'VehPreview.OpenDoor(VehicleDoor.Hood, False, False)
-                'VehPreview.OpenDoor(VehicleDoor.Trunk, False, False)
             ElseIf IsControlJustPressed(0, GTA.Control.VehicleRoof) AndAlso poly.IsInInterior(VehPreview.Position) AndAlso TaskScriptStatus = 0 Then
                 If VehPreview.RoofState = VehicleRoofState.Closed Then
                     Native.Function.Call(Hash.LOWER_CONVERTIBLE_ROOF, VehPreview, False)
@@ -296,13 +279,15 @@ Public Class PDM
 
         Try
             If ShowVehicleName = True AndAlso Not VehicleName = Nothing AndAlso poly.IsInInterior(VehPreview.Position) AndAlso TaskScriptStatus = 0 Then
+                Dim sr = Size.Round(UIMenu.GetScreenResolutionMaintainRatio)
+                Dim sz = UIMenu.GetSafezoneBounds
                 Select Case Game.Language.ToString
-                    Case "Chinese", "Korean", "Japanese"
-                        DrawText(VehicleName, New Point(0, 500), 2.0, Color.White, GTAFont.UIDefault, GTAFontAlign.Right, GTAFontStyleOptions.DropShadow)
-                        DrawText(GetClassDisplayName(VehPreview.ClassType), New Point(0, 550), 2.0, Color.DodgerBlue, GTAFont.Script, GTAFontAlign.Right, GTAFontStyleOptions.DropShadow)
+                    Case "Chinese", "Korean", "Japanese", "ChineseSimplified"
+                        Dim vn As New UIResText(VehicleName, New Point(sr.Width - sz.X - 100, sr.Height - sz.Y - 240), 2.0F, Color.White, GTA.Font.ChaletLondon, UIResText.Alignment.Right) With {.DropShadow = True} : vn.Draw()
+                        Dim vc As New UIResText(VehPreview.GetClassDisplayName, New Point(sr.Width - sz.X, sr.Height - sz.Y - 170), 2.0F, Color.DodgerBlue, GTA.Font.HouseScript, UIResText.Alignment.Right) With {.DropShadow = True} : vc.Draw()
                     Case Else
-                        DrawText(VehicleName, New Point(0, 500), 2.0, Color.White, GTAFont.Title, GTAFontAlign.Right, GTAFontStyleOptions.DropShadow)
-                        DrawText(GetClassDisplayName(VehPreview.ClassType), New Point(0, 550), 2.0, Color.DodgerBlue, GTAFont.Script, GTAFontAlign.Right, GTAFontStyleOptions.DropShadow)
+                        Dim vn As New UIResText(VehicleName, New Point(sr.Width - sz.X - 100, sr.Height - sz.Y - 240), 2.0F, Color.White, GTA.Font.ChaletComprimeCologne, UIResText.Alignment.Right) With {.DropShadow = True} : vn.Draw()
+                        Dim vc As New UIResText(VehPreview.GetClassDisplayName, New Point(sr.Width - sz.X, sr.Height - sz.Y - 170), 2.0F, Color.DodgerBlue, GTA.Font.HouseScript, UIResText.Alignment.Right) With {.DropShadow = True} : vc.Draw()
                 End Select
             End If
         Catch ex As Exception

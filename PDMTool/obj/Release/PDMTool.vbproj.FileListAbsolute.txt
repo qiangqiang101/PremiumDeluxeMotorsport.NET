@@ -37,3 +37,16 @@ E:\Users\Barry\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\obj\Release\
 E:\Users\Barry\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\obj\Release\PDMTool.exe
 E:\Users\Barry\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\obj\Release\PDMTool.xml
 E:\Users\Barry\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\obj\Release\PDMTool.pdb
+E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\bin\Release\PDMTool.exe.config
+E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\bin\Release\PDMTool.exe
+E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\bin\Release\PDMTool.pdb
+E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\bin\Release\PDMTool.xml
+E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\obj\Release\PDMTool.vbprojResolveAssemblyReference.cache
+E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\obj\Release\PDMTool.frmDealer.resources
+E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\obj\Release\PDMTool.frmDEdit.resources
+E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\obj\Release\PDMTool.frmImport.resources
+E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\obj\Release\PDMTool.Resources.resources
+E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\obj\Release\PDMTool.vbproj.GenerateResource.Cache
+E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\obj\Release\PDMTool.exe
+E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\obj\Release\PDMTool.xml
+E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\obj\Release\PDMTool.pdb

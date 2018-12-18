@@ -538,11 +538,9 @@ Public Class PDMMenu
                     ShowVehicleName = False
                     TaskScriptStatus = -1
                 Else
-                    If PlayerName = "Michael" Then
-                        DisplayNotificationThisFrame(GetLangEntry("MAZE_BANK"), GetLangEntry("INSUFFICIENT_FUNDS_TITLE"), GetLangEntry("INSUFFICIENT_FUNCS_BODY"), "CHAR_BANK_MAZE", True, IconType.RightJumpingArrow)
-                    ElseIf PlayerName = "Franklin" Then
+                    If Game.Player.Character.Name = "Franklin" Then
                         DisplayNotificationThisFrame(GetLangEntry("FLEECA_BANK"), GetLangEntry("INSUFFICIENT_FUNDS_TITLE"), GetLangEntry("INSUFFICIENT_FUNCS_BODY"), "CHAR_BANK_FLEECA", True, IconType.RightJumpingArrow)
-                    ElseIf PlayerName = "Trevor" Then
+                    ElseIf Game.Player.Character.Name = "Trevor" Then
                         DisplayNotificationThisFrame(GetLangEntry("BOL_BANK"), GetLangEntry("INSUFFICIENT_FUNDS_TITLE"), GetLangEntry("INSUFFICIENT_FUNCS_BODY"), "CHAR_BANK_BOL", True, IconType.RightJumpingArrow)
                     Else
                         DisplayNotificationThisFrame(GetLangEntry("MAZE_BANK"), GetLangEntry("INSUFFICIENT_FUNDS_TITLE"), GetLangEntry("INSUFFICIENT_FUNCS_BODY"), "CHAR_BANK_MAZE", True, IconType.RightJumpingArrow)
