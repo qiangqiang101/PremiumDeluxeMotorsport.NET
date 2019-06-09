@@ -24,6 +24,7 @@ Public Class PDM
     Public Shared TaskScriptStatus As Integer = -1
     Public Shared pdmPed As Ped
     Public Shared poly As Interior = New Interior(), testDeivePoly As Interior = New Interior()
+    Public localizedBlipName As Boolean = False
 
     Public Sub New()
         Try
@@ -58,21 +59,26 @@ Public Class PDM
             LoadMissingProps()
 
             CreateEntrance()
+            Game.Globals(GetGlobalValue).SetInt(1)
         Catch ex As Exception
             logger.Log(ex.Message & " " & ex.StackTrace)
         End Try
     End Sub
 
-    Public Shared Sub CreateEntrance()
+    Public Sub CreateEntrance()
         PdmDoor = New Vector3(-55.99228, -1098.51, 25.423)
         PdmBlip = World.CreateBlip(PdmDoor)
         PdmBlip.Sprite = BlipSprite.PersonalVehicleCar
         PdmBlip.Color = BlipColor.Red
         PdmBlip.IsShortRange = True
-        PdmBlip.Name = GetLangEntry("PREMIUM_DELUXE_MOTORSPORT")
     End Sub
 
-    Public Shared Sub OnTick(o As Object, e As EventArgs) Handles Me.Tick
+    Public Sub OnTick(o As Object, e As EventArgs) Handles Me.Tick
+        If RequestAdditionTextFile("LFI_F") AndAlso Not localizedBlipName Then
+            PdmBlip.Name = Game.GetGXTEntry("collision_vt4m0x") 'GetLangEntry("PREMIUM_DELUXE_MOTORSPORT")
+            localizedBlipName = True
+        End If
+
         Try
             If MissionFlag Or GP.WantedLevel > 1 Then
                 PdmBlip.Alpha = 0
@@ -123,7 +129,7 @@ Public Class PDM
 
         Try
             If Not GPC.IsInVehicle AndAlso Not GPC.IsDead AndAlso PdmDoorDist < 3.0 AndAlso GP.WantedLevel = 0 AndAlso TaskScriptStatus = -1 Then
-                DisplayHelpTextThisFrame(GetLangEntry("HELP_ENTER_SHOP"))
+                DisplayHelpTextThisFrame(Game.GetGXTEntry("SHR_MENU")) 'GetLangEntry("HELP_ENTER_SHOP"))
             ElseIf Not GPC.IsInVehicle AndAlso Not GPC.IsDead AndAlso PdmDoorDist < 3.0 AndAlso GP.WantedLevel >= 1 Then
                 Native.Function.Call(Hash.DISPLAY_HELP_TEXT_THIS_FRAME, New InputArgument() {"LOSE_WANTED", 0})
             End If
@@ -134,8 +140,8 @@ Public Class PDM
                 Dim penalty As Double = VehiclePrice / 99
                 If VehPreview.HasBeenDamagedBy(GPC) Then
                     GP.Money = (PlayerCash - (VehiclePrice / 99))
-                    DisplayHelpTextThisFrame("$" & Math.Round(penalty) & GetLangEntry("HELP_PENALTY"))
-                    UI.Notify("$" & Math.Round(penalty) & GetLangEntry("HELP_PENALTY"))
+                    DisplayHelpTextThisFrame("$" & Math.Round(penalty).ToString("###,###") & GetLangEntry("HELP_PENALTY"))
+                    UI.Notify("$" & Math.Round(penalty).ToString("###,###") & GetLangEntry("HELP_PENALTY"))
                 End If
                 PDMMenu.ConfirmMenu.Visible = True
                 VehPreview.IsDriveable = False
@@ -157,7 +163,7 @@ Public Class PDM
                 Dim penalty As Double = VehiclePrice / 99
                 If VehPreview.HasBeenDamagedBy(GPC) Then
                     GP.Money = (PlayerCash - (VehiclePrice / 99))
-                    UI.Notify("$" & Math.Round(penalty) & GetLangEntry("HELP_PENALTY"))
+                    UI.Notify("$" & Math.Round(penalty).ToString("###,###") & GetLangEntry("HELP_PENALTY"))
                 End If
                 PDMMenu.ConfirmMenu.Visible = True
                 VehPreview.IsDriveable = False

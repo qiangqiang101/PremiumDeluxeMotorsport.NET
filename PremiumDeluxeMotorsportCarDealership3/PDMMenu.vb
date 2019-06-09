@@ -20,32 +20,29 @@ Public Class PDMMenu
     Public Shared ColorMenu, SecColorMenu, ClassicColorMenu2, MetallicColorMenu2, MetalColorMenu2, MatteColorMenu2, ChromeColorMenu2, CSecColorMenu, PlateMenu As UIMenu
 
     Public Shared ItemCustomize As New UIMenuItem(GetLangEntry("BTN_CUSTOMIZE"))
-    Public Shared ItenConfirm As New UIMenuItem(GetLangEntry("BTN_CONFIRM"))
-    Public Shared ItemColor As New UIMenuItem(GetLangEntry("BTN_COLOR_NAME"), GetLangEntry("BTN_COLOR_DESC"))
-    Public Shared ItemClassicColor As New UIMenuItem(GetLangEntry("BTN_CLASSIC_COLOR"), GetLangEntry("BTN_COLOR_DESC"))
-    Public Shared ItemClassicColor2 As New UIMenuItem(GetLangEntry("BTN_CLASSIC_COLOR"), GetLangEntry("BTN_COLOR_DESC"))
-    Public Shared ItemMetallicColor As New UIMenuItem(GetLangEntry("BTN_METALLIC_COLOR"), GetLangEntry("BTN_COLOR_DESC"))
-    Public Shared ItemMetallicColor2 As New UIMenuItem(GetLangEntry("BTN_METALLIC_COLOR"), GetLangEntry("BTN_COLOR_DESC"))
-    Public Shared ItemPearlColor As New UIMenuItem(GetLangEntry("BTN_PEARL_COLOR"), GetLangEntry("BTN_COLOR_DESC"))
-    Public Shared ItemPearlColor2 As New UIMenuItem(GetLangEntry("BTN_PEARL_COLOR"), GetLangEntry("BTN_COLOR_DESC"))
-    Public Shared ItemMetalColor As New UIMenuItem(GetLangEntry("BTN_METAL_COLOR"), GetLangEntry("BTN_COLOR_DESC"))
-    Public Shared ItemMetalColor2 As New UIMenuItem(GetLangEntry("BTN_METAL_COLOR"), GetLangEntry("BTN_COLOR_DESC"))
-    Public Shared ItemMatteColor As New UIMenuItem(GetLangEntry("BTN_MATTE_COLOR"), GetLangEntry("BTN_COLOR_DESC"))
-    Public Shared ItemMatteColor2 As New UIMenuItem(GetLangEntry("BTN_MATTE_COLOR"), GetLangEntry("BTN_COLOR_DESC"))
-    Public Shared ItemChromeColor As New UIMenuItem(GetLangEntry("BTN_CHROME_COLOR"), GetLangEntry("BTN_COLOR_DESC"))
-    Public Shared ItemChromeColor2 As New UIMenuItem(GetLangEntry("BTN_CHROME_COLOR"), GetLangEntry("BTN_COLOR_DESC"))
-    Public Shared ItemCPriColor As New UIMenuItem(GetLangEntry("BTN_CUSTOM_PRIMARY"), GetLangEntry("BTN_COLOR_DESC"))
-    Public Shared ItemCSecColor As New UIMenuItem(GetLangEntry("BTN_CUSTOM_SECONDARY"), GetLangEntry("BTN_COLOR_DESC"))
-    Public Shared ItemPriColor As New UIMenuItem(GetLangEntry("BTN_PRIMARY_COLOR"), GetLangEntry("BTN_COLOR_DESC"))
-    Public Shared ItemSecColor As New UIMenuItem(GetLangEntry("BTN_SECONDARY_COLOR"), GetLangEntry("BTN_COLOR_DESC"))
-    Public Shared ItemPeaColor As New UIMenuItem(GetLangEntry("BTN_PEARLESCENT_COLOR"), GetLangEntry("BTN_COLOR_DESC"))
-    Public Shared ItemPlate As New UIMenuItem(GetLangEntry("BTN_PLATE_STYLE"), GetLangEntry("BTN_COLOR_DESC"))
+    Public Shared ItenConfirm As New UIMenuItem(Game.GetGXTEntry("ITEM_YES")) 'GetLangEntry("BTN_CONFIRM"))
+    Public Shared ItemColor As New UIMenuItem(Game.GetGXTEntry("IB_COLOR"), Game.GetGXTEntry("CMOD_MOD_6_D")) 'GetLangEntry("BTN_COLOR_NAME"), GetLangEntry("BTN_COLOR_DESC"))
+    Public Shared ItemClassicColor As New UIMenuItem(Game.GetGXTEntry("CMOD_COL1_1"), Game.GetGXTEntry("CMOD_MOD_6_D")) 'GetLangEntry("BTN_CLASSIC_COLOR"), GetLangEntry("BTN_COLOR_DESC"))
+    Public Shared ItemClassicColor2 As New UIMenuItem(Game.GetGXTEntry("CMOD_COL1_1"), Game.GetGXTEntry("CMOD_MOD_6_D")) 'GetLangEntry("BTN_CLASSIC_COLOR"), GetLangEntry("BTN_COLOR_DESC"))
+    Public Shared ItemMetallicColor As New UIMenuItem(Game.GetGXTEntry("CMOD_COL1_3"), Game.GetGXTEntry("CMOD_MOD_6_D")) 'GetLangEntry("BTN_METALLIC_COLOR"), GetLangEntry("BTN_COLOR_DESC"))
+    Public Shared ItemMetallicColor2 As New UIMenuItem(Game.GetGXTEntry("CMOD_COL1_3"), Game.GetGXTEntry("CMOD_MOD_6_D")) 'GetLangEntry("BTN_METALLIC_COLOR"), GetLangEntry("BTN_COLOR_DESC"))
+    Public Shared ItemMetalColor As New UIMenuItem(Game.GetGXTEntry("CMOD_COL1_4"), Game.GetGXTEntry("CMOD_MOD_6_D")) 'GetLangEntry("BTN_METAL_COLOR"), GetLangEntry("BTN_COLOR_DESC"))
+    Public Shared ItemMetalColor2 As New UIMenuItem(Game.GetGXTEntry("CMOD_COL1_4"), Game.GetGXTEntry("CMOD_MOD_6_D")) 'GetLangEntry("BTN_METAL_COLOR"), GetLangEntry("BTN_COLOR_DESC"))
+    Public Shared ItemMatteColor As New UIMenuItem(Game.GetGXTEntry("CMOD_COL1_5"), Game.GetGXTEntry("CMOD_MOD_6_D")) 'GetLangEntry("BTN_MATTE_COLOR"), GetLangEntry("BTN_COLOR_DESC"))
+    Public Shared ItemMatteColor2 As New UIMenuItem(Game.GetGXTEntry("CMOD_COL1_5"), Game.GetGXTEntry("CMOD_MOD_6_D")) 'GetLangEntry("BTN_MATTE_COLOR"), GetLangEntry("BTN_COLOR_DESC"))
+    Public Shared ItemChromeColor As New UIMenuItem(Game.GetGXTEntry("CMOD_COL1_0"), Game.GetGXTEntry("CMOD_MOD_6_D")) 'GetLangEntry("BTN_CHROME_COLOR"), GetLangEntry("BTN_COLOR_DESC"))
+    Public Shared ItemChromeColor2 As New UIMenuItem(Game.GetGXTEntry("CMOD_COL1_0"), Game.GetGXTEntry("CMOD_MOD_6_D")) 'GetLangEntry("BTN_CHROME_COLOR"), GetLangEntry("BTN_COLOR_DESC"))
+    Public Shared ItemCPriColor As New UIMenuItem(GetLangEntry("BTN_CUSTOM_PRIMARY"), Game.GetGXTEntry("CMOD_MOD_6_D")) 'GetLangEntry("BTN_COLOR_DESC"))
+    Public Shared ItemCSecColor As New UIMenuItem(GetLangEntry("BTN_CUSTOM_SECONDARY"), Game.GetGXTEntry("CMOD_MOD_6_D")) 'GetLangEntry("BTN_COLOR_DESC"))
+    Public Shared ItemPriColor As New UIMenuItem(Game.GetGXTEntry("CMOD_COL0_0"), Game.GetGXTEntry("CMOD_MOD_6_D")) 'GetLangEntry("BTN_PRIMARY_COLOR"), GetLangEntry("BTN_COLOR_DESC"))
+    Public Shared ItemSecColor As New UIMenuItem(Game.GetGXTEntry("CMOD_COL0_1"), Game.GetGXTEntry("CMOD_MOD_6_D")) 'GetLangEntry("BTN_SECONDARY_COLOR"), GetLangEntry("BTN_COLOR_DESC"))
+    Public Shared ItemPeaColor As New UIMenuItem(Game.GetGXTEntry("CMOD_COL1_6"), Game.GetGXTEntry("CMOD_MOD_6_D")) 'GetLangEntry("BTN_PEARLESCENT_COLOR"), GetLangEntry("BTN_COLOR_DESC"))
+    Public Shared ItemPlate As New UIMenuItem(Game.GetGXTEntry("CMOD_MOD_PLA"), Game.GetGXTEntry("CMOD_MOD_6_D")) 'GetLangEntry("BTN_PLATE_STYLE"), GetLangEntry("BTN_COLOR_DESC"))
 
-    Public Shared BtnRotLeft As New InstructionalButton(GTA.Control.ParachuteBrakeLeft, GetLangEntry("BTN_DOOR"))
-    Public Shared BtnRotRight As New InstructionalButton(GTA.Control.VehicleRoof, GetLangEntry("BTN_ROOF"))
-    Public Shared BtnCamera As New InstructionalButton(GTA.Control.VehiclePushbikeSprint, GetLangEntry("BTN_CHANGE_CAM"))
-    Public Shared BtnZoom As New InstructionalButton(GTA.Control.VehicleSubAscend, GetLangEntry("BTN_ZOOM"))
-    'Public Shared BtnStat As New InstructionalButton(GTA.Control.MultiplayerInfo, GetLangEntry("BTN_SHOW_STAT"))
+    Public Shared BtnRotLeft As New InstructionalButton(GTA.Control.ParachuteBrakeLeft, Game.GetGXTEntry("CMM_MOD_S6")) 'GetLangEntry("BTN_DOOR"))
+    Public Shared BtnRotRight As New InstructionalButton(GTA.Control.VehicleRoof, Game.GetGXTEntry("CMOD_MOD_ROF")) 'GetLangEntry("BTN_ROOF"))
+    Public Shared BtnCamera As New InstructionalButton(GTA.Control.VehiclePushbikeSprint, Game.GetGXTEntry("CTRL_0")) 'GetLangEntry("BTN_CHANGE_CAM"))
+    Public Shared BtnZoom As New InstructionalButton(GTA.Control.VehicleSubAscend, Game.GetGXTEntry("HUD_INPUT91")) 'GetLangEntry("BTN_ZOOM"))
 
     Public Shared Parameters As String() = {"[name]", "[price]", "[model]", "[gxt]", "[make]"}
 
@@ -85,22 +82,22 @@ Public Class PDMMenu
             ReadConfirm()
             ReadCustomize()
             ReadColorCategory()
-            CreateModMenuFor(CustomiseMenu, ItemPlate, PlateMenu, GetLangEntry("BTN_PLATE_STYLE"))
+            CreateModMenuFor(CustomiseMenu, ItemPlate, PlateMenu, Game.GetGXTEntry("CMOD_MOD_PLA")) 'GetLangEntry("BTN_PLATE_STYLE"))
             ReadColorPrimary()
             ReadColorSecondary()
             CreateModMenuFor(ColorMenu, ItemCPriColor, CPriColorMenu, GetLangEntry("BTN_CUSTOM_PRIMARY"))
             CreateModMenuFor(ColorMenu, ItemCSecColor, CSecColorMenu, GetLangEntry("BTN_CUSTOM_SECONDARY"))
-            CreateModMenuFor(PriColorMenu, ItemClassicColor, ClassicColorMenu, GetLangEntry("BTN_CLASSIC_COLOR"))
-            CreateModMenuFor(PriColorMenu, ItemMetallicColor, MetallicColorMenu, GetLangEntry("BTN_METALLIC_COLOR"))
-            CreateModMenuFor(PriColorMenu, ItemMetalColor, MetalColorMenu, GetLangEntry("BTN_METAL_COLOR"))
-            CreateModMenuFor(PriColorMenu, ItemMatteColor, MatteColorMenu, GetLangEntry("BTN_MATTE_COLOR"))
-            CreateModMenuFor(PriColorMenu, ItemChromeColor, ChromeColorMenu, GetLangEntry("BTN_CHROME_COLOR"))
-            CreateModMenuFor(PriColorMenu, ItemPeaColor, PeaColorMenu, GetLangEntry("BTN_PEARLESCENT_COLOR"))
-            CreateModMenuFor(SecColorMenu, ItemClassicColor2, ClassicColorMenu2, GetLangEntry("BTN_CLASSIC_COLOR"))
-            CreateModMenuFor(SecColorMenu, ItemMetallicColor2, MetallicColorMenu2, GetLangEntry("BTN_METALLIC_COLOR"))
-            CreateModMenuFor(SecColorMenu, ItemMetalColor2, MetalColorMenu2, GetLangEntry("BTN_METAL_COLOR"))
-            CreateModMenuFor(SecColorMenu, ItemMatteColor2, MatteColorMenu2, GetLangEntry("BTN_MATTE_COLOR"))
-            CreateModMenuFor(SecColorMenu, ItemChromeColor2, ChromeColorMenu2, GetLangEntry("BTN_CHROME_COLOR"))
+            CreateModMenuFor(PriColorMenu, ItemClassicColor, ClassicColorMenu, Game.GetGXTEntry("CMOD_COL1_1")) 'GetLangEntry("BTN_CLASSIC_COLOR"))
+            CreateModMenuFor(PriColorMenu, ItemMetallicColor, MetallicColorMenu, Game.GetGXTEntry("CMOD_COL1_3")) 'GetLangEntry("BTN_METALLIC_COLOR"))
+            CreateModMenuFor(PriColorMenu, ItemMetalColor, MetalColorMenu, Game.GetGXTEntry("CMOD_COL1_4")) 'GetLangEntry("BTN_METAL_COLOR"))
+            CreateModMenuFor(PriColorMenu, ItemMatteColor, MatteColorMenu, Game.GetGXTEntry("CMOD_COL1_5")) 'GetLangEntry("BTN_MATTE_COLOR"))
+            CreateModMenuFor(PriColorMenu, ItemChromeColor, ChromeColorMenu, Game.GetGXTEntry("CMOD_COL1_0")) 'GetLangEntry("BTN_CHROME_COLOR"))
+            CreateModMenuFor(PriColorMenu, ItemPeaColor, PeaColorMenu, Game.GetGXTEntry("CMOD_COL1_6")) 'GetLangEntry("BTN_PEARLESCENT_COLOR"))
+            CreateModMenuFor(SecColorMenu, ItemClassicColor2, ClassicColorMenu2, Game.GetGXTEntry("CMOD_COL1_1")) 'GetLangEntry("BTN_CLASSIC_COLOR"))
+            CreateModMenuFor(SecColorMenu, ItemMetallicColor2, MetallicColorMenu2, Game.GetGXTEntry("CMOD_COL1_3")) 'GetLangEntry("BTN_METALLIC_COLOR"))
+            CreateModMenuFor(SecColorMenu, ItemMetalColor2, MetalColorMenu2, Game.GetGXTEntry("CMOD_COL1_4")) 'GetLangEntry("BTN_METAL_COLOR"))
+            CreateModMenuFor(SecColorMenu, ItemMatteColor2, MatteColorMenu2, Game.GetGXTEntry("CMOD_COL1_5")) 'GetLangEntry("BTN_MATTE_COLOR"))
+            CreateModMenuFor(SecColorMenu, ItemChromeColor2, ChromeColorMenu2, Game.GetGXTEntry("CMOD_COL1_0")) 'GetLangEntry("BTN_CHROME_COLOR"))
 
             Native.Function.Call(Hash.REQUEST_SCRIPT_AUDIO_BANK, "VEHICLE_SHOP_HUD_1", False, -1)
             Native.Function.Call(Hash.REQUEST_SCRIPT_AUDIO_BANK, "VEHICLE_SHOP_HUD_2", False, -1)
@@ -112,10 +109,10 @@ Public Class PDMMenu
     Public Shared Sub CreateCategoryMenu()
         Try
             If optRemoveImg = 0 Then
-                MainMenu = New UIMenu("", GetLangEntry("CATEGORY"), True)
+                MainMenu = New UIMenu("", Game.GetGXTEntry("CMOD_MOD_T"), True) 'GetLangEntry("CATEGORY"), True)
                 MainMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCD4.shopui_title_pdm.png"))
             Else
-                MainMenu = New UIMenu("", GetLangEntry("CATEGORY"), New Point(0, -107)) With {.EnableStats = True}
+                MainMenu = New UIMenu("", Game.GetGXTEntry("CMOD_MOD_T"), New Point(0, -107)) With {.EnableStats = True} 'GetLangEntry("CATEGORY"), New Point(0, -107)) With {.EnableStats = True}
                 MainMenu.SetBannerType(Rectangle)
             End If
             MainMenu.MouseEdgeEnabled = False
@@ -230,8 +227,8 @@ Public Class PDMMenu
         CustomiseMenu.AddInstructionalButton(BtnCamera)
         CustomiseMenu.AddInstructionalButton(BtnZoom)
         CustomiseMenu.AddItem(ItemColor)
-        CustomiseMenu.AddItem(New UIMenuItem(GetLangEntry("BTN_UPGRADE_NAME"), GetLangEntry("BTN_UPGRADE_DESC")))
-        CustomiseMenu.AddItem(New UIMenuItem(GetLangEntry("BTN_PLATE_NUMBER_NAME"), GetLangEntry("BTN_PLATE_NUMBER_DESC")))
+        CustomiseMenu.AddItem(New UIMenuItem(Game.GetGXTEntry("PERSO_MOD_PER"), Game.GetGXTEntry("IE_MOD_OBJ4"))) 'GetLangEntry("BTN_UPGRADE_NAME"), GetLangEntry("BTN_UPGRADE_DESC")))
+        CustomiseMenu.AddItem(New UIMenuItem(GetLangEntry("BTN_PLATE_NUMBER_NAME"), Game.GetGXTEntry("IE_MOD_OBJ2"))) 'GetLangEntry("BTN_PLATE_NUMBER_NAME"), GetLangEntry("BTN_PLATE_NUMBER_DESC")))
         CustomiseMenu.AddItem(ItemPlate)
         CustomiseMenu.RefreshIndex()
         ConfirmMenu.BindMenuToItem(CustomiseMenu, ItemCustomize)
@@ -240,10 +237,10 @@ Public Class PDMMenu
 
     Public Shared Sub ReadColorCategory()
         If optRemoveImg = 0 Then
-            ColorMenu = New UIMenu("", GetLangEntry("BTN_COLOR_NAME").ToUpper, True)
+            ColorMenu = New UIMenu("", Game.GetGXTEntry("CMOD_COL1_T"), True) 'GetLangEntry("BTN_COLOR_NAME").ToUpper, True)
             ColorMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCD4.shopui_title_pdm.png"))
         Else
-            ColorMenu = New UIMenu("", GetLangEntry("BTN_COLOR_NAME").ToUpper, New Point(0, -107)) With {.EnableStats = True}
+            ColorMenu = New UIMenu("", Game.GetGXTEntry("CMOD_COL1_T"), New Point(0, -107)) With {.EnableStats = True} 'GetLangEntry("BTN_COLOR_NAME").ToUpper, New Point(0, -107)) With {.EnableStats = True}
             ColorMenu.SetBannerType(Rectangle)
         End If
         ColorMenu.MouseEdgeEnabled = False
@@ -262,10 +259,10 @@ Public Class PDMMenu
 
     Public Shared Sub ReadColorPrimary()
         If optRemoveImg = 0 Then
-            PriColorMenu = New UIMenu("", GetLangEntry("BTN_PRIMARY_COLOR").ToUpper, True)
+            PriColorMenu = New UIMenu("", Game.GetGXTEntry("CMOD_COL2_T"), True) 'GetLangEntry("BTN_PRIMARY_COLOR").ToUpper, True)
             PriColorMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCD4.shopui_title_pdm.png"))
         Else
-            PriColorMenu = New UIMenu("", GetLangEntry("BTN_PRIMARY_COLOR").ToUpper, New Point(0, -107)) With {.EnableStats = True}
+            PriColorMenu = New UIMenu("", Game.GetGXTEntry("CMOD_COL2_T"), New Point(0, -107)) With {.EnableStats = True} 'GetLangEntry("BTN_PRIMARY_COLOR").ToUpper, New Point(0, -107)) With {.EnableStats = True}
             PriColorMenu.SetBannerType(Rectangle)
         End If
         PriColorMenu.MouseEdgeEnabled = False
@@ -286,10 +283,10 @@ Public Class PDMMenu
 
     Public Shared Sub ReadColorSecondary()
         If optRemoveImg = 0 Then
-            SecColorMenu = New UIMenu("", GetLangEntry("BTN_SECONDARY_COLOR").ToUpper, True)
+            SecColorMenu = New UIMenu("", Game.GetGXTEntry("CMOD_COL3_T"), True) 'GetLangEntry("BTN_SECONDARY_COLOR").ToUpper, True)
             SecColorMenu.SetBannerType(Sprite.WriteFileFromResources(Assembly.GetExecutingAssembly, "PDMCD4.shopui_title_pdm.png"))
         Else
-            SecColorMenu = New UIMenu("", GetLangEntry("BTN_SECONDARY_COLOR").ToUpper, New Point(0, -107)) With {.EnableStats = True}
+            SecColorMenu = New UIMenu("", Game.GetGXTEntry("CMOD_COL3_T"), New Point(0, -107)) With {.EnableStats = True} 'GetLangEntry("BTN_SECONDARY_COLOR").ToUpper, New Point(0, -107)) With {.EnableStats = True}
             SecColorMenu.SetBannerType(Rectangle)
         End If
         SecColorMenu.MouseEdgeEnabled = False
@@ -323,7 +320,7 @@ Public Class PDMMenu
         ConfirmMenu.AddInstructionalButton(BtnZoom)
         ConfirmMenu.AddItem(ItemCustomize)
         ConfirmMenu.AddItem(New UIMenuItem(GetLangEntry("BTN_TEST_DRIVE")))
-        ConfirmMenu.AddItem(New UIMenuItem(GetLangEntry("BTN_CONFIRM")))
+        ConfirmMenu.AddItem(New UIMenuItem(Game.GetGXTEntry("ITEM_YES"))) 'GetLangEntry("BTN_CONFIRM")))
         ConfirmMenu.RefreshIndex()
         AddHandler ConfirmMenu.OnMenuClose, AddressOf ConfirmCloseHandler
         AddHandler ConfirmMenu.OnItemSelect, AddressOf ItemSelectHandler
@@ -513,7 +510,7 @@ Public Class PDMMenu
 
     Public Shared Sub ItemSelectHandler(sender As UIMenu, selectedItem As UIMenuItem, index As Integer)
         Try
-            If selectedItem.Text = GetLangEntry("BTN_CONFIRM") Then
+            If selectedItem.Text = Game.GetGXTEntry("ITEM_YES") Then 'GetLangEntry("BTN_CONFIRM") Then
                 If PlayerCash > VehiclePrice Then
                     FadeScreenOut(200)
                     Wait(200)
@@ -539,11 +536,11 @@ Public Class PDMMenu
                     TaskScriptStatus = -1
                 Else
                     If Game.Player.Character.Name = "Franklin" Then
-                        DisplayNotificationThisFrame(GetLangEntry("FLEECA_BANK"), GetLangEntry("INSUFFICIENT_FUNDS_TITLE"), GetLangEntry("INSUFFICIENT_FUNCS_BODY"), "CHAR_BANK_FLEECA", True, IconType.RightJumpingArrow)
+                        DisplayNotificationThisFrame(Game.GetGXTEntry("EMSTR_55"), "", Game.GetGXTEntry("PI_BIK_HX8"), "CHAR_BANK_FLEECA", True, IconType.RightJumpingArrow) 'GetLangEntry("FLEECA_BANK") GetLangEntry("INSUFFICIENT_FUNCS_BODY")
                     ElseIf Game.Player.Character.Name = "Trevor" Then
-                        DisplayNotificationThisFrame(GetLangEntry("BOL_BANK"), GetLangEntry("INSUFFICIENT_FUNDS_TITLE"), GetLangEntry("INSUFFICIENT_FUNCS_BODY"), "CHAR_BANK_BOL", True, IconType.RightJumpingArrow)
+                        DisplayNotificationThisFrame(Game.GetGXTEntry("EMSTR_58"), "", Game.GetGXTEntry("PI_BIK_HX8"), "CHAR_BANK_BOL", True, IconType.RightJumpingArrow) 'GetLangEntry("BOL_BANK")
                     Else
-                        DisplayNotificationThisFrame(GetLangEntry("MAZE_BANK"), GetLangEntry("INSUFFICIENT_FUNDS_TITLE"), GetLangEntry("INSUFFICIENT_FUNCS_BODY"), "CHAR_BANK_MAZE", True, IconType.RightJumpingArrow)
+                        DisplayNotificationThisFrame(Game.GetGXTEntry("EMSTR_52"), "", Game.GetGXTEntry("PI_BIK_HX8"), "CHAR_BANK_MAZE", True, IconType.RightJumpingArrow) 'GetLangEntry("MAZE_BANK")
                     End If
                 End If
             ElseIf selectedItem.Text = GetLangEntry("BTN_TEST_DRIVE") Then
@@ -565,7 +562,7 @@ Public Class PDMMenu
                 ShowVehicleName = False
             End If
 
-            If selectedItem.Text = GetLangEntry("BTN_UPGRADE_NAME") Then
+            If selectedItem.Text = Game.GetGXTEntry("PERSO_MOD_PER") Then 'GetLangEntry("BTN_UPGRADE_NAME") Then
                 VehPreview.InstallModKit()
                 VehPreview.SetMod(VehicleMod.Suspension, VehPreview.GetModCount(VehicleMod.Suspension) - 1, False)
                 VehPreview.SetMod(VehicleMod.Engine, VehPreview.GetModCount(VehicleMod.Engine) - 1, False)

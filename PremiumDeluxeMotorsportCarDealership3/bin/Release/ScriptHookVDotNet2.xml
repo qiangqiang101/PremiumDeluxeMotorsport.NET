@@ -821,6 +821,261 @@ Gets or sets the X component of the quaternion.
             <summary>Gets or sets the current transition ratio of the weather.</summary>
             <value>A Single representing the current time ratio between 0.0f and 1.0f.</value>
         </member>
+        <member name="F:GTA.BlipSprite.WeaponizedTrailer">
+            <summary>The default English text for this value is "Anti-Aircraft Trailer".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.Rocket">
+            <summary>The default English text for this value is "Homing Rocket".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.Cup">
+            <summary>The default English text for this value is "Challenge Series".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.SteeringWheel">
+            <summary>The default English text for this value is "Special Vehicle Race Series".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.Document">
+            <summary>The default English text for this value is "Registration Papers".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.Motorcycle">
+            <summary>The default English text for this value is "Deadline".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.DrugPackage">
+            <summary>The default English text for this value is "Drugs Package".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.Package2">
+            <summary>The default English text for this value is "Package", whose label text hash is used in Biker Business missions in GTA Online.</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.DollarBill">
+            <summary>The default English text for this value is "Weed Production".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.Meth">
+            <summary>The default English text for this value is "Weed Production".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.IdentityCard">
+            <summary>The default English text for this value is "Weed Production".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.Cocaine">
+            <summary>The default English text for this value is "Weed Production".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.Weed">
+            <summary>The default English text for this value is "Weed Production".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.Shield">
+            <summary>The sprite image is a shield, but the default English text for this value is "Beast".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.Flip">
+            <summary>The default English text for this value is "Flipped".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.Loading">
+            <summary>The default English text for this value is "Zoned".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.King">
+            <summary>The default English text for this value is "Player King".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.GunCar">
+            <summary>The default English text for this value is "Insurgent".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.PlayerNoColor">
+            <summary>This enum is wrongly named. The sprite doesn't have outline, but you can change the color.</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.Plane">
+            <summary>The sprite is the same as <see cref="F:GTA.BlipSprite.Jet" /> has, but the default English text for this value is "Jet".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.GTAOPlayerSafehouseDead">
+            <summary>In GTA Online, when some player is a bounty and is in a safehouse, a blip with this sprite will be attached.</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.Invisible">
+            <summary>This blip sprite is invisible and the default English text for this value is "Invisible".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.Testosterone">
+            <summary>The default English text for this value is "Raging".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.Crosshair">
+            <summary>The default English text for this value is "Aim".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.RaceFoot">
+            <summary>The default English text for this value is "Foot Race".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.RaceBike">
+            <summary>The default English text for this value is "Bike Race".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.MarinaForSale">
+            <summary>The default English text for this value is "Dock For Sale".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.Rockets">
+            <summary>The default English text for this value is "Missiles".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.PickupSpawn">
+            <summary>The default English text for this value is "Spawn Point Pickup".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.Masks">
+            <summary>The default English text for this value is "Masks Store".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.Package">
+            <summary>The default English text for this value is "Gang Attack Package".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.SafehouseForSale">
+            <summary>The default English text for this value is "Property For Sale".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.RaceSea">
+            <summary>The default English text for this value is "Sea Race".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.RaceCar">
+            <summary>The default English text for this value is "Street Race".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.GTAOSurvival">
+            <summary>The default English text for this value is "Horde".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.GTAOMission">
+            <summary>The default English text for this value is "UGC Mission".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.Hooker">
+            <summary>The default English text for this value is "Drop Off Hooker".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.PersonalVehicleBike">
+            <summary>The default English text for this value is "Gang Vehicle Bikers".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.PersonalVehicleCar">
+            <summary>The default English text for this value is "Gang Vehicle".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.Handcuffs">
+            <summary>The default English text for this value is "Biker Handcuffs Closed".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.Castle">
+            <summary>The default English text for this value is "Property Takeover".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.Link">
+            <summary>The default English text for this value is "Gang Police Partner".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.Marijuana">
+            <summary>The default English text for this value is "Stash".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.Music">
+            <summary>The default English text for this value is "Music Venue".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.Key">
+            <summary>The default English text for this value is "Criminal Cuff Keys".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.OffRoadRaceFinish">
+            <summary>The default English text for this value is "Off Road Racing".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.DollarSign">
+            <summary>The default English text for this value is "Devin".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.Dart">
+            <summary>The default English text for this value is "Darts".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.Clothes">
+            <summary>The default English text for this value is "Clothes Store".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.Store">
+            <summary>The default English text for this value is "Criminal Holdups".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.Drugs">
+            <summary>The default English text for this value is "Criminal Drugs".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.Garage2">
+            <summary>The default English text for this value is "Criminal Carsteal".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.ChatBubble">
+            <summary>The default English text for this value is "Snitch".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.PoliceCarDot">
+            <summary>The default English text for this value is "Police Chase".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.PoliceOfficer2">
+            <summary>The default English text for this value is "Police".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.Lift">
+            <summary>The default English text for this value is "Cable Car".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.Jet">
+            <summary>The default English text for this value is "Police Plane".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.Square">
+            <summary>The sprite shape is square and the default English text for this value is "Objective".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.PoliceArea">
+            <summary>When this value is set, the blip will flash. The default English text for this value is "Objective".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.PoliceOfficer">
+            <summary>The default English text for this value is "Police".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.BigBlip">
+            <summary>The default English text for this value is "Destination".</summary>
+        </member>
+        <member name="F:GTA.BlipSprite.Standard">
+            <summary>The default English text for this value is "Destination".</summary>
+        </member>
+        <member name="F:GTA.BlipColor.Blue7">
+            <summary>This color is always the same as <see cref="F:GTA.BlipColor.Blue" />, the only difference is color index.</summary>
+        </member>
+        <member name="F:GTA.BlipColor.RedDark2">
+            <summary>This color is always the same as <see cref="F:GTA.BlipColor.RedDark" />, the only difference is color index.</summary>
+        </member>
+        <member name="F:GTA.BlipColor.BlueDark2">
+            <summary>This color is always the same as <see cref="F:GTA.BlipColor.BlueDark" />, the only difference is color index.</summary>
+        </member>
+        <member name="F:GTA.BlipColor.Blue6">
+            <summary>This color is always the same as <see cref="F:GTA.BlipColor.Blue" />, the only difference is color index.</summary>
+        </member>
+        <member name="F:GTA.BlipColor.Red4">
+            <summary>This color is always the same as <see cref="F:GTA.BlipColor.Red" />, the only difference is color index.</summary>
+        </member>
+        <member name="F:GTA.BlipColor.Blue5">
+            <summary>This color is always the same as <see cref="F:GTA.BlipColor.Blue" />, the only difference is color index.</summary>
+        </member>
+        <member name="F:GTA.BlipColor.Yellow6">
+            <summary>This color is always the same as <see cref="F:GTA.BlipColor.Yellow" />, the only difference is color index.</summary>
+        </member>
+        <member name="F:GTA.BlipColor.White2">
+            <summary>This color is always the same as <see cref="F:GTA.BlipColor.White" />, the only difference is color index.</summary>
+        </member>
+        <member name="F:GTA.BlipColor.Yellow5">
+            <summary>This color is always the same as <see cref="F:GTA.BlipColor.Yellow" />, the only difference is color index.</summary>
+        </member>
+        <member name="F:GTA.BlipColor.Yellow4">
+            <summary>This color is always the same as <see cref="F:GTA.BlipColor.Yellow" />, the only difference is color index.</summary>
+        </member>
+        <member name="F:GTA.BlipColor.Green2">
+            <summary>This color is always the same as <see cref="F:GTA.BlipColor.Green" />, the only difference is color index.</summary>
+        </member>
+        <member name="F:GTA.BlipColor.Blue4">
+            <summary>This color is always the same as <see cref="F:GTA.BlipColor.Blue" />, the only difference is color index.</summary>
+        </member>
+        <member name="F:GTA.BlipColor.Blue3">
+            <summary>This color is always the same as <see cref="F:GTA.BlipColor.Blue" />, the only difference is color index.</summary>
+        </member>
+        <member name="F:GTA.BlipColor.Yellow3">
+            <summary>This color is always the same as <see cref="F:GTA.BlipColor.Yellow" />, the only difference is color index.</summary>
+        </member>
+        <member name="F:GTA.BlipColor.Red3">
+            <summary>This color is always the same as <see cref="F:GTA.BlipColor.Red" />, the only difference is color index.</summary>
+        </member>
+        <member name="F:GTA.BlipColor.Blue2">
+            <summary>This color is always the same as <see cref="F:GTA.BlipColor.Blue" />, the only difference is color index.</summary>
+        </member>
+        <member name="F:GTA.BlipColor.Red2">
+            <summary>This color is always the same as <see cref="F:GTA.BlipColor.Red" />, the only difference is color index.</summary>
+        </member>
+        <member name="F:GTA.BlipColor.Trevor">
+            <summary>This color is usually #ABEDAB orange, which is very similar to <see cref="P:System.Drawing.Color.SandyBrown" />.</summary>
+        </member>
+        <member name="F:GTA.BlipColor.Franklin">
+            <summary>This color is usually #ABEDAB light green, which is very similar to <see cref="P:System.Drawing.Color.LightGreen" />.</summary>
+        </member>
+        <member name="F:GTA.BlipColor.Michael">
+            <summary>This color is usually #65B4D4 sky blue, which is similar to <see cref="P:System.Drawing.Color.SkyBlue" />.</summary>
+        </member>
+        <member name="F:GTA.BlipColor.Yellow2">
+            <summary>This color is always the same as <see cref="F:GTA.BlipColor.Yellow" />, the only difference is color index.</summary>
+        </member>
+        <member name="F:GTA.BlipColor.WhiteNotPure">
+            <summary>The default RGB value of this color is the same as HUD_COLOUR_WHITE, whose default RGB value is #F0F0F0.</summary>
+        </member>
+        <member name="F:GTA.BlipColor.White">
+            <summary>The default RGB value of this color is the same as HUD_COLOUR_PURE_WHITE, whose default RGB value is #FFFFFF.</summary>
+        </member>
         <member name="M:GTA.Math.Vector2.Equals(GTA.Math.Vector2@,GTA.Math.Vector2@)">
             <summary>
 Determines whether the specified object instances are considered equal. 

@@ -49,3 +49,4 @@ E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeM
 E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\obj\Release\PDMCD4.dll
 E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\obj\Release\PDMCD4.xml
 E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\obj\Release\PDMCD4.pdb
+E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\bin\Release\ScriptHookVDotNet2.dll
