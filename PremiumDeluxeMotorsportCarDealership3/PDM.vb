@@ -24,7 +24,7 @@ Public Class PDM
     Public Shared TaskScriptStatus As Integer = -1
     Public Shared pdmPed As Ped
     Public Shared poly As Interior = New Interior(), testDeivePoly As Interior = New Interior()
-    Public localizedBlipName As Boolean = False
+    Public Shared blipName As String = "NULL"
 
     Public Sub New()
         Try
@@ -74,9 +74,11 @@ Public Class PDM
     End Sub
 
     Public Sub OnTick(o As Object, e As EventArgs) Handles Me.Tick
-        If RequestAdditionTextFile("LFI_F") AndAlso Not localizedBlipName Then
-            PdmBlip.Name = Game.GetGXTEntry("collision_vt4m0x") 'GetLangEntry("PREMIUM_DELUXE_MOTORSPORT")
-            localizedBlipName = True
+        If blipName = "NULL" Then
+            If RequestAdditionTextFile("LFI_F") Then
+                blipName = Game.GetGXTEntry("collision_vt4m0x")
+                PdmBlip.Name = blipName 'GetLangEntry("PREMIUM_DELUXE_MOTORSPORT")
+            End If
         End If
 
         Try
