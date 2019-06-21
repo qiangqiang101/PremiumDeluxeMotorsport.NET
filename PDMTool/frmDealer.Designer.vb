@@ -224,7 +224,7 @@ Partial Class frmDealer
         Me.Controls.Add(Me.lvCars)
         Me.Controls.Add(Me.MenuStrip1)
         Me.Font = New System.Drawing.Font("Segoe UI", 9.0!)
-        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.Icon = CType(GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "frmDealer"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Untitled - Dealership Editor"

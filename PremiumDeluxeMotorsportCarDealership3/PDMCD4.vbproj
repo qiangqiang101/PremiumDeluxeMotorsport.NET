@@ -80,7 +80,7 @@
     <Compile Include="Class\Memory.vb" />
     <Compile Include="Class\Reader.vb" />
     <Compile Include="Class\ReadMemory.vb" />
-    <Compile Include="Class\Resources.vb" />
+    <Compile Include="Class\Helper.vb" />
     <Compile Include="Class\Timer.vb" />
     <Compile Include="PDMMenu.vb" />
     <Compile Include="PDM.vb" />

@@ -28,7 +28,7 @@ Public Class PDM
 
     Public Sub New()
         Try
-            PDMMenu.LoadSettings()
+            LoadSettings()
 
             poly.Add(New Vector3(-71.54493, -1060.757, 27.5556))
             poly.Add(New Vector3(-94.17564, -1126.55, 25.79746))
@@ -213,13 +213,13 @@ Public Class PDM
                 HideHud = True
                 Wait(200)
                 FadeScreenIn(200)
-                SelectedVehicle = PDMMenu.optLastVehName
+                SelectedVehicle = optLastVehName
                 PlayerLastPos = GPC.Position
                 If VehPreview = Nothing Then
-                    VehPreview = CreateVehicleFromHash(PDMMenu.optLastVehHash, VehPreviewPos, 6.122209)
+                    VehPreview = CreateVehicleFromHash(optLastVehHash, VehPreviewPos, 6.122209)
                 Else
                     VehPreview.Delete()
-                    VehPreview = CreateVehicleFromHash(PDMMenu.optLastVehHash, VehPreviewPos, 6.122209)
+                    VehPreview = CreateVehicleFromHash(optLastVehHash, VehPreviewPos, 6.122209)
                 End If
                 PDMMenu.UpdateVehPreview()
                 camera.RepositionFor(VehPreview)
@@ -235,7 +235,7 @@ Public Class PDM
         End Try
 
         Try
-            If IsControlJustReleased(0, GTA.Control.ParachuteBrakeLeft) AndAlso poly.IsInInterior(VehPreview.Position) AndAlso Not GPC.IsInVehicle AndAlso TaskScriptStatus = 0 Then
+            If IsControlJustReleased(0, keyDoor) AndAlso poly.IsInInterior(VehPreview.Position) AndAlso Not GPC.IsInVehicle AndAlso TaskScriptStatus = 0 Then
                 If VehPreview.IsDoorOpen(VehicleDoor.FrontLeftDoor) Then
                     Native.Function.Call(Hash.SET_VEHICLE_DOORS_SHUT, VehPreview, False)
                 Else
@@ -246,13 +246,13 @@ Public Class PDM
                     VehPreview.OpenDoor(VehicleDoor.Hood, False, False)
                     VehPreview.OpenDoor(VehicleDoor.Trunk, False, False)
                 End If
-            ElseIf IsControlJustPressed(0, GTA.Control.VehicleRoof) AndAlso poly.IsInInterior(VehPreview.Position) AndAlso TaskScriptStatus = 0 Then
+            ElseIf IsControlJustPressed(0, keyRoof) AndAlso poly.IsInInterior(VehPreview.Position) AndAlso TaskScriptStatus = 0 Then
                 If VehPreview.RoofState = VehicleRoofState.Closed Then
                     Native.Function.Call(Hash.LOWER_CONVERTIBLE_ROOF, VehPreview, False)
                 Else
                     Native.Function.Call(Hash.RAISE_CONVERTIBLE_ROOF, VehPreview, False)
                 End If
-            ElseIf IsControlJustPressed(0, GTA.Control.VehicleSubAscend) AndAlso poly.IsInInterior(VehPreview.Position) AndAlso TaskScriptStatus = 0 Then
+            ElseIf IsControlJustPressed(0, keyZoom) AndAlso poly.IsInInterior(VehPreview.Position) AndAlso TaskScriptStatus = 0 Then
                 If camera.MainCameraPosition = CameraPosition.Car Then
                     If camera.CameraZoom = 5.0 Then
                         Do While camera.CameraZoom > 3.5
@@ -272,7 +272,7 @@ Public Class PDM
         End Try
 
         Try
-            If IsControlJustReleased(0, GTA.Control.VehiclePushbikeSprint) AndAlso poly.IsInInterior(VehPreview.Position) AndAlso Not GPC.IsInVehicle Then
+            If IsControlJustReleased(0, keyCamera) AndAlso poly.IsInInterior(VehPreview.Position) AndAlso Not GPC.IsInVehicle Then
                 If Not VehPreview.ClassType = VehicleClass.Motorcycles Then
                     If camera.MainCameraPosition = CameraPosition.Car Then
                         camera.MainCameraPosition = CameraPosition.Interior

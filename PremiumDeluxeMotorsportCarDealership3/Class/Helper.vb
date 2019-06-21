@@ -7,10 +7,39 @@ Imports GTA.Math
 Imports GTA.Native
 Imports INMNativeUI
 
-Public Module Resources
+Public Module Helper
 
     Public VC_MOTORCYCLE, VC_COMPACT, VC_COUPE, VC_SEDAN, VC_SPORT, VC_CLASSIC, VC_SUPER, VC_MUSCLE, VC_OFF_ROAD, VC_SUV, VC_VAN As String
     Public VC_INDUSTRIAL, VC_BICYCLE, VC_BOAT, VC_HELI, VC_PLANE, VC_SERVICE, VC_EMERGENCY, VC_MILITARY, VC_COMMERCIAL, VC_UTILITY As String
+
+    Public config As ScriptSettings = ScriptSettings.Load("scripts\PremiumDeluxeMotorsport\config.ini")
+    Public hiddenSave As ScriptSettings = ScriptSettings.Load("scripts\PremiumDeluxeMotorsport\database.ini")
+    Public optRemoveColor As Boolean = True
+    Public optRemoveImg As Boolean = False
+    Public optRandomColor As Boolean = True
+    Public optFade As Boolean = True
+    Public optLastVehHash As Integer = 0
+    Public optLastVehName As String = Nothing
+    Public optLastVehMake As String = Nothing
+    Public optLogging As Boolean = True
+    Public keyZoom As GTA.Control = GTA.Control.NextCamera
+    Public keyDoor As GTA.Control = GTA.Control.ParachuteBrakeLeft
+    Public keyRoof As GTA.Control = GTA.Control.VehicleRoof
+    Public keyCamera As GTA.Control = GTA.Control.VehiclePushbikeSprint
+
+    Public Sub LoadSettings()
+        optRemoveColor = config.GetValue(Of Boolean)("SETTINGS", "REMOVECOLOR", 1)
+        optRemoveImg = config.GetValue(Of Boolean)("SETTINGS", "REMOVESPRITE", 0)
+        optRandomColor = config.GetValue(Of Boolean)("SETTINGS", "RANDOMCOLOR", 1)
+        optFade = config.GetValue(Of Integer)("SETTINGS", "FADEEFFECT", 1)
+        optLastVehHash = config.GetValue(Of Integer)("SETTINGS", "LASTVEHHASH", -2022483795)
+        optLastVehName = config.GetValue(Of String)("SETTINGS", "LASTVEHNAME", "Pfister Comet Retro Custom")
+        optLogging = config.GetValue(Of Integer)("SETTINGS", "LOGGING", 1)
+        keyZoom = config.GetValue(Of GTA.Control)("CONTROLS", "ZOOM", GTA.Control.NextCamera)
+        keyDoor = config.GetValue(Of GTA.Control)("CONTROLS", "DOOR", GTA.Control.ParachuteBrakeLeft)
+        keyRoof = config.GetValue(Of GTA.Control)("CONTROLS", "ROOF", GTA.Control.VehicleRoof)
+        keyCamera = config.GetValue(Of GTA.Control)("CONTROLS", "CAMERA", GTA.Control.VehiclePushbikeSprint)
+    End Sub
 
     <Extension()>
     Public Function Name(ped As Ped) As String

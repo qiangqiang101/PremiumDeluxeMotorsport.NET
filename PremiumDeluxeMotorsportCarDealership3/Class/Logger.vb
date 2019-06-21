@@ -5,7 +5,7 @@
     End Sub
 
     Public Shared Sub Log(message As Object)
-        If PDMMenu.optLogging Then System.IO.File.AppendAllText(".\PDM.log", DateTime.Now & ":" & message & Environment.NewLine)
+        If optLogging Then System.IO.File.AppendAllText(".\PDM.log", DateTime.Now & ":" & message & Environment.NewLine)
     End Sub
 
     Public Shared Sub PinPoint(message As GTA.Math.Vector3)

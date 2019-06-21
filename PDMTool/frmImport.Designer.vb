@@ -229,7 +229,7 @@ Partial Class frmImport
         Me.Controls.Add(Me.btnBrowse)
         Me.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
-        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.Icon = CType(GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximizeBox = False
         Me.Name = "frmImport"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen

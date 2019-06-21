@@ -49,28 +49,6 @@ Public Class PDMMenu
     Public Shared _menuPool As MenuPool
     Public Shared Rectangle = New UIResRectangle()
 
-    Public Shared config As ScriptSettings = ScriptSettings.Load("scripts\PremiumDeluxeMotorsport\config.ini")
-    Public Shared hiddenSave As ScriptSettings = ScriptSettings.Load("scripts\PremiumDeluxeMotorsport\database.ini")
-    Public Shared optAddOnCars As Integer = 0
-    Public Shared optRemoveColor As Integer = 1
-    Public Shared optRemoveImg As Integer = 0
-    Public Shared optRandomColor As Integer = 1
-    Public Shared optFade As Integer = 1
-    Public Shared optLastVehHash As Integer = 0
-    Public Shared optLastVehName As String = Nothing
-    Public Shared optLastVehMake As String = Nothing
-    Public Shared optLogging As Integer = 1
-
-    Public Shared Sub LoadSettings()
-        optRemoveColor = config.GetValue(Of Integer)("SETTINGS", "REMOVECOLOR", 1)
-        optRemoveImg = config.GetValue(Of Integer)("SETTINGS", "REMOVESPRITE", 0)
-        optRandomColor = config.GetValue(Of Integer)("SETTINGS", "RANDOMCOLOR", 1)
-        optFade = config.GetValue(Of Integer)("SETTINGS", "FADEEFFECT", 1)
-        optLastVehHash = config.GetValue(Of Integer)("SETTINGS", "LASTVEHHASH", -2022483795)
-        optLastVehName = config.GetValue(Of String)("SETTINGS", "LASTVEHNAME", "Pfister Comet Retro Custom")
-        optLogging = config.GetValue(Of Integer)("SETTINGS", "LOGGING", 1)
-    End Sub
-
     Public Sub New()
         Try
             LoadSettings()
@@ -372,17 +350,17 @@ Public Class PDMMenu
             ShowVehicleName = True
             RefreshRGBColorMenuFor(CPriColorMenu, New UIMenuItem("nothing"), "Primary")
             RefreshRGBColorMenuFor(CSecColorMenu, New UIMenuItem("nothing"), "Secondary")
-            RefreshColorMenuFor(ClassicColorMenu, New UIMenuItem("nothing"), Resources.ClassicColor, "Primary")
-            RefreshColorMenuFor(MetallicColorMenu, New UIMenuItem("nothing"), Resources.ClassicColor, "Primary")
-            RefreshColorMenuFor(MetalColorMenu, New UIMenuItem("nothing"), Resources.MetalColor, "Primary")
-            RefreshColorMenuFor(MatteColorMenu, New UIMenuItem("nothing"), Resources.MatteColor, "Primary")
-            RefreshColorMenuFor(ChromeColorMenu, New UIMenuItem("nothing"), Resources.ChromeColor, "Primary")
-            RefreshColorMenuFor(PeaColorMenu, New UIMenuItem("nothing"), Resources.PearlescentColor, "Pearlescent")
-            RefreshColorMenuFor(ClassicColorMenu2, New UIMenuItem("nothing"), Resources.ClassicColor, "Secondary")
-            RefreshColorMenuFor(MetallicColorMenu2, New UIMenuItem("nothing"), Resources.ClassicColor, "Secondary")
-            RefreshColorMenuFor(MetalColorMenu2, New UIMenuItem("nothing"), Resources.MetalColor, "Secondary")
-            RefreshColorMenuFor(MatteColorMenu2, New UIMenuItem("nothing"), Resources.MatteColor, "Secondary")
-            RefreshColorMenuFor(ChromeColorMenu2, New UIMenuItem("nothing"), Resources.ChromeColor, "Secondary")
+            RefreshColorMenuFor(ClassicColorMenu, New UIMenuItem("nothing"), ClassicColor, "Primary")
+            RefreshColorMenuFor(MetallicColorMenu, New UIMenuItem("nothing"), ClassicColor, "Primary")
+            RefreshColorMenuFor(MetalColorMenu, New UIMenuItem("nothing"), MetalColor, "Primary")
+            RefreshColorMenuFor(MatteColorMenu, New UIMenuItem("nothing"), MatteColor, "Primary")
+            RefreshColorMenuFor(ChromeColorMenu, New UIMenuItem("nothing"), ChromeColor, "Primary")
+            RefreshColorMenuFor(PeaColorMenu, New UIMenuItem("nothing"), PearlescentColor, "Pearlescent")
+            RefreshColorMenuFor(ClassicColorMenu2, New UIMenuItem("nothing"), ClassicColor, "Secondary")
+            RefreshColorMenuFor(MetallicColorMenu2, New UIMenuItem("nothing"), ClassicColor, "Secondary")
+            RefreshColorMenuFor(MetalColorMenu2, New UIMenuItem("nothing"), MetalColor, "Secondary")
+            RefreshColorMenuFor(MatteColorMenu2, New UIMenuItem("nothing"), MatteColor, "Secondary")
+            RefreshColorMenuFor(ChromeColorMenu2, New UIMenuItem("nothing"), ChromeColor, "Secondary")
             RefreshEnumModMenuFor(PlateMenu, New UIMenuItem("nothing"), EnumTypes.NumberPlateType)
         Else
             SelectedVehicle = selectedItem.SubString2
