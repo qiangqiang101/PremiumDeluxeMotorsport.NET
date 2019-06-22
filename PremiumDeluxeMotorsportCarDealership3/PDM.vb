@@ -1,13 +1,9 @@
-﻿Imports System
-Imports System.Drawing
-Imports System.Windows.Forms
+﻿Imports System.Drawing
 Imports GTA
 Imports GTA.Native
 Imports GTA.Math
 Imports GTA.Game
 Imports INMNativeUI
-Imports System.Reflection
-Imports PDMCD4.Resources
 
 Public Class PDM
     Inherits Script
@@ -19,7 +15,6 @@ Public Class PDM
     Public Shared CameraPos, CameraRot As Vector3
     Public Shared PlayerHeading, PdmDoorDist As Single
     Public Shared camera As WorkshopCamera
-    Public Shared cutCamera As Camera
     Public Shared lastVehMemory As Memory
     Public Shared TaskScriptStatus As Integer = -1
     Public Shared pdmPed As Ped
@@ -142,8 +137,8 @@ Public Class PDM
                 Dim penalty As Double = VehiclePrice / 99
                 If VehPreview.HasBeenDamagedBy(GPC) Then
                     GP.Money = (PlayerCash - (VehiclePrice / 99))
-                    DisplayHelpTextThisFrame("$" & Math.Round(penalty).ToString("###,###") & GetLangEntry("HELP_PENALTY"))
-                    UI.Notify("$" & Math.Round(penalty).ToString("###,###") & GetLangEntry("HELP_PENALTY"))
+                    DisplayHelpTextThisFrame("$" & System.Math.Round(penalty).ToString("###,###") & GetLangEntry("HELP_PENALTY"))
+                    UI.Notify("$" & System.Math.Round(penalty).ToString("###,###") & GetLangEntry("HELP_PENALTY"))
                 End If
                 PDMMenu.ConfirmMenu.Visible = True
                 VehPreview.IsDriveable = False
@@ -165,7 +160,7 @@ Public Class PDM
                 Dim penalty As Double = VehiclePrice / 99
                 If VehPreview.HasBeenDamagedBy(GPC) Then
                     GP.Money = (PlayerCash - (VehiclePrice / 99))
-                    UI.Notify("$" & Math.Round(penalty).ToString("###,###") & GetLangEntry("HELP_PENALTY"))
+                    UI.Notify("$" & System.Math.Round(penalty).ToString("###,###") & GetLangEntry("HELP_PENALTY"))
                 End If
                 PDMMenu.ConfirmMenu.Visible = True
                 VehPreview.IsDriveable = False

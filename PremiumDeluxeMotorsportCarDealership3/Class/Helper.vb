@@ -27,6 +27,8 @@ Public Module Helper
     Public keyRoof As GTA.Control = GTA.Control.VehicleRoof
     Public keyCamera As GTA.Control = GTA.Control.VehiclePushbikeSprint
 
+    Public BtnRotLeft, BtnRotRight, BtnCamera, BtnZoom As InstructionalButton
+
     Public Sub LoadSettings()
         optRemoveColor = config.GetValue(Of Boolean)("SETTINGS", "REMOVECOLOR", 1)
         optRemoveImg = config.GetValue(Of Boolean)("SETTINGS", "REMOVESPRITE", 0)

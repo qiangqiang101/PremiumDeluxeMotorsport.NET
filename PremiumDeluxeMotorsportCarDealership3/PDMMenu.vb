@@ -1,5 +1,4 @@
-﻿Imports System
-Imports System.Drawing
+﻿Imports System.Drawing
 Imports System.Windows.Forms
 Imports GTA
 Imports GTA.Native
@@ -7,7 +6,6 @@ Imports GTA.Math
 Imports GTA.Game
 Imports INMNativeUI
 Imports System.Reflection
-Imports PDMCD4.Resources
 Imports PDMCD4.PDM
 Imports System.Text
 
@@ -39,11 +37,6 @@ Public Class PDMMenu
     Public Shared ItemPeaColor As New UIMenuItem(Game.GetGXTEntry("CMOD_COL1_6"), Game.GetGXTEntry("CMOD_MOD_6_D")) 'GetLangEntry("BTN_PEARLESCENT_COLOR"), GetLangEntry("BTN_COLOR_DESC"))
     Public Shared ItemPlate As New UIMenuItem(Game.GetGXTEntry("CMOD_MOD_PLA"), Game.GetGXTEntry("CMOD_MOD_6_D")) 'GetLangEntry("BTN_PLATE_STYLE"), GetLangEntry("BTN_COLOR_DESC"))
 
-    Public Shared BtnRotLeft As New InstructionalButton(GTA.Control.ParachuteBrakeLeft, Game.GetGXTEntry("CMM_MOD_S6")) 'GetLangEntry("BTN_DOOR"))
-    Public Shared BtnRotRight As New InstructionalButton(GTA.Control.VehicleRoof, Game.GetGXTEntry("CMOD_MOD_ROF")) 'GetLangEntry("BTN_ROOF"))
-    Public Shared BtnCamera As New InstructionalButton(GTA.Control.VehiclePushbikeSprint, Game.GetGXTEntry("CTRL_0")) 'GetLangEntry("BTN_CHANGE_CAM"))
-    Public Shared BtnZoom As New InstructionalButton(GTA.Control.VehicleSubAscend, Game.GetGXTEntry("HUD_INPUT91")) 'GetLangEntry("BTN_ZOOM"))
-
     Public Shared Parameters As String() = {"[name]", "[price]", "[model]", "[gxt]", "[make]"}
 
     Public Shared _menuPool As MenuPool
@@ -52,6 +45,10 @@ Public Class PDMMenu
     Public Sub New()
         Try
             LoadSettings()
+            BtnRotLeft = New InstructionalButton(keyDoor, Game.GetGXTEntry("CMM_MOD_S6")) 'GetLangEntry("BTN_DOOR"))
+            BtnRotRight = New InstructionalButton(keyRoof, Game.GetGXTEntry("CMOD_MOD_ROF")) 'GetLangEntry("BTN_ROOF"))
+            BtnCamera = New InstructionalButton(keyCamera, Game.GetGXTEntry("CTRL_0")) 'GetLangEntry("BTN_CHANGE_CAM"))
+            BtnZoom = New InstructionalButton(keyZoom, Game.GetGXTEntry("HUD_INPUT91")) 'GetLangEntry("BTN_ZOOM"))
 
             _menuPool = New MenuPool()
             Rectangle.Color = Color.FromArgb(0, 0, 0, 0)
