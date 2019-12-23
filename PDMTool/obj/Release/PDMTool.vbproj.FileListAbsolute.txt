@@ -41,7 +41,6 @@ E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\bin\Re
 E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\bin\Release\PDMTool.exe
 E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\bin\Release\PDMTool.pdb
 E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\bin\Release\PDMTool.xml
-E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\obj\Release\PDMTool.vbprojResolveAssemblyReference.cache
 E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\obj\Release\PDMTool.frmDealer.resources
 E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\obj\Release\PDMTool.frmDEdit.resources
 E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\obj\Release\PDMTool.frmImport.resources
