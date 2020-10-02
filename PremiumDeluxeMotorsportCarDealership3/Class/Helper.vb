@@ -29,18 +29,35 @@ Public Module Helper
 
     Public BtnRotLeft, BtnRotRight, BtnCamera, BtnZoom As InstructionalButton
 
+    Public VehPreview As Vehicle
+    Public lastVehMemory As Memory
+    Public TaskScriptStatus As Integer = -1
+    Public SelectedVehicle As String, PlayerCash, VehiclePrice As Integer, PdmBlip As Blip
+    Public HideHud As Boolean = False, DrawSpotLight As Boolean = False, ShowVehicleName As Boolean = False
+    Public Price As Decimal = 0, Radius As Integer = 120, TestDrive As Integer = 1, VehicleName As String = Nothing
+    Public wsCamera As New WorkshopCamera
+    Public PdmDoor, PlayerLastPos As Vector3, GPC, pdmPed As Ped, GP As Player
+    Public PdmDoorDist As Single
+    Public poly As Interior = New Interior(), testDeivePoly As Interior = New Interior()
+    Public blipName As String = "NULL"
+
+    Public VehPreviewPos As Vector3 = New Vector3(-44.45501, -1096.976, 26.42235)
+    Public CameraPos As Vector3 = New Vector3(-47.45673, -1101.28, 27.54757)
+    Public CameraRot As Vector3 = New Vector3(-18.12634, 0, -26.97177)
+    Public PlayerHeading As Single = 250.6701
+
     Public Sub LoadSettings()
-        optRemoveColor = config.GetValue(Of Boolean)("SETTINGS", "REMOVECOLOR", 1)
-        optRemoveImg = config.GetValue(Of Boolean)("SETTINGS", "REMOVESPRITE", 0)
-        optRandomColor = config.GetValue(Of Boolean)("SETTINGS", "RANDOMCOLOR", 1)
-        optFade = config.GetValue(Of Integer)("SETTINGS", "FADEEFFECT", 1)
+        optRemoveColor = config.GetValue(Of Boolean)("SETTINGS", "REMOVECOLOR", True)
+        optRemoveImg = config.GetValue(Of Boolean)("SETTINGS", "REMOVESPRITE", False)
+        optRandomColor = config.GetValue(Of Boolean)("SETTINGS", "RANDOMCOLOR", True)
+        optFade = config.GetValue(Of Boolean)("SETTINGS", "FADEEFFECT", True)
         optLastVehHash = config.GetValue(Of Integer)("SETTINGS", "LASTVEHHASH", -2022483795)
         optLastVehName = config.GetValue(Of String)("SETTINGS", "LASTVEHNAME", "Pfister Comet Retro Custom")
-        optLogging = config.GetValue(Of Integer)("SETTINGS", "LOGGING", 1)
-        keyZoom = config.GetValue(Of GTA.Control)("CONTROLS", "ZOOM", GTA.Control.NextCamera)
+        optLogging = config.GetValue(Of Boolean)("SETTINGS", "LOGGING", True)
+        keyZoom = config.GetValue(Of GTA.Control)("CONTROLS", "ZOOM", GTA.Control.FrontendRt)
         keyDoor = config.GetValue(Of GTA.Control)("CONTROLS", "DOOR", GTA.Control.ParachuteBrakeLeft)
-        keyRoof = config.GetValue(Of GTA.Control)("CONTROLS", "ROOF", GTA.Control.VehicleRoof)
-        keyCamera = config.GetValue(Of GTA.Control)("CONTROLS", "CAMERA", GTA.Control.VehiclePushbikeSprint)
+        keyRoof = config.GetValue(Of GTA.Control)("CONTROLS", "ROOF", GTA.Control.ParachuteBrakeRight)
+        keyCamera = config.GetValue(Of GTA.Control)("CONTROLS", "CAMERA", GTA.Control.NextCamera)
     End Sub
 
     <Extension()>
@@ -163,7 +180,7 @@ Public Module Helper
         model.Request(250)
         If model.IsInCdImage AndAlso model.IsValid Then
             While Not model.IsLoaded
-                Script.Wait(50)
+                Script.Yield()
             End While
             Result = World.CreateVehicle(model, Position, Heading)
         End If
@@ -177,7 +194,7 @@ Public Module Helper
         model.Request(250)
         If model.IsInCdImage AndAlso model.IsValid Then
             While Not model.IsLoaded
-                Script.Wait(50)
+                Script.Yield()
             End While
             Result = World.CreateVehicle(model, Position, Heading)
         End If
@@ -227,7 +244,7 @@ Public Module Helper
     End Enum
 
     Public Function IsCustomWheels() As Boolean
-        Return Native.Function.Call(Of Boolean)(Hash.GET_VEHICLE_MOD_VARIATION, PDM.VehPreview, VehicleMod.FrontWheels)
+        Return Native.Function.Call(Of Boolean)(Hash.GET_VEHICLE_MOD_VARIATION, VehPreview, VehicleMod.FrontWheels)
     End Function
 
     Public Function GetInteriorID(interior As Vector3) As Integer
@@ -548,6 +565,8 @@ Public Module Helper
         b1_0_1604_1 = 4266905
         b1_0_1737_0 = 4267883
         b1_0_1868_0 = 4268190
+        b1_0_2060_0 = 4268340
+        b1_0_2060_1 = 4268341
     End Enum
 
     Public Function GetGlobalValue() As GlobalValue
@@ -572,12 +591,138 @@ Public Module Helper
                 Return GlobalValue.b1_0_1493_1
             Case GameVersion.VER_1_0_1604_0_NOSTEAM, GameVersion.VER_1_0_1604_0_STEAM, GameVersion.VER_1_0_1604_1_NOSTEAM, GameVersion.VER_1_0_1604_1_STEAM
                 Return GlobalValue.b1_0_1604_1
-            Case 54, 53, GameVersion.VER_1_0_1737_0_NOSTEAM, GameVersion.VER_1_0_1737_0_STEAM 'GameVersion.VER_1_0_1737_6_NOSTEAM, GameVersion.VER_1_0_1737_6_STEAM
+            Case GameVersion.VER_1_0_1737_0_NOSTEAM, GameVersion.VER_1_0_1737_0_STEAM, GameVersion.VER_1_0_1737_6_NOSTEAM, GameVersion.VER_1_0_1737_6_STEAM
                 Return GlobalValue.b1_0_1737_0
-            Case 55, 56 'GameVersion.VER_1_0_1868_0_NOSTEAM, 'GameVersion.VER_1_0_1868_0_STEAM
+            Case GameVersion.VER_1_0_1868_0_NOSTEAM, GameVersion.VER_1_0_1868_0_STEAM, 57, 58, 59 'GameVersion.VER_1_0_1868_1_STEAM, GameVersion.VER_1_0_1868_1_NOSTEAM, GameVersion.VER_1_0_1868_4_EGS
                 Return GlobalValue.b1_0_1868_0
+            Case 60, 61 'GameVersion.VER_1_0_2060_0_STEAM, GameVersion.VER_1_0_2060_0_NOSTEAM
+                Return GlobalValue.b1_0_2060_0
+            Case 62, 63 'GameVersion.VER_1_0_2060_1_STEAM, GameVersion.VER_1_0_2060_1_NOSTEAM
+                Return GlobalValue.b1_0_2060_1
             Case Else
-                Return GlobalValue.b1_0_1868_0
+                Return GlobalValue.b1_0_2060_1
         End Select
     End Function
+
+    Public Sub UpdateVehPreview()
+        lastVehMemory = New Memory() With {
+                .Aerials = VehPreview.GetMod(VehicleMod.Aerials),
+                .Trim = VehPreview.GetMod(VehicleMod.Trim),
+                .FrontBumper = VehPreview.GetMod(VehicleMod.FrontBumper),
+                .RearBumper = VehPreview.GetMod(VehicleMod.RearBumper),
+                .SideSkirt = VehPreview.GetMod(VehicleMod.SideSkirt),
+                .ColumnShifterLevers = VehPreview.GetMod(VehicleMod.ColumnShifterLevers),
+                .Dashboard = VehPreview.GetMod(VehicleMod.Dashboard),
+                .DialDesign = VehPreview.GetMod(VehicleMod.DialDesign),
+                .Ornaments = VehPreview.GetMod(VehicleMod.Ornaments),
+                .Seats = VehPreview.GetMod(VehicleMod.Seats),
+                .SteeringWheels = VehPreview.GetMod(VehicleMod.SteeringWheels),
+                .TrimDesign = VehPreview.GetMod(VehicleMod.TrimDesign),
+                .LightsColor = VehPreview.DashboardColor,
+                .TrimColor = VehPreview.TrimColor,
+                .WheelType = VehPreview.WheelType,
+                .AirFilter = VehPreview.GetMod(VehicleMod.AirFilter),
+                .EngineBlock = VehPreview.GetMod(VehicleMod.EngineBlock),
+                .Struts = VehPreview.GetMod(VehicleMod.Struts),
+                .NumberPlate = VehPreview.NumberPlateType,
+                .PlateHolder = VehPreview.GetMod(VehicleMod.PlateHolder),
+                .VanityPlates = VehPreview.GetMod(VehicleMod.VanityPlates),
+                .Armor = VehPreview.GetMod(VehicleMod.Armor),
+                .Brakes = VehPreview.GetMod(VehicleMod.Brakes),
+                .Engine = VehPreview.GetMod(VehicleMod.Engine),
+                .Transmission = VehPreview.GetMod(VehicleMod.Transmission),
+                .BackNeon = VehPreview.IsNeonLightsOn(VehicleNeonLight.Back),
+                .FrontNeon = VehPreview.IsNeonLightsOn(VehicleNeonLight.Front),
+                .LeftNeon = VehPreview.IsNeonLightsOn(VehicleNeonLight.Left),
+                .RightNeon = VehPreview.IsNeonLightsOn(VehicleNeonLight.Right),
+                .BackWheels = VehPreview.GetMod(VehicleMod.BackWheels),
+                .FrontWheels = VehPreview.GetMod(VehicleMod.FrontWheels),
+                .Headlights = VehPreview.IsToggleModOn(VehicleToggleMod.XenonHeadlights),
+                .WheelsVariation = IsCustomWheels(),
+                .ArchCover = VehPreview.GetMod(VehicleMod.ArchCover),
+                .Exhaust = VehPreview.GetMod(VehicleMod.Exhaust),
+                .Fender = VehPreview.GetMod(VehicleMod.Fender),
+                .RightFender = VehPreview.GetMod(VehicleMod.RightFender),
+                .DoorSpeakers = VehPreview.GetMod(VehicleMod.DoorSpeakers),
+                .Frame = VehPreview.GetMod(VehicleMod.Frame),
+                .Grille = VehPreview.GetMod(VehicleMod.Grille),
+                .Hood = VehPreview.GetMod(VehicleMod.Hood),
+                .Horns = VehPreview.GetMod(VehicleMod.Horns),
+                .Hydraulics = VehPreview.GetMod(VehicleMod.Hydraulics),
+                .Livery = VehPreview.GetMod(VehicleMod.Livery),
+                .Plaques = VehPreview.GetMod(VehicleMod.Plaques),
+                .Roof = VehPreview.GetMod(VehicleMod.Roof),
+                .Speakers = VehPreview.GetMod(VehicleMod.Speakers),
+                .Spoilers = VehPreview.GetMod(VehicleMod.Spoilers),
+                .Tank = VehPreview.GetMod(VehicleMod.Tank),
+                .Trunk = VehPreview.GetMod(VehicleMod.Trunk),
+                .Turbo = VehPreview.IsToggleModOn(VehicleToggleMod.Turbo),
+                .Windows = VehPreview.GetMod(VehicleMod.Windows),
+                .Tint = VehPreview.WindowTint,
+                .PearlescentColor = VehPreview.PearlescentColor,
+                .PrimaryColor = VehPreview.PrimaryColor,
+                .RimColor = VehPreview.RimColor,
+                .SecondaryColor = VehPreview.SecondaryColor,
+                .TireSmokeColor = VehPreview.TireSmokeColor,
+                .NeonLightsColor = VehPreview.NeonLightsColor,
+                .PlateNumbers = VehPreview.NumberPlate,
+                .CustomPrimaryColor = VehPreview.CustomPrimaryColor,
+                .CustomSecondaryColor = VehPreview.CustomSecondaryColor,
+                .IsPrimaryColorCustom = VehPreview.IsPrimaryColorCustom,
+                .IsSecondaryColorCustom = VehPreview.IsSecondaryColorCustom,
+                .Suspension = VehPreview.GetMod(VehicleMod.Suspension)}
+    End Sub
+
+    Public Sub SuspendKeys()
+        Game.DisableControlThisFrame(0, GTA.Control.MoveUpDown)
+        Game.DisableControlThisFrame(0, GTA.Control.MoveLeftRight)
+        Game.DisableControlThisFrame(0, GTA.Control.MoveDown)
+        Game.DisableControlThisFrame(0, GTA.Control.MoveDownOnly)
+        Game.DisableControlThisFrame(0, GTA.Control.MoveLeft)
+        Game.DisableControlThisFrame(0, GTA.Control.MoveLeftOnly)
+        Game.DisableControlThisFrame(0, GTA.Control.MoveRight)
+        Game.DisableControlThisFrame(0, GTA.Control.MoveRightOnly)
+        Game.DisableControlThisFrame(0, GTA.Control.MoveUp)
+        Game.DisableControlThisFrame(0, GTA.Control.MoveUpOnly)
+        Game.DisableControlThisFrame(0, GTA.Control.Jump)
+        Game.DisableControlThisFrame(0, GTA.Control.Cover)
+        Game.DisableControlThisFrame(0, GTA.Control.Context)
+        Game.DisableControlThisFrame(0, GTA.Control.VehicleAccelerate)
+        Game.DisableControlThisFrame(0, GTA.Control.VehicleAim)
+        Game.DisableControlThisFrame(0, GTA.Control.VehicleAttack)
+        Game.DisableControlThisFrame(0, GTA.Control.VehicleAttack2)
+        Game.DisableControlThisFrame(0, GTA.Control.VehicleBrake)
+        Game.DisableControlThisFrame(0, GTA.Control.VehicleCinCam)
+        Game.DisableControlThisFrame(0, GTA.Control.VehicleDuck)
+        Game.DisableControlThisFrame(0, GTA.Control.VehicleExit)
+        Game.DisableControlThisFrame(0, GTA.Control.VehicleHeadlight)
+        Game.DisableControlThisFrame(0, GTA.Control.VehicleHorn)
+        Game.DisableControlThisFrame(0, GTA.Control.VehicleMoveLeftOnly)
+        Game.DisableControlThisFrame(0, GTA.Control.VehicleMoveRightOnly)
+        Game.DisableControlThisFrame(0, GTA.Control.VehicleMoveLeft)
+        Game.DisableControlThisFrame(0, GTA.Control.VehicleMoveRight)
+        Game.DisableControlThisFrame(0, GTA.Control.VehicleSubTurnLeftRight)
+        Game.DisableControlThisFrame(0, GTA.Control.VehicleSubTurnLeftOnly)
+        Game.DisableControlThisFrame(0, GTA.Control.VehicleSubTurnRightOnly)
+        Game.DisableControlThisFrame(0, GTA.Control.VehicleSubTurnHardLeft)
+        Game.DisableControlThisFrame(0, GTA.Control.VehicleSubTurnHardRight)
+        Game.DisableControlThisFrame(0, GTA.Control.VehicleMoveLeftRight)
+        Game.DisableControlThisFrame(0, GTA.Control.VehicleLookLeft)
+        Game.DisableControlThisFrame(0, GTA.Control.VehicleLookRight)
+        Game.DisableControlThisFrame(0, GTA.Control.VehicleHotwireLeft)
+        Game.DisableControlThisFrame(0, GTA.Control.VehicleHotwireRight)
+        Game.DisableControlThisFrame(0, GTA.Control.VehicleGunLeftRight)
+        Game.DisableControlThisFrame(0, GTA.Control.VehicleGunLeft)
+        Game.DisableControlThisFrame(0, GTA.Control.VehicleGunRight)
+        Game.DisableControlThisFrame(0, GTA.Control.VehicleCinematicLeftRight)
+        Game.DisableControlThisFrame(0, GTA.Control.NextCamera)
+        Game.DisableControlThisFrame(0, GTA.Control.VehicleRocketBoost)
+        Game.DisableControlThisFrame(0, GTA.Control.VehicleJump)
+        Game.DisableControlThisFrame(0, GTA.Control.VehicleCarJump)
+        Game.DisableControlThisFrame(0, GTA.Control.Jump)
+        Game.DisableControlThisFrame(0, keyCamera)
+        Game.DisableControlThisFrame(0, keyDoor)
+        Game.DisableControlThisFrame(0, keyRoof)
+        Game.DisableControlThisFrame(0, keyZoom)
+    End Sub
 End Module

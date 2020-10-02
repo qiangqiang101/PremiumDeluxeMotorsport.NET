@@ -44,8 +44,9 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="INMNativeUI">
-      <HintPath>F:\Program Files\Steam\SteamApps\common\Grand Theft Auto V\scripts\INMNativeUI.dll</HintPath>
+    <Reference Include="INMNativeUI, Version=1.7.4.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Grand Theft Auto V\scripts\INMNativeUI.dll</HintPath>
     </Reference>
     <Reference Include="ScriptHookVDotNet2, Version=2.10.5.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
@@ -80,10 +81,9 @@
     <Compile Include="Class\Logger.vb" />
     <Compile Include="Class\Memory.vb" />
     <Compile Include="Class\Reader.vb" />
-    <Compile Include="Class\ReadMemory.vb" />
     <Compile Include="Class\Helper.vb" />
     <Compile Include="Class\Timer.vb" />
-    <Compile Include="PDMMenu.vb" />
+    <Compile Include="MenuHelper.vb" />
     <Compile Include="PDM.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
@@ -101,6 +101,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Class\WorkshopCamera.vb" />
+    <Compile Include="PDMeX.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">

@@ -510,7 +510,7 @@ Public Class WorkshopCamera
                     Game.Player.Character.Alpha = 255
                     RotationMode = CameraRotationMode.Around
 
-                    Select Case PDM.VehPreview.Model
+                    Select Case VehPreview.Model
                         Case "buccaneer2", "faction2", "moonbeam2", "slamvan3", "faction3"
                             _targetPos = GetBonePosition(_target, "misc_h")
                         Case "voodoo", "chino2"
@@ -625,8 +625,8 @@ Public Class WorkshopCamera
         World.DestroyAllCameras()
         _mainCamera = World.CreateCamera(lowrider.Position - lowrider.ForwardVector * 5.0 + New Vector3(0, 0, 1.5), CutsceneManager.DirectionToRotation(lowrider.ForwardVector * -5.0), GameplayCamera.FieldOfView)
         _mainCamera.PointAt(lowrider)
-        _mainCamera.Position = PDM.CameraPos
-        _mainCamera.Rotation = PDM.CameraRot
+        _mainCamera.Position = CameraPos
+        _mainCamera.Rotation = CameraRot
         World.RenderingCamera = _mainCamera
         _target = lowrider
         _targetPos = lowrider.Position
@@ -811,8 +811,8 @@ Public Class WorkshopCamera
         End If
 
         If Not MainCameraPosition = CameraPosition.Interior Then
-            PDM.CameraPos = _mainCamera.Position
-            PDM.CameraRot = _mainCamera.Rotation
+            CameraPos = _mainCamera.Position
+            CameraRot = _mainCamera.Rotation
         End If
     End Sub
 

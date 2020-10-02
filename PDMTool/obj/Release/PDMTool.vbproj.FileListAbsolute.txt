@@ -49,3 +49,4 @@ E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\obj\Re
 E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\obj\Release\PDMTool.exe
 E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\obj\Release\PDMTool.xml
 E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\obj\Release\PDMTool.pdb
+E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PDMTool\obj\Release\PDMTool.vbprojResolveAssemblyReference.cache

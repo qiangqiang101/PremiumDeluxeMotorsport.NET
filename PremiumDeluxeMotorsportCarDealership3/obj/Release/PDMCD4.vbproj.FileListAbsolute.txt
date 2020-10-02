@@ -49,3 +49,5 @@ E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeM
 E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\obj\Release\PDMCD4.pdb
 E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\bin\Release\ScriptHookVDotNet2.dll
 E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\obj\Release\PDMCD4.vbprojResolveAssemblyReference.cache
+E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\bin\Release\INMNativeUI.dll
+E:\Users\Bartholomew\Documents\GitHub\PremiumDeluxeMotorsport.NET\PremiumDeluxeMotorsportCarDealership3\bin\Release\INMNativeUI.pdb
