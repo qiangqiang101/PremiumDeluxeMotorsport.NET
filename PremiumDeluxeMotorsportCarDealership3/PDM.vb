@@ -98,8 +98,7 @@ Public Class PDM
                 Dim penalty As Double = VehiclePrice / 99
                 If VehPreview.HasBeenDamagedBy(GPC) Then
                     GP.Money = (PlayerCash - (VehiclePrice / 99))
-                    DisplayHelpTextThisFrame("$" & System.Math.Round(penalty).ToString("###,###") & GetLangEntry("HELP_PENALTY"))
-                    UI.Notify("$" & System.Math.Round(penalty).ToString("###,###") & GetLangEntry("HELP_PENALTY"))
+                    UI.ShowSubtitle("$" & System.Math.Round(penalty).ToString("###,###") & GetLangEntry("HELP_PENALTY"))
                 End If
                 ConfirmMenu.Visible = True
                 VehPreview.IsDriveable = False
