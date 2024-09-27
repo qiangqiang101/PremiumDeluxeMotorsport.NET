@@ -44,13 +44,11 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="INMNativeUI, Version=1.7.4.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Grand Theft Auto V\scripts\INMNativeUI.dll</HintPath>
+    <Reference Include="LemonUI.SHVDN3">
+      <HintPath>G:\Program Files (x86)\Steam\steamapps\common\Grand Theft Auto V\scripts\LemonUI.SHVDN3.dll</HintPath>
     </Reference>
-    <Reference Include="ScriptHookVDotNet2, Version=2.10.5.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Grand Theft Auto V\ScriptHookVDotNet2.dll</HintPath>
+    <Reference Include="ScriptHookVDotNet3">
+      <HintPath>G:\Program Files (x86)\Steam\steamapps\common\Grand Theft Auto V\ScriptHookVDotNet3.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

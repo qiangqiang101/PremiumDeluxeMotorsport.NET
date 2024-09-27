@@ -7,69 +7,71 @@ Imports GTA
 Imports GTA.Math
 Imports GTA.Native
 Imports INMNativeUI
+Imports LemonUI
+Imports LemonUI.Menus
 
 Public Module MenuHelper
 
-    Public MainMenu, ConfirmMenu, CustomiseMenu, VehicleMenu As UIMenu
-    Public itemCat As UIMenuItem
-    Public PriColorMenu, ClassicColorMenu, MetallicColorMenu, MetalColorMenu, MatteColorMenu, ChromeColorMenu, PeaColorMenu, CPriColorMenu As UIMenu
-    Public ColorMenu, SecColorMenu, ClassicColorMenu2, MetallicColorMenu2, MetalColorMenu2, MatteColorMenu2, ChromeColorMenu2, CSecColorMenu, PlateMenu As UIMenu
+    Public MainMenu, ConfirmMenu, CustomiseMenu, VehicleMenu As NativeMenu
+    Public itemCat As MenuItem
+    Public PriColorMenu, ClassicColorMenu, MetallicColorMenu, MetalColorMenu, MatteColorMenu, ChromeColorMenu, PeaColorMenu, CPriColorMenu As NativeMenu
+    Public ColorMenu, SecColorMenu, ClassicColorMenu2, MetallicColorMenu2, MetalColorMenu2, MatteColorMenu2, ChromeColorMenu2, CSecColorMenu, PlateMenu As NativeMenu
 
     Public ItemCustomize, ItemConfirm, ItemColor, ItemClassicColor, ItemClassicColor2, ItemMetallicColor, ItemMetallicColor2, ItemMetalColor, ItemMetalColor2,
-        ItemMatteColor, ItemMatteColor2, ItemChromeColor, ItemChromeColor2, ItemCPriColor, ItemCSecColor, ItemPriColor, ItemSecColor, ItemPeaColor, ItemPlate As UIMenuItem
+        ItemMatteColor, ItemMatteColor2, ItemChromeColor, ItemChromeColor2, ItemCPriColor, ItemCSecColor, ItemPriColor, ItemSecColor, ItemPeaColor, ItemPlate As MenuItem
 
     Public Parameters As String() = {"[name]", "[price]", "[model]", "[gxt]", "[make]"}
 
-    Public _menuPool As MenuPool
+    Public _menuPool As ObjectPool
 
     Public Sub CreateMenus()
-        ItemCustomize = New UIMenuItem(GetLangEntry("BTN_CUSTOMIZE"))
-        ItemConfirm = New UIMenuItem(Game.GetGXTEntry("ITEM_YES"))
-        ItemColor = New UIMenuItem(Game.GetGXTEntry("IB_COLOR"), Game.GetGXTEntry("CMOD_MOD_6_D"))
-        ItemClassicColor = New UIMenuItem(Game.GetGXTEntry("CMOD_COL1_1"), Game.GetGXTEntry("CMOD_MOD_6_D"))
-        ItemClassicColor2 = New UIMenuItem(Game.GetGXTEntry("CMOD_COL1_1"), Game.GetGXTEntry("CMOD_MOD_6_D"))
-        ItemMetallicColor = New UIMenuItem(Game.GetGXTEntry("CMOD_COL1_3"), Game.GetGXTEntry("CMOD_MOD_6_D"))
-        ItemMetallicColor2 = New UIMenuItem(Game.GetGXTEntry("CMOD_COL1_3"), Game.GetGXTEntry("CMOD_MOD_6_D"))
-        ItemMetalColor = New UIMenuItem(Game.GetGXTEntry("CMOD_COL1_4"), Game.GetGXTEntry("CMOD_MOD_6_D"))
-        ItemMetalColor2 = New UIMenuItem(Game.GetGXTEntry("CMOD_COL1_4"), Game.GetGXTEntry("CMOD_MOD_6_D"))
-        ItemMatteColor = New UIMenuItem(Game.GetGXTEntry("CMOD_COL1_5"), Game.GetGXTEntry("CMOD_MOD_6_D"))
-        ItemMatteColor2 = New UIMenuItem(Game.GetGXTEntry("CMOD_COL1_5"), Game.GetGXTEntry("CMOD_MOD_6_D"))
-        ItemChromeColor = New UIMenuItem(Game.GetGXTEntry("CMOD_COL1_0"), Game.GetGXTEntry("CMOD_MOD_6_D"))
-        ItemChromeColor2 = New UIMenuItem(Game.GetGXTEntry("CMOD_COL1_0"), Game.GetGXTEntry("CMOD_MOD_6_D"))
-        ItemCPriColor = New UIMenuItem(GetLangEntry("BTN_CUSTOM_PRIMARY"), Game.GetGXTEntry("CMOD_MOD_6_D"))
-        ItemCSecColor = New UIMenuItem(GetLangEntry("BTN_CUSTOM_SECONDARY"), Game.GetGXTEntry("CMOD_MOD_6_D"))
-        ItemPriColor = New UIMenuItem(Game.GetGXTEntry("CMOD_COL0_0"), Game.GetGXTEntry("CMOD_MOD_6_D"))
-        ItemSecColor = New UIMenuItem(Game.GetGXTEntry("CMOD_COL0_1"), Game.GetGXTEntry("CMOD_MOD_6_D"))
-        ItemPeaColor = New UIMenuItem(Game.GetGXTEntry("CMOD_COL1_6"), Game.GetGXTEntry("CMOD_MOD_6_D"))
-        ItemPlate = New UIMenuItem(Game.GetGXTEntry("CMOD_MOD_PLA"), Game.GetGXTEntry("CMOD_MOD_6_D"))
+        ItemCustomize = New MenuItem(GetLangEntry("BTN_CUSTOMIZE"))
+        ItemConfirm = New MenuItem(Game.GetLocalizedString("ITEM_YES"))
+        ItemColor = New MenuItem(Game.GetLocalizedString("IB_COLOR"), Game.GetLocalizedString("CMOD_MOD_6_D"))
+        ItemClassicColor = New MenuItem(Game.GetLocalizedString("CMOD_COL1_1"), Game.GetLocalizedString("CMOD_MOD_6_D"))
+        ItemClassicColor2 = New MenuItem(Game.GetLocalizedString("CMOD_COL1_1"), Game.GetLocalizedString("CMOD_MOD_6_D"))
+        ItemMetallicColor = New MenuItem(Game.GetLocalizedString("CMOD_COL1_3"), Game.GetLocalizedString("CMOD_MOD_6_D"))
+        ItemMetallicColor2 = New MenuItem(Game.GetLocalizedString("CMOD_COL1_3"), Game.GetLocalizedString("CMOD_MOD_6_D"))
+        ItemMetalColor = New MenuItem(Game.GetLocalizedString("CMOD_COL1_4"), Game.GetLocalizedString("CMOD_MOD_6_D"))
+        ItemMetalColor2 = New MenuItem(Game.GetLocalizedString("CMOD_COL1_4"), Game.GetLocalizedString("CMOD_MOD_6_D"))
+        ItemMatteColor = New MenuItem(Game.GetLocalizedString("CMOD_COL1_5"), Game.GetLocalizedString("CMOD_MOD_6_D"))
+        ItemMatteColor2 = New MenuItem(Game.GetLocalizedString("CMOD_COL1_5"), Game.GetLocalizedString("CMOD_MOD_6_D"))
+        ItemChromeColor = New MenuItem(Game.GetLocalizedString("CMOD_COL1_0"), Game.GetLocalizedString("CMOD_MOD_6_D"))
+        ItemChromeColor2 = New MenuItem(Game.GetLocalizedString("CMOD_COL1_0"), Game.GetLocalizedString("CMOD_MOD_6_D"))
+        ItemCPriColor = New MenuItem(GetLangEntry("BTN_CUSTOM_PRIMARY"), Game.GetLocalizedString("CMOD_MOD_6_D"))
+        ItemCSecColor = New MenuItem(GetLangEntry("BTN_CUSTOM_SECONDARY"), Game.GetLocalizedString("CMOD_MOD_6_D"))
+        ItemPriColor = New MenuItem(Game.GetLocalizedString("CMOD_COL0_0"), Game.GetLocalizedString("CMOD_MOD_6_D"))
+        ItemSecColor = New MenuItem(Game.GetLocalizedString("CMOD_COL0_1"), Game.GetLocalizedString("CMOD_MOD_6_D"))
+        ItemPeaColor = New MenuItem(Game.GetLocalizedString("CMOD_COL1_6"), Game.GetLocalizedString("CMOD_MOD_6_D"))
+        ItemPlate = New MenuItem(Game.GetLocalizedString("CMOD_MOD_PLA"), Game.GetLocalizedString("CMOD_MOD_6_D"))
 
         CreateCategoryMenu()
         CreateConfirmMenu()
         CreateCustomizeMenu()
         CreateColorCategory()
-        PlateMenu = PlateMenu.NewUIMenu(Game.GetGXTEntry("CMOD_MOD_PLA"), CustomiseMenu, ItemPlate)
+        PlateMenu = PlateMenu.AddSubMenu(New NativeMenu(Game.GetLocalizedString("CMOD_MOD_PLA"), CustomiseMenu, ItemPlate))
         CreatePrimaryColor()
         CreateSecondaryColor()
         CPriColorMenu = CPriColorMenu.NewUIMenu(GetLangEntry("BTN_CUSTOM_PRIMARY"), ColorMenu, ItemCPriColor)
         CSecColorMenu = CSecColorMenu.NewUIMenu(GetLangEntry("BTN_CUSTOM_SECONDARY"), ColorMenu, ItemCSecColor)
-        ClassicColorMenu = ClassicColorMenu.NewUIMenu(Game.GetGXTEntry("CMOD_COL1_1"), PriColorMenu, ItemClassicColor)
-        MetallicColorMenu = MetallicColorMenu.NewUIMenu(Game.GetGXTEntry("CMOD_COL1_3"), PriColorMenu, ItemMetallicColor)
-        MetalColorMenu = MetalColorMenu.NewUIMenu(Game.GetGXTEntry("CMOD_COL1_4"), PriColorMenu, ItemMetalColor)
-        MatteColorMenu = MatteColorMenu.NewUIMenu(Game.GetGXTEntry("CMOD_COL1_5"), PriColorMenu, ItemMatteColor)
-        ChromeColorMenu = ChromeColorMenu.NewUIMenu(Game.GetGXTEntry("CMOD_COL1_0"), PriColorMenu, ItemChromeColor)
-        PeaColorMenu = PeaColorMenu.NewUIMenu(Game.GetGXTEntry("CMOD_COL1_6"), PriColorMenu, ItemPeaColor)
-        ClassicColorMenu2 = ClassicColorMenu2.NewUIMenu(Game.GetGXTEntry("CMOD_COL1_1"), SecColorMenu, ItemClassicColor2)
-        MetallicColorMenu2 = MetallicColorMenu2.NewUIMenu(Game.GetGXTEntry("CMOD_COL1_3"), SecColorMenu, ItemMetallicColor2)
-        MetalColorMenu2 = MetalColorMenu2.NewUIMenu(Game.GetGXTEntry("CMOD_COL1_4"), SecColorMenu, ItemMetalColor2)
-        MatteColorMenu2 = MatteColorMenu2.NewUIMenu(Game.GetGXTEntry("CMOD_COL1_5"), SecColorMenu, ItemMatteColor2)
-        ChromeColorMenu2 = ChromeColorMenu2.NewUIMenu(Game.GetGXTEntry("CMOD_COL1_0"), SecColorMenu, ItemChromeColor2)
+        ClassicColorMenu = ClassicColorMenu.NewUIMenu(Game.GetLocalizedString("CMOD_COL1_1"), PriColorMenu, ItemClassicColor)
+        MetallicColorMenu = MetallicColorMenu.NewUIMenu(Game.GetLocalizedString("CMOD_COL1_3"), PriColorMenu, ItemMetallicColor)
+        MetalColorMenu = MetalColorMenu.NewUIMenu(Game.GetLocalizedString("CMOD_COL1_4"), PriColorMenu, ItemMetalColor)
+        MatteColorMenu = MatteColorMenu.NewUIMenu(Game.GetLocalizedString("CMOD_COL1_5"), PriColorMenu, ItemMatteColor)
+        ChromeColorMenu = ChromeColorMenu.NewUIMenu(Game.GetLocalizedString("CMOD_COL1_0"), PriColorMenu, ItemChromeColor)
+        PeaColorMenu = PeaColorMenu.NewUIMenu(Game.GetLocalizedString("CMOD_COL1_6"), PriColorMenu, ItemPeaColor)
+        ClassicColorMenu2 = ClassicColorMenu2.NewUIMenu(Game.GetLocalizedString("CMOD_COL1_1"), SecColorMenu, ItemClassicColor2)
+        MetallicColorMenu2 = MetallicColorMenu2.NewUIMenu(Game.GetLocalizedString("CMOD_COL1_3"), SecColorMenu, ItemMetallicColor2)
+        MetalColorMenu2 = MetalColorMenu2.NewUIMenu(Game.GetLocalizedString("CMOD_COL1_4"), SecColorMenu, ItemMetalColor2)
+        MatteColorMenu2 = MatteColorMenu2.NewUIMenu(Game.GetLocalizedString("CMOD_COL1_5"), SecColorMenu, ItemMatteColor2)
+        ChromeColorMenu2 = ChromeColorMenu2.NewUIMenu(Game.GetLocalizedString("CMOD_COL1_0"), SecColorMenu, ItemChromeColor2)
     End Sub
 
     Public Sub CreateCategoryMenu()
-        MainMenu = MainMenu.NewUIMenu(Game.GetGXTEntry("CMOD_MOD_T"), True)
+        MainMenu = MainMenu.NewUIMenu(Game.GetLocalizedString("CMOD_MOD_T"), True)
         For Each file As String In IO.Directory.GetFiles(".\scripts\PremiumDeluxeMotorsport\Vehicles\", "*.ini")
             If IO.File.Exists(file) Then
-                itemCat = New UIMenuItem(GetLangEntry(IO.Path.GetFileNameWithoutExtension(file)))
+                itemCat = New MenuItem(GetLangEntry(IO.Path.GetFileNameWithoutExtension(file)))
                 With itemCat
                     Dim lc As Integer = IO.File.ReadAllLines(file).Length
                     .Tag = New Tuple(Of Integer, String)(lc, IO.Path.GetFileNameWithoutExtension(file))
@@ -85,8 +87,8 @@ Public Module MenuHelper
     Public Sub CreateConfirmMenu()
         ConfirmMenu = ConfirmMenu.NewUIMenu(GetLangEntry("PURCHASE_ORDER"), True)
         ConfirmMenu.AddItem(ItemCustomize)
-        ConfirmMenu.AddItem(New UIMenuItem(GetLangEntry("BTN_TEST_DRIVE")))
-        ConfirmMenu.AddItem(New UIMenuItem(Game.GetGXTEntry("ITEM_YES")))
+        ConfirmMenu.AddItem(New MenuItem(GetLangEntry("BTN_TEST_DRIVE")))
+        ConfirmMenu.AddItem(New MenuItem(Game.GetLocalizedString("ITEM_YES")))
         ConfirmMenu.RefreshIndex()
         AddHandler ConfirmMenu.OnMenuClose, AddressOf ConfirmCloseHandler
         AddHandler ConfirmMenu.OnItemSelect, AddressOf ItemSelectHandler
@@ -95,8 +97,8 @@ Public Module MenuHelper
     Public Sub CreateCustomizeMenu()
         CustomiseMenu = CustomiseMenu.NewUIMenu(GetLangEntry("BTN_CUSTOMIZE").ToUpper, True)
         CustomiseMenu.AddItem(ItemColor)
-        CustomiseMenu.AddItem(New UIMenuItem(Game.GetGXTEntry("PERSO_MOD_PER"), Game.GetGXTEntry("IE_MOD_OBJ4")))
-        CustomiseMenu.AddItem(New UIMenuItem(GetLangEntry("BTN_PLATE_NUMBER_NAME"), Game.GetGXTEntry("IE_MOD_OBJ2")))
+        CustomiseMenu.AddItem(New MenuItem(Game.GetLocalizedString("PERSO_MOD_PER"), Game.GetLocalizedString("IE_MOD_OBJ4")))
+        CustomiseMenu.AddItem(New MenuItem(GetLangEntry("BTN_PLATE_NUMBER_NAME"), Game.GetLocalizedString("IE_MOD_OBJ2")))
         CustomiseMenu.AddItem(ItemPlate)
         CustomiseMenu.RefreshIndex()
         ConfirmMenu.BindMenuToItem(CustomiseMenu, ItemCustomize)
@@ -104,7 +106,7 @@ Public Module MenuHelper
     End Sub
 
     Public Sub CreateColorCategory()
-        ColorMenu = ColorMenu.NewUIMenu(Game.GetGXTEntry("CMOD_COL1_T"), True)
+        ColorMenu = ColorMenu.NewUIMenu(Game.GetLocalizedString("CMOD_COL1_T"), True)
         ColorMenu.AddItem(ItemPriColor)
         ColorMenu.AddItem(ItemSecColor)
         ColorMenu.AddItem(ItemCPriColor)
@@ -114,7 +116,7 @@ Public Module MenuHelper
     End Sub
 
     Public Sub CreatePrimaryColor()
-        PriColorMenu = PriColorMenu.NewUIMenu(Game.GetGXTEntry("CMOD_COL2_T"), True)
+        PriColorMenu = PriColorMenu.NewUIMenu(Game.GetLocalizedString("CMOD_COL2_T"), True)
         PriColorMenu.AddItem(ItemClassicColor)
         PriColorMenu.AddItem(ItemMetallicColor)
         PriColorMenu.AddItem(ItemMatteColor)
@@ -126,7 +128,7 @@ Public Module MenuHelper
     End Sub
 
     Public Sub CreateSecondaryColor()
-        SecColorMenu = SecColorMenu.NewUIMenu(Game.GetGXTEntry("CMOD_COL3_T"), True)
+        SecColorMenu = SecColorMenu.NewUIMenu(Game.GetLocalizedString("CMOD_COL3_T"), True)
         SecColorMenu.AddItem(ItemClassicColor2)
         SecColorMenu.AddItem(ItemMetallicColor2)
         SecColorMenu.AddItem(ItemMatteColor2)
@@ -161,7 +163,7 @@ Public Module MenuHelper
     End Function
 
     <Extension>
-    Public Function NewUIMenu(ByRef menu As UIMenu, title As String, ByRef parentMenu As UIMenu, ByRef parentItem As UIMenuItem) As UIMenu
+    Public Function NewUIMenu(ByRef menu As UIMenu, title As String, ByRef parentMenu As UIMenu, ByRef parentItem As MenuItem) As UIMenu
         Try
             If optRemoveImg = 0 Then
                 menu = New UIMenu("", title, True)
@@ -177,7 +179,7 @@ Public Module MenuHelper
             menu.AddInstructionalButton(BtnCamera)
             menu.AddInstructionalButton(BtnZoom)
             _menuPool.Add(menu)
-            menu.AddItem(New UIMenuItem("Nothing"))
+            menu.AddItem(New MenuItem("Nothing"))
             menu.RefreshIndex()
             parentMenu.BindMenuToItem(menu, parentItem)
             AddHandler menu.OnMenuClose, AddressOf ModsMenuCloseHandler
@@ -221,19 +223,19 @@ Public Module MenuHelper
         End Try
     End Sub
 
-    Public Sub RefreshColorMenuFor(ByRef menu As UIMenu, ByRef item As UIMenuItem, ByRef colorList As List(Of VehicleColor), prisecpear As String)
+    Public Sub RefreshColorMenuFor(ByRef menu As UIMenu, ByRef item As MenuItem, ByRef colorList As List(Of VehicleColor), prisecpear As String)
         Try
             menu.MenuItems.Clear()
             For Each col As VehicleColor In colorList
-                item = New UIMenuItem(GetLocalizedColorName(col))
+                item = New MenuItem(GetLocalizedColorName(col))
                 With item
                     .Tag = col
                     If prisecpear = "Primary" Then
-                        If VehPreview.PrimaryColor = col Then .SetRightBadge(UIMenuItem.BadgeStyle.Car)
+                        If VehPreview.PrimaryColor = col Then .SetRightBadge(MenuItem.BadgeStyle.Car)
                     ElseIf prisecpear = "Secondary" Then
-                        If VehPreview.SecondaryColor = col Then .SetRightBadge(UIMenuItem.BadgeStyle.Car)
+                        If VehPreview.SecondaryColor = col Then .SetRightBadge(MenuItem.BadgeStyle.Car)
                     ElseIf prisecpear = "Pearlescent" Then
-                        If VehPreview.PearlescentColor = col Then .SetRightBadge(UIMenuItem.BadgeStyle.Car)
+                        If VehPreview.PearlescentColor = col Then .SetRightBadge(MenuItem.BadgeStyle.Car)
                     End If
                 End With
                 menu.AddItem(item)
@@ -244,20 +246,20 @@ Public Module MenuHelper
         End Try
     End Sub
 
-    Public Sub RefreshRGBColorMenuFor(ByRef menu As UIMenu, ByRef item As UIMenuItem, category As String)
+    Public Sub RefreshRGBColorMenuFor(ByRef menu As UIMenu, ByRef item As MenuItem, category As String)
         Try
             menu.MenuItems.Clear()
             Dim removeList As New List(Of String) From {"R", "G", "B", "A", "IsKnownColor", "IsEmpty", "IsNamedColor", "IsSystemColor", "Name", "Transparent"}
             Dim index As Integer = 0
             For Each col As Reflection.PropertyInfo In GetType(Drawing.Color).GetProperties()
                 If Not removeList.Contains(col.Name) Then
-                    item = New UIMenuItem(Trim(RegularExpressions.Regex.Replace(col.Name, "[A-Z]", " ${0}")))
+                    item = New MenuItem(Trim(RegularExpressions.Regex.Replace(col.Name, "[A-Z]", " ${0}")))
                     With item
                         .Tag = Color.FromArgb(Color.FromName(col.Name).R, Color.FromName(col.Name).G, Color.FromName(col.Name).B)
                         If category = "Primary" Then
-                            If VehPreview.CustomPrimaryColor = Drawing.Color.FromName(col.Name) Then .SetRightBadge(UIMenuItem.BadgeStyle.Car)
+                            If VehPreview.CustomPrimaryColor = Drawing.Color.FromName(col.Name) Then .SetRightBadge(MenuItem.BadgeStyle.Car)
                         ElseIf category = "Secondary" Then
-                            If VehPreview.CustomSecondaryColor = Drawing.Color.FromName(col.Name) Then .SetRightBadge(UIMenuItem.BadgeStyle.Car)
+                            If VehPreview.CustomSecondaryColor = Drawing.Color.FromName(col.Name) Then .SetRightBadge(MenuItem.BadgeStyle.Car)
                         End If
                     End With
                     menu.AddItem(item)
@@ -270,59 +272,59 @@ Public Module MenuHelper
         End Try
     End Sub
 
-    Public Sub RefreshEnumModMenuFor(ByRef menu As UIMenu, ByRef item As UIMenuItem, ByRef enumType As EnumTypes)
+    Public Sub RefreshEnumModMenuFor(ByRef menu As UIMenu, ByRef item As MenuItem, ByRef enumType As EnumTypes)
         Try
             menu.MenuItems.Clear()
 
             Dim enumArray As Array = Nothing
             Select Case enumType
                 Case EnumTypes.NumberPlateType
-                    enumArray = System.Enum.GetValues(GetType(NumberPlateType))
-                    For Each enumItem As NumberPlateType In enumArray
-                        item = New UIMenuItem(LocalizedLicensePlate(enumItem))
+                    enumArray = System.Enum.GetValues(GetType(LicensePlateStyle))
+                    For Each enumItem As LicensePlateStyle In enumArray
+                        item = New MenuItem(LocalizedLicensePlate(enumItem))
                         With item
                             .Tag = enumItem
-                            If VehPreview.NumberPlateType = enumItem Then .SetRightBadge(UIMenuItem.BadgeStyle.Car)
+                            If VehPreview.NumberPlateType = enumItem Then .SetRightBadge(MenuItem.BadgeStyle.Car)
                         End With
                         menu.AddItem(item)
                     Next
                 Case EnumTypes.VehicleWindowTint
                     enumArray = System.Enum.GetValues(GetType(VehicleWindowTint))
                     For Each enumItem As VehicleWindowTint In enumArray
-                        item = New UIMenuItem(LocalizedWindowsTint(enumItem))
+                        item = New MenuItem(LocalizedWindowsTint(enumItem))
                         With item
                             .Tag = enumItem
-                            If VehPreview.WindowTint = enumItem Then .SetRightBadge(UIMenuItem.BadgeStyle.Car)
+                            If VehPreview.WindowTint = enumItem Then .SetRightBadge(MenuItem.BadgeStyle.Car)
                         End With
                         menu.AddItem(item)
                     Next
                 Case EnumTypes.VehicleColorTrim
                     enumArray = System.Enum.GetValues(GetType(VehicleColor))
                     For Each enumItem As VehicleColor In enumArray
-                        item = New UIMenuItem(GetLocalizedColorName(enumItem))
+                        item = New MenuItem(GetLocalizedColorName(enumItem))
                         With item
                             .Tag = enumItem
-                            If VehPreview.TrimColor = enumItem Then .SetRightBadge(UIMenuItem.BadgeStyle.Car)
+                            If VehPreview.TrimColor = enumItem Then .SetRightBadge(MenuItem.BadgeStyle.Car)
                         End With
                         menu.AddItem(item)
                     Next
                 Case EnumTypes.VehicleColorDashboard
                     enumArray = System.Enum.GetValues(GetType(VehicleColor))
                     For Each enumItem As VehicleColor In enumArray
-                        item = New UIMenuItem(GetLocalizedColorName(enumItem))
+                        item = New MenuItem(GetLocalizedColorName(enumItem))
                         With item
                             .Tag = enumItem
-                            If VehPreview.DashboardColor = enumItem Then .SetRightBadge(UIMenuItem.BadgeStyle.Car)
+                            If VehPreview.DashboardColor = enumItem Then .SetRightBadge(MenuItem.BadgeStyle.Car)
                         End With
                         menu.AddItem(item)
                     Next
                 Case EnumTypes.VehicleColorRim
                     enumArray = System.Enum.GetValues(GetType(VehicleColor))
                     For Each enumItem As VehicleColor In enumArray
-                        item = New UIMenuItem(GetLocalizedColorName(enumItem))
+                        item = New MenuItem(GetLocalizedColorName(enumItem))
                         With item
                             .Tag = enumItem
-                            If VehPreview.RimColor = enumItem Then .SetRightBadge(UIMenuItem.BadgeStyle.Car)
+                            If VehPreview.RimColor = enumItem Then .SetRightBadge(MenuItem.BadgeStyle.Car)
                         End With
                         menu.AddItem(item)
                     Next
@@ -333,7 +335,7 @@ Public Module MenuHelper
         End Try
     End Sub
 
-    Public Sub VehicleSelectHandler(sender As UIMenu, selectedItem As UIMenuItem, index As Integer)
+    Public Sub VehicleSelectHandler(sender As UIMenu, selectedItem As MenuItem, index As Integer)
         If selectedItem.Text = VehicleName Then 'If VehPreview.Exists() = True Then
             Dim t As Tuple(Of String, Integer, String, String) = selectedItem.Tag
             sender.Visible = False
@@ -341,31 +343,31 @@ Public Module MenuHelper
             VehicleName = selectedItem.Text
             optLastVehMake = t.Item4
             ShowVehicleName = True
-            RefreshRGBColorMenuFor(CPriColorMenu, New UIMenuItem("nothing"), "Primary")
-            RefreshRGBColorMenuFor(CSecColorMenu, New UIMenuItem("nothing"), "Secondary")
-            RefreshColorMenuFor(ClassicColorMenu, New UIMenuItem("nothing"), ClassicColor, "Primary")
-            RefreshColorMenuFor(MetallicColorMenu, New UIMenuItem("nothing"), ClassicColor, "Primary")
-            RefreshColorMenuFor(MetalColorMenu, New UIMenuItem("nothing"), MetalColor, "Primary")
-            RefreshColorMenuFor(MatteColorMenu, New UIMenuItem("nothing"), MatteColor, "Primary")
-            RefreshColorMenuFor(ChromeColorMenu, New UIMenuItem("nothing"), ChromeColor, "Primary")
-            RefreshColorMenuFor(PeaColorMenu, New UIMenuItem("nothing"), PearlescentColor, "Pearlescent")
-            RefreshColorMenuFor(ClassicColorMenu2, New UIMenuItem("nothing"), ClassicColor, "Secondary")
-            RefreshColorMenuFor(MetallicColorMenu2, New UIMenuItem("nothing"), ClassicColor, "Secondary")
-            RefreshColorMenuFor(MetalColorMenu2, New UIMenuItem("nothing"), MetalColor, "Secondary")
-            RefreshColorMenuFor(MatteColorMenu2, New UIMenuItem("nothing"), MatteColor, "Secondary")
-            RefreshColorMenuFor(ChromeColorMenu2, New UIMenuItem("nothing"), ChromeColor, "Secondary")
-            RefreshEnumModMenuFor(PlateMenu, New UIMenuItem("nothing"), EnumTypes.NumberPlateType)
+            RefreshRGBColorMenuFor(CPriColorMenu, New MenuItem("nothing"), "Primary")
+            RefreshRGBColorMenuFor(CSecColorMenu, New MenuItem("nothing"), "Secondary")
+            RefreshColorMenuFor(ClassicColorMenu, New MenuItem("nothing"), ClassicColor, "Primary")
+            RefreshColorMenuFor(MetallicColorMenu, New MenuItem("nothing"), ClassicColor, "Primary")
+            RefreshColorMenuFor(MetalColorMenu, New MenuItem("nothing"), MetalColor, "Primary")
+            RefreshColorMenuFor(MatteColorMenu, New MenuItem("nothing"), MatteColor, "Primary")
+            RefreshColorMenuFor(ChromeColorMenu, New MenuItem("nothing"), ChromeColor, "Primary")
+            RefreshColorMenuFor(PeaColorMenu, New MenuItem("nothing"), PearlescentColor, "Pearlescent")
+            RefreshColorMenuFor(ClassicColorMenu2, New MenuItem("nothing"), ClassicColor, "Secondary")
+            RefreshColorMenuFor(MetallicColorMenu2, New MenuItem("nothing"), ClassicColor, "Secondary")
+            RefreshColorMenuFor(MetalColorMenu2, New MenuItem("nothing"), MetalColor, "Secondary")
+            RefreshColorMenuFor(MatteColorMenu2, New MenuItem("nothing"), MatteColor, "Secondary")
+            RefreshColorMenuFor(ChromeColorMenu2, New MenuItem("nothing"), ChromeColor, "Secondary")
+            RefreshEnumModMenuFor(PlateMenu, New MenuItem("nothing"), EnumTypes.NumberPlateType)
         Else
             Dim t As Tuple(Of String, Integer, String, String) = selectedItem.Tag
             SelectedVehicle = t.Item3
             If VehPreview = Nothing Then
                 If Not selectedItem.Text.Contains("NULL") Then
                     If optFade = 1 Then
-                        Game.FadeScreenOut(200)
+                        Game.UI.Screen.FadeOut(200)
                         Script.Wait(200)
                         VehPreview = CreateVehicle(t.Item1, VehPreviewPos, Radius)
                         Script.Wait(200)
-                        Game.FadeScreenIn(200)
+                        Game.UI.Screen.FadeIn(200)
                     Else
                         VehPreview = CreateVehicle(t.Item1, VehPreviewPos, Radius)
                     End If
@@ -374,11 +376,11 @@ Public Module MenuHelper
                 VehPreview.Delete()
                 If Not selectedItem.Text.Contains("NULL") Then
                     If optFade = 1 Then
-                        Game.FadeScreenOut(200)
+                        Game.UI.Screen.FadeOut(200)
                         Script.Wait(200)
                         VehPreview = CreateVehicle(t.Item1, VehPreviewPos, Radius)
                         Script.Wait(200)
-                        Game.FadeScreenIn(200)
+                        Game.UI.Screen.FadeIn(200)
                     Else
                         VehPreview = CreateVehicle(t.Item1, VehPreviewPos, Radius)
                     End If
@@ -400,7 +402,7 @@ Public Module MenuHelper
             ShowVehicleName = True
             VehPreview.Heading = Radius
             VehPreview.IsDriveable = False
-            VehPreview.LockStatus = VehicleLockStatus.CannotBeTriedToEnter
+            VehPreview.LockStatus = VehicleLockStatus.IgnoredByPlayer
             VehPreview.DirtLevel = 0
             VehiclePrice = t.Item2
             optLastVehHash = VehPreview.Model.Hash
@@ -418,11 +420,11 @@ Public Module MenuHelper
             If VehPreview = Nothing Then
                 If Not sender.MenuItems(index).Text.Contains("NULL") Then
                     If optFade = 1 Then
-                        Game.FadeScreenOut(200)
+                        Game.UI.Screen.FadeOut(200)
                         Script.Wait(200)
                         VehPreview = CreateVehicle(t.Item1, VehPreviewPos, Radius)
                         Script.Wait(200)
-                        Game.FadeScreenIn(200)
+                        Game.UI.Screen.FadeIn(200)
                     Else
                         VehPreview = CreateVehicle(t.Item1, VehPreviewPos, Radius)
                     End If
@@ -431,11 +433,11 @@ Public Module MenuHelper
                 VehPreview.Delete()
                 If Not sender.MenuItems(index).Text.Contains("NULL") Then
                     If optFade = 1 Then
-                        Game.FadeScreenOut(200)
+                        Game.UI.Screen.FadeOut(200)
                         Script.Wait(200)
                         VehPreview = CreateVehicle(t.Item1, VehPreviewPos, Radius)
                         Script.Wait(200)
-                        Game.FadeScreenIn(200)
+                        Game.UI.Screen.FadeIn(200)
                     Else
                         VehPreview = CreateVehicle(t.Item1, VehPreviewPos, Radius)
                     End If
@@ -457,7 +459,7 @@ Public Module MenuHelper
             ShowVehicleName = True
             VehPreview.Heading = Radius
             VehPreview.IsDriveable = False
-            VehPreview.LockStatus = VehicleLockStatus.CannotBeTriedToEnter
+            VehPreview.LockStatus = VehicleLockStatus.IgnoredByPlayer
             VehPreview.DirtLevel = 0
             VehiclePrice = t.Item2
             wsCamera.RepositionFor(VehPreview)
@@ -476,11 +478,11 @@ Public Module MenuHelper
         End Try
     End Sub
 
-    Public Sub ItemSelectHandler(sender As UIMenu, selectedItem As UIMenuItem, index As Integer)
+    Public Sub ItemSelectHandler(sender As UIMenu, selectedItem As MenuItem, index As Integer)
         Try
-            If selectedItem.Text = Game.GetGXTEntry("ITEM_YES") Then 'GetLangEntry("BTN_CONFIRM") Then
+            If selectedItem.Text = Game.GetLocalizedString("ITEM_YES") Then 'GetLangEntry("BTN_CONFIRM") Then
                 If PlayerCash > VehiclePrice Then
-                    Game.FadeScreenOut(200)
+                    Game.UI.Screen.FadeOut(200)
                     Script.Wait(200)
                     GP.Money = (PlayerCash - VehiclePrice)
                     ConfirmMenu.Visible = False
@@ -488,15 +490,15 @@ Public Module MenuHelper
                     DrawSpotLight = False
                     VehPreview.IsDriveable = True
                     VehPreview.LockStatus = VehicleLockStatus.Unlocked
-                    Native.Function.Call(Hash.SET_VEHICLE_DOORS_SHUT, VehPreview, False)
+                    NativeFunction.Call(Hash.SET_VEHICLE_DOORS_SHUT, VehPreview, False)
                     VehPreview.Position = New Vector3(-56.79958, -1110.868, 26.43581)
-                    Native.Function.Call(Hash.TASK_WARP_PED_INTO_VEHICLE, GPC, VehPreview, -1)
+                    NativeFunction.Call(Hash.TASK_WARP_PED_INTO_VEHICLE, GPC, VehPreview, -1)
                     VehPreview.MarkAsNoLongerNeeded()
                     VehPreview = Nothing
                     HideHud = False
                     Script.Wait(200)
-                    Game.FadeScreenIn(200)
-                    Native.Function.Call(Hash.PLAY_SOUND_FRONTEND, -1, "PROPERTY_PURCHASE", "HUD_AWARDS", False)
+                    Game.UI.Screen.FadeIn(200)
+                    NativeFunction.Call(Hash.PLAY_SOUND_FRONTEND, -1, "PROPERTY_PURCHASE", "HUD_AWARDS", False)
                     BigMessageThread.MessageInstance.ShowWeaponPurchasedMessage("~y~" & GetLangEntry("VEHICLE_PURCHASED"), "~w~" & SelectedVehicle, Nothing)
                     SelectedVehicle = Nothing
                     VehicleName = Nothing
@@ -504,33 +506,33 @@ Public Module MenuHelper
                     TaskScriptStatus = -1
                 Else
                     If Game.Player.Character.Name = "Franklin" Then
-                        DisplayNotificationThisFrame(Game.GetGXTEntry("EMSTR_55"), "", Game.GetGXTEntry("PI_BIK_HX8"), "CHAR_BANK_FLEECA", True, IconType.RightJumpingArrow) 'GetLangEntry("FLEECA_BANK") GetLangEntry("INSUFFICIENT_FUNCS_BODY")
+                        DisplayNotificationThisFrame(Game.GetLocalizedString("EMSTR_55"), "", Game.GetLocalizedString("PI_BIK_HX8"), "CHAR_BANK_FLEECA", True, UI.FeedTextIcon.Invite) 'GetLangEntry("FLEECA_BANK") GetLangEntry("INSUFFICIENT_FUNCS_BODY")
                     ElseIf Game.Player.Character.Name = "Trevor" Then
-                        DisplayNotificationThisFrame(Game.GetGXTEntry("EMSTR_58"), "", Game.GetGXTEntry("PI_BIK_HX8"), "CHAR_BANK_BOL", True, IconType.RightJumpingArrow) 'GetLangEntry("BOL_BANK")
+                        DisplayNotificationThisFrame(Game.GetLocalizedString("EMSTR_58"), "", Game.GetLocalizedString("PI_BIK_HX8"), "CHAR_BANK_BOL", True, UI.FeedTextIcon.Invite) 'GetLangEntry("BOL_BANK")
                     Else
-                        DisplayNotificationThisFrame(Game.GetGXTEntry("EMSTR_52"), "", Game.GetGXTEntry("PI_BIK_HX8"), "CHAR_BANK_MAZE", True, IconType.RightJumpingArrow) 'GetLangEntry("MAZE_BANK")
+                        DisplayNotificationThisFrame(Game.GetLocalizedString("EMSTR_52"), "", Game.GetLocalizedString("PI_BIK_HX8"), "CHAR_BANK_MAZE", True, UI.FeedTextIcon.Invite) 'GetLangEntry("MAZE_BANK")
                     End If
                 End If
             ElseIf selectedItem.Text = GetLangEntry("BTN_TEST_DRIVE") Then
-                Game.FadeScreenOut(200)
+                Game.UI.Screen.FadeOut(200)
                 Script.Wait(200)
-                Native.Function.Call(Hash.TASK_WARP_PED_INTO_VEHICLE, GPC, VehPreview, -1)
+                NativeFunction.Call(Hash.TASK_WARP_PED_INTO_VEHICLE, GPC, VehPreview, -1)
                 ConfirmMenu.Visible = False
                 wsCamera.Stop()
                 DrawSpotLight = False
                 VehPreview.IsDriveable = True
                 VehPreview.LockStatus = VehicleLockStatus.Unlocked
-                Native.Function.Call(Hash.SET_VEHICLE_DOORS_SHUT, VehPreview, False)
+                NativeFunction.Call(Hash.SET_VEHICLE_DOORS_SHUT, VehPreview, False)
                 DisplayHelpTextThisFrame(GetLangEntry("HELP_TEST_DRIVE"))
                 TestDrive = TestDrive + 1
                 HideHud = False
                 VehPreview.Position = New Vector3(-56.79958, -1110.868, 26.43581)
                 Script.Wait(200)
-                Game.FadeScreenIn(200)
+                Game.UI.Screen.FadeIn(200)
                 ShowVehicleName = False
             End If
 
-            If selectedItem.Text = Game.GetGXTEntry("PERSO_MOD_PER") Then 'GetLangEntry("BTN_UPGRADE_NAME") Then
+            If selectedItem.Text = Game.GetLocalizedString("PERSO_MOD_PER") Then 'GetLangEntry("BTN_UPGRADE_NAME") Then
                 VehPreview.InstallModKit()
                 VehPreview.SetMod(VehicleMod.Suspension, VehPreview.GetModCount(VehicleMod.Suspension) - 1, False)
                 VehPreview.SetMod(VehicleMod.Engine, VehPreview.GetModCount(VehicleMod.Engine) - 1, False)
@@ -539,9 +541,9 @@ Public Module MenuHelper
                 VehPreview.SetMod(VehicleMod.Armor, VehPreview.GetModCount(VehicleMod.Armor) - 1, False)
                 VehPreview.ToggleMod(VehicleToggleMod.XenonHeadlights, True)
                 VehPreview.ToggleMod(VehicleToggleMod.Turbo, True)
-                Native.Function.Call(Hash.SET_VEHICLE_TYRES_CAN_BURST, VehPreview, False)
-                Native.Function.Call(Hash._START_SCREEN_EFFECT, "MP_corona_switch_supermod", 0, 1)
-                Native.Function.Call(Hash.PLAY_SOUND_FRONTEND, -1, "Lowrider_Upgrade", "Lowrider_Super_Mod_Garage_Sounds", 1)
+                NativeFunction.Call(Hash.SET_VEHICLE_TYRES_CAN_BURST, VehPreview, False)
+                NativeFunction.Call(Hash._START_SCREEN_EFFECT, "MP_corona_switch_supermod", 0, 1)
+                NativeFunction.Call(Hash.PLAY_SOUND_FRONTEND, -1, "Lowrider_Upgrade", "Lowrider_Super_Mod_Garage_Sounds", 1)
             ElseIf selectedItem.Text = GetLangEntry("BTN_PLATE_NUMBER_NAME") Then
                 Dim NumPlateText As String = Game.GetUserInput(VehPreview.NumberPlate, 9)
                 If NumPlateText <> "" Then
@@ -553,7 +555,7 @@ Public Module MenuHelper
         End Try
     End Sub
 
-    Public Sub CategoryItemSelectHandler(sender As UIMenu, selectedItem As UIMenuItem, index As Integer)
+    Public Sub CategoryItemSelectHandler(sender As UIMenu, selectedItem As MenuItem, index As Integer)
         Try
             Dim t As Tuple(Of Integer, String) = selectedItem.Tag
             CreateVehicleMenu($".\scripts\PremiumDeluxeMotorsport\Vehicles\{t.Item2}.ini", GetLangEntry(t.Item2))
@@ -580,16 +582,16 @@ Public Module MenuHelper
             For ii As Integer = 0 To Format.Count - 1
                 Dim i As Integer = (Format.Count - 1) - ii
                 Price = Format(i)("price")
-                Dim item As New UIMenuItem($"{Game.GetGXTEntry(Format(i)("make"))} {Game.GetGXTEntry(Format(i)("gxt"))}")
+                Dim item As New MenuItem($"{Game.GetLocalizedString(Format(i)("make"))} {Game.GetLocalizedString(Format(i)("gxt"))}")
                 With item
-                    If .Text.Contains("NULL") Then .Text = Game.GetGXTEntry(Format(i)("gxt"))
+                    If .Text.Contains("NULL") Then .Text = Game.GetLocalizedString(Format(i)("gxt"))
                     If .Text.Contains("NULL") Then .Text = Format(i)("name")
                     .SetRightLabel($"${Price.ToString("N0")}")
-                    .Tag = New Tuple(Of String, Integer, String, String)(Format(i)("model"), Format(i)("price"), $"{Game.GetGXTEntry(Format(i)("make"))} {Game.GetGXTEntry(Format(i)("gxt"))}", Format(i)("make"))
+                    .Tag = New Tuple(Of String, Integer, String, String)(Format(i)("model"), Format(i)("price"), $"{Game.GetLocalizedString(Format(i)("make"))} {Game.GetLocalizedString(Format(i)("gxt"))}", Format(i)("make"))
                     Dim model As Model = New Model(Format(i)("model"))
                     If hiddenSave.GetValue(Of Integer)("VEHICLES", model.Hash, 0) = 0 Then
                         hiddenSave.SetValue(Of Integer)("VEHICLES", VehPreview.Model.Hash, 0)
-                        .SetLeftBadge(UIMenuItem.BadgeStyle.Star)
+                        .SetLeftBadge(MenuItem.BadgeStyle.Star)
                     End If
                 End With
                 Dim vmodel As Model = New Model(Format(i)("model"))
@@ -644,48 +646,48 @@ Public Module MenuHelper
         End Try
     End Sub
 
-    Public Sub ModsMenuItemSelectHandler(sender As UIMenu, selectedItem As UIMenuItem, index As Integer)
+    Public Sub ModsMenuItemSelectHandler(sender As UIMenu, selectedItem As MenuItem, index As Integer)
         Try
-            For Each i As UIMenuItem In sender.MenuItems
-                i.SetRightBadge(UIMenuItem.BadgeStyle.None)
+            For Each i As MenuItem In sender.MenuItems
+                i.SetRightBadge(MenuItem.BadgeStyle.None)
             Next
 
             'Color
             If (sender Is ClassicColorMenu) Or (sender Is ChromeColorMenu) Or (sender Is MatteColorMenu) Or (sender Is MetalColorMenu) Then
                 VehPreview.PrimaryColor = selectedItem.Tag
-                selectedItem.SetRightBadge(UIMenuItem.BadgeStyle.Car)
+                selectedItem.SetRightBadge(MenuItem.BadgeStyle.Car)
                 lastVehMemory.PrimaryColor = selectedItem.Tag
             ElseIf sender Is MetallicColorMenu Then
                 VehPreview.PrimaryColor = selectedItem.Tag
                 VehPreview.PearlescentColor = selectedItem.Tag
-                selectedItem.SetRightBadge(UIMenuItem.BadgeStyle.Car)
+                selectedItem.SetRightBadge(MenuItem.BadgeStyle.Car)
                 lastVehMemory.PrimaryColor = selectedItem.Tag
                 lastVehMemory.PearlescentColor = selectedItem.Tag
             ElseIf sender Is PeaColorMenu Then
                 VehPreview.PearlescentColor = selectedItem.Tag
-                selectedItem.SetRightBadge(UIMenuItem.BadgeStyle.Car)
+                selectedItem.SetRightBadge(MenuItem.BadgeStyle.Car)
                 lastVehMemory.PearlescentColor = selectedItem.Tag
             ElseIf (sender Is ClassicColorMenu2) Or (sender Is ChromeColorMenu2) Or (sender Is MatteColorMenu2) Or (sender Is MetalColorMenu2) Then
                 VehPreview.SecondaryColor = selectedItem.Tag
-                selectedItem.SetRightBadge(UIMenuItem.BadgeStyle.Car)
+                selectedItem.SetRightBadge(MenuItem.BadgeStyle.Car)
                 lastVehMemory.SecondaryColor = selectedItem.Tag
             ElseIf sender Is MetallicColorMenu2 Then
                 VehPreview.SecondaryColor = selectedItem.Tag
                 VehPreview.PearlescentColor = selectedItem.Tag
-                selectedItem.SetRightBadge(UIMenuItem.BadgeStyle.Car)
+                selectedItem.SetRightBadge(MenuItem.BadgeStyle.Car)
                 lastVehMemory.SecondaryColor = selectedItem.Tag
                 lastVehMemory.PearlescentColor = selectedItem.Tag
             ElseIf sender Is CPriColorMenu Then
                 VehPreview.CustomPrimaryColor = selectedItem.Tag
-                selectedItem.SetRightBadge(UIMenuItem.BadgeStyle.Car)
+                selectedItem.SetRightBadge(MenuItem.BadgeStyle.Car)
                 lastVehMemory.CustomPrimaryColor = selectedItem.Tag
             ElseIf sender Is CSecColorMenu Then
                 VehPreview.CustomSecondaryColor = selectedItem.Tag
-                selectedItem.SetRightBadge(UIMenuItem.BadgeStyle.Car)
+                selectedItem.SetRightBadge(MenuItem.BadgeStyle.Car)
                 lastVehMemory.CustomSecondaryColor = selectedItem.Tag
             ElseIf sender Is PlateMenu Then
                 VehPreview.NumberPlateType = selectedItem.Tag
-                selectedItem.SetRightBadge(UIMenuItem.BadgeStyle.Car)
+                selectedItem.SetRightBadge(MenuItem.BadgeStyle.Car)
                 lastVehMemory.NumberPlate = selectedItem.Tag
             End If
 

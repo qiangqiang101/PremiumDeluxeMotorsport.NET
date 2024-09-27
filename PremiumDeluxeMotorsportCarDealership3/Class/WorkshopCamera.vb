@@ -675,10 +675,10 @@ Public Class WorkshopCamera
 
         If Game.IsControlJustPressed(0, Control.Attack) AndAlso Not _isDragging AndAlso Not IsMouseInMenu() Then
             _isDragging = True
-            Dim mouseX = Native.Function.Call(Of Single)(Hash.GET_CONTROL_NORMAL, 0, CInt(Control.CursorX))
-            Dim mouseY = Native.Function.Call(Of Single)(Hash.GET_CONTROL_NORMAL, 0, CInt(Control.CursorY))
+            Dim mouseX = NativeFunction.Call(Of Single)(Hash.GET_CONTROL_NORMAL, 0, CInt(Control.CursorX))
+            Dim mouseY = NativeFunction.Call(Of Single)(Hash.GET_CONTROL_NORMAL, 0, CInt(Control.CursorY))
 
-            Native.Function.Call(DirectCast(&H8DB8CFFD58B62552UL, Hash), 4)
+            NativeFunction.Call(DirectCast(&H8DB8CFFD58B62552UL, Hash), 4)
 
 
             mouseX = (mouseX * 2) - 1
@@ -689,12 +689,12 @@ Public Class WorkshopCamera
         If Game.IsControlJustReleased(0, Control.Attack) AndAlso _isDragging Then
             _isDragging = False
             _dragOffset = New Point()
-            Native.Function.Call(DirectCast(&H8DB8CFFD58B62552UL, Hash), 0)
+            NativeFunction.Call(DirectCast(&H8DB8CFFD58B62552UL, Hash), 0)
         End If
 
         If RotationMode = CameraRotationMode.Around Then
             If _isDragging Then
-                Native.Function.Call(Hash._SHOW_CURSOR_THIS_FRAME)
+                NativeFunction.Call(Hash._SHOW_CURSOR_THIS_FRAME)
                 Dim dir = CutsceneManager.RotationToDirection(_mainCamera.Rotation)
 
                 Dim len = (_targetPos - _mainCamera.Position).Length()
@@ -709,8 +709,8 @@ Public Class WorkshopCamera
                 Dim up = CutsceneManager.RotationToDirection(rotUp) - CutsceneManager.RotationToDirection(rotDown)
 
 
-                Dim mouseX = Native.Function.Call(Of Single)(Hash.GET_CONTROL_NORMAL, 0, CInt(Control.CursorX))
-                Dim mouseY = Native.Function.Call(Of Single)(Hash.GET_CONTROL_NORMAL, 0, CInt(Control.CursorY))
+                Dim mouseX = NativeFunction.Call(Of Single)(Hash.GET_CONTROL_NORMAL, 0, CInt(Control.CursorX))
+                Dim mouseY = NativeFunction.Call(Of Single)(Hash.GET_CONTROL_NORMAL, 0, CInt(Control.CursorY))
 
                 mouseX = (mouseX * 2) - 1
                 mouseY = (mouseY * 2) - 1
@@ -744,8 +744,8 @@ Public Class WorkshopCamera
                 Dim up = CutsceneManager.RotationToDirection(rotUp) - CutsceneManager.RotationToDirection(rotDown)
 
 
-                Dim mouseX = Native.Function.Call(Of Single)(Hash.GET_CONTROL_NORMAL, 0, CInt(Control.LookLeftRight))
-                Dim mouseY = Native.Function.Call(Of Single)(Hash.GET_CONTROL_NORMAL, 0, CInt(Control.LookUpDown))
+                Dim mouseX = NativeFunction.Call(Of Single)(Hash.GET_CONTROL_NORMAL, 0, CInt(Control.LookLeftRight))
+                Dim mouseY = NativeFunction.Call(Of Single)(Hash.GET_CONTROL_NORMAL, 0, CInt(Control.LookUpDown))
 
                 Dim rotation As New Vector3()
 
@@ -761,10 +761,10 @@ Public Class WorkshopCamera
             End If
         ElseIf RotationMode = CameraRotationMode.FirstPerson Then
             If _isDragging Then
-                Native.Function.Call(Hash._SHOW_CURSOR_THIS_FRAME)
+                NativeFunction.Call(Hash._SHOW_CURSOR_THIS_FRAME)
 
-                Dim mouseX = Native.Function.Call(Of Single)(Hash.GET_CONTROL_NORMAL, 0, CInt(Control.CursorX))
-                Dim mouseY = Native.Function.Call(Of Single)(Hash.GET_CONTROL_NORMAL, 0, CInt(Control.CursorY))
+                Dim mouseX = NativeFunction.Call(Of Single)(Hash.GET_CONTROL_NORMAL, 0, CInt(Control.CursorX))
+                Dim mouseY = NativeFunction.Call(Of Single)(Hash.GET_CONTROL_NORMAL, 0, CInt(Control.CursorY))
 
 
                 mouseX = (mouseX * 2) - 1
@@ -789,8 +789,8 @@ Public Class WorkshopCamera
                 _dragOffset = New PointF(mouseX, mouseY)
             End If
             If Game.CurrentInputMode = InputMode.GamePad Then
-                Dim mouseX = Native.Function.Call(Of Single)(Hash.GET_CONTROL_NORMAL, 0, CInt(Control.LookLeftRight))
-                Dim mouseY = Native.Function.Call(Of Single)(Hash.GET_CONTROL_NORMAL, 0, CInt(Control.LookUpDown))
+                Dim mouseX = NativeFunction.Call(Of Single)(Hash.GET_CONTROL_NORMAL, 0, CInt(Control.LookLeftRight))
+                Dim mouseY = NativeFunction.Call(Of Single)(Hash.GET_CONTROL_NORMAL, 0, CInt(Control.LookUpDown))
 
                 mouseX *= -1
 

@@ -137,7 +137,7 @@ Public Class CutsceneManager
         Dim argument As New OutputArgument
         Dim argument2 As New OutputArgument
         Dim arguments As InputArgument() = New InputArgument() {worldCoords.X, worldCoords.Y, worldCoords.Z, argument, argument2}
-        If Not Native.Function.Call(Of Boolean)(Hash._0x34E82F05DF2974F5, arguments) Then
+        If Not NativeFunction.Call(Of Boolean)(Hash._0x34E82F05DF2974F5, arguments) Then
             screenCoords = New Vector2
             Return False
         End If

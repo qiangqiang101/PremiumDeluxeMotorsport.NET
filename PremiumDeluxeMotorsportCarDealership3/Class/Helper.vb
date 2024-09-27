@@ -5,7 +5,9 @@ Imports System.Windows.Forms
 Imports GTA
 Imports GTA.Math
 Imports GTA.Native
-Imports INMNativeUI
+Imports GTA.UI
+Imports LemonUI.Scaleform
+Imports NativeFunction = GTA.Native.Function
 
 Public Module Helper
 
@@ -74,12 +76,6 @@ Public Module Helper
         End Select
     End Function
 
-    Public Sub DisplayHelpTextThisFrame(ByVal [text] As String)
-        Native.Function.Call(Hash._0x8509B634FBE7DA11, "STRING")
-        Native.Function.Call(Hash._0x6C188BE134E074AA, [text])
-        Native.Function.Call(Hash._0x238FFE5C7B0498A6, 0, 0, 1, -1)
-    End Sub
-
     Public Enum IconType
         ChatBox = 1
         Email = 2
@@ -126,11 +122,8 @@ Public Module Helper
     ''' CHAR_MARTIN: Martin Madrazo 's Face
     ''' CHAR_ACTING_UP: Acting Icon
     ''' </summary>
-    Public Sub DisplayNotificationThisFrame(Sender As String, Subject As String, Message As String, Icon As String, Flash As Boolean, Type As IconType)
-        Native.Function.Call(Hash._SET_NOTIFICATION_TEXT_ENTRY, "STRING")
-        Native.Function.Call(Hash._ADD_TEXT_COMPONENT_STRING, Message)
-        Native.Function.Call(Hash._SET_NOTIFICATION_MESSAGE, Icon, Icon, Flash, Type, Sender, Subject)
-        Native.Function.Call(Hash._DRAW_NOTIFICATION, False, True)
+    Public Sub DisplayNotificationThisFrame(Sender As String, Subject As String, Message As String, Icon As String, Flash As Boolean, Type As FeedTextIcon)
+        UI.Notification.PostMessageText(Message, New GTA.Graphics.TextureAsset(Icon, Icon), Flash, Type, Sender, Subject)
     End Sub
 
     Public Enum ModType
@@ -217,18 +210,18 @@ Public Module Helper
     End Function
 
     Public Sub ToggleIPL(iplToEnable As String, iplToDisable As String)
-        If Native.Function.Call(Of Boolean)(Hash.IS_IPL_ACTIVE, New InputArgument() {iplToDisable}) Then
-            Native.Function.Call(Hash.REMOVE_IPL, New InputArgument() {iplToDisable})
-            Native.Function.Call(Hash.REQUEST_IPL, New InputArgument() {iplToEnable})
+        If NativeFunction.Call(Of Boolean)(Hash.IS_IPL_ACTIVE, New InputArgument() {iplToDisable}) Then
+            NativeFunction.Call(Hash.REMOVE_IPL, New InputArgument() {iplToDisable})
+            NativeFunction.Call(Hash.REQUEST_IPL, New InputArgument() {iplToEnable})
         Else
-            Native.Function.Call(Hash.REQUEST_IPL, New InputArgument() {iplToEnable})
+            NativeFunction.Call(Hash.REQUEST_IPL, New InputArgument() {iplToEnable})
         End If
     End Sub
 
     Public Sub LoadMissingProps()
-        Dim v_2 As Integer = Native.Function.Call(Of Integer)(Hash.GET_INTERIOR_AT_COORDS, -59.793598175048828, -1098.7840576171875, 27.2612) 'Showroom
-        Native.Function.Call(Hash._ENABLE_INTERIOR_PROP, v_2, "csr_beforeMission")
-        Native.Function.Call(Hash.REFRESH_INTERIOR, v_2)
+        Dim ip = InteriorProxy.GetInteriorProxyAt(New Vector3(-59.793598175048828, -1098.7840576171875, 27.2612)) 'NativeFunction.Call(Of Integer)(Hash.GET_INTERIOR_AT_COORDS, -59.793598175048828, -1098.7840576171875, 27.2612) 'Showroom
+        ip.ActivateEntitySet("csr_beforeMission")
+        ip.Refresh()
     End Sub
 
     Enum EnumTypes
@@ -244,25 +237,21 @@ Public Module Helper
     End Enum
 
     Public Function IsCustomWheels() As Boolean
-        Return Native.Function.Call(Of Boolean)(Hash.GET_VEHICLE_MOD_VARIATION, VehPreview, VehicleMod.FrontWheels)
-    End Function
-
-    Public Function GetInteriorID(interior As Vector3) As Integer
-        Return Native.Function.Call(Of Integer)(Hash.GET_INTERIOR_AT_COORDS, interior.X, interior.Y, interior.Z)
+        Return NativeFunction.Call(Of Boolean)(Hash.GET_VEHICLE_MOD_VARIATION, VehPreview, CInt(VehicleModType.FrontWheel))
     End Function
 
     Public Function DoesGXTEntryExist(entry As String) As Boolean
-        Return Native.Function.Call(Of Boolean)(Hash.DOES_TEXT_LABEL_EXIST, entry)
+        Return NativeFunction.Call(Of Boolean)(Hash.DOES_TEXT_LABEL_EXIST, entry)
     End Function
 
     Public Function GetLocalizedColorName(vehColor As VehicleColor) As String
-        If Not Native.Function.Call(Of Boolean)(Hash.HAS_THIS_ADDITIONAL_TEXT_LOADED, "mod_mnu", 10) Then
-            Native.Function.Call(Hash.CLEAR_ADDITIONAL_TEXT, 10, True)
-            Native.Function.Call(Hash.REQUEST_ADDITIONAL_TEXT, "mod_mnu", 10)
+        If Not NativeFunction.Call(Of Boolean)(Hash.HAS_THIS_ADDITIONAL_TEXT_LOADED, "mod_mnu", 10) Then
+            NativeFunction.Call(Hash.CLEAR_ADDITIONAL_TEXT, 10, True)
+            NativeFunction.Call(Hash.REQUEST_ADDITIONAL_TEXT, "mod_mnu", 10)
         End If
         If _colorNames.ContainsKey(vehColor) Then
             If DoesGXTEntryExist(_colorNames(vehColor).Item1) Then
-                Return Game.GetGXTEntry(_colorNames(vehColor).Item1)
+                Return Game.GetLocalizedString(_colorNames(vehColor).Item1)
             End If
             Return Trim(RegularExpressions.Regex.Replace(_colorNames(vehColor).Item2, "[A-Z]", " ${0}"))
         End If
@@ -445,52 +434,52 @@ Public Module Helper
 
         Select Case tint
             Case VehicleWindowTint.DarkSmoke
-                result = Game.GetGXTEntry("CMOD_WIN_2")
+                result = Game.GetLocalizedString("CMOD_WIN_2")
                 Exit Select
             Case VehicleWindowTint.Green
-                result = Game.GetGXTEntry("GREEN")
+                result = Game.GetLocalizedString("GREEN")
                 Exit Select
             Case VehicleWindowTint.LightSmoke
-                result = Game.GetGXTEntry("CMOD_WIN_1")
+                result = Game.GetLocalizedString("CMOD_WIN_1")
                 Exit Select
             Case VehicleWindowTint.Limo
-                result = Game.GetGXTEntry("CMOD_WIN_3")
+                result = Game.GetLocalizedString("CMOD_WIN_3")
                 Exit Select
             Case VehicleWindowTint.None
-                result = Game.GetGXTEntry("CMOD_WIN_0")
+                result = Game.GetLocalizedString("CMOD_WIN_0")
                 Exit Select
             Case VehicleWindowTint.PureBlack
-                result = Game.GetGXTEntry("CMOD_WIN_5")
+                result = Game.GetLocalizedString("CMOD_WIN_5")
                 Exit Select
             Case VehicleWindowTint.Stock
-                result = Game.GetGXTEntry("CMOD_WIN_4")
+                result = Game.GetLocalizedString("CMOD_WIN_4")
                 Exit Select
         End Select
 
         Return result
     End Function
 
-    Public Function LocalizedLicensePlate(plateType As GTA.NumberPlateType) As String
+    Public Function LocalizedLicensePlate(plateType As LicensePlateStyle) As String
         Dim result As String = Nothing
 
         Select Case plateType
             Case NumberPlateType.BlueOnWhite1
-                result = Game.GetGXTEntry("CMOD_PLA_0")
+                result = Game.GetLocalizedString("CMOD_PLA_0")
                 Exit Select
             Case NumberPlateType.BlueOnWhite2
-                result = Game.GetGXTEntry("CMOD_PLA_1")
+                result = Game.GetLocalizedString("CMOD_PLA_1")
                 Exit Select
             Case NumberPlateType.BlueOnWhite3
-                result = Game.GetGXTEntry("CMOD_PLA_2")
+                result = Game.GetLocalizedString("CMOD_PLA_2")
                 Exit Select
             Case NumberPlateType.NorthYankton
-                result = Game.GetGXTEntry("CMOD_MOD_GLD2")
+                result = Game.GetLocalizedString("CMOD_MOD_GLD2")
                 Exit Select
             Case NumberPlateType.YellowOnBlack
-                result = Game.GetGXTEntry("CMOD_PLA_4")
+                result = Game.GetLocalizedString("CMOD_PLA_4")
                 Exit Select
             Case NumberPlateType.YellowOnBlue
-                result = Game.GetGXTEntry("CMOD_PLA_3")
+                result = Game.GetLocalizedString("CMOD_PLA_3")
                 Exit Select
         End Select
 
@@ -499,46 +488,46 @@ Public Module Helper
 
     <Extension()>
     Public Function GetClassDisplayName(vehicle As Vehicle) As String
-        Return Game.GetGXTEntry("VEH_CLASS_" + CInt(vehicle.ClassType).ToString())
+        Return Game.GetLocalizedString("VEH_CLASS_" + CInt(vehicle.ClassType).ToString())
     End Function
 
     Public Sub AttachTo(entity1 As Entity, entity2 As Entity, boneindex As Integer, position As Vector3, rotation As Vector3)
-        Native.Function.Call(Hash.ATTACH_ENTITY_TO_ENTITY, entity1.Handle, entity2.Handle, boneindex, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, False, False, True, False, 2, True)
+        NativeFunction.Call(Hash.ATTACH_ENTITY_TO_ENTITY, entity1.Handle, entity2.Handle, boneindex, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, False, False, True, False, 2, True)
     End Sub
 
     Public Function GetVehAcceleration(veh As Vehicle) As Single
-        Dim result As Single = (Native.Function.Call(Of Single)(Hash.GET_VEHICLE_ACCELERATION, veh) * 100) * 4.4
+        Dim result As Single = (NativeFunction.Call(Of Single)(Hash.GET_VEHICLE_ACCELERATION, veh) * 100) * 4.4
         If result >= 200 Then result = 200
         Return result
     End Function
 
     Public Function GetVehTopSpeed(veh As Vehicle) As Single
-        Dim result As Single = (((Native.Function.Call(Of Single)(Hash._0x53AF99BAA671CA47, veh) * 3600) / 1609.344) * 1.9)
+        Dim result As Single = (((NativeFunction.Call(Of Single)(Hash._0x53AF99BAA671CA47, veh) * 3600) / 1609.344) * 1.9)
         If result >= 200 Then result = 200
         Return result
     End Function
 
     Public Function GetVehBraking(veh As Vehicle) As Single
-        Dim result As Single = (Native.Function.Call(Of Single)(Hash.GET_VEHICLE_MAX_BRAKING, veh) * 70)
+        Dim result As Single = (NativeFunction.Call(Of Single)(Hash.GET_VEHICLE_MAX_BRAKING, veh) * 70)
         If result >= 200 Then result = 200
         Return result
     End Function
 
     Public Function GetVehTraction(veh As Vehicle) As Single
-        Dim result As Single = Native.Function.Call(Of Single)(Hash.GET_VEHICLE_MAX_TRACTION, veh) * 6.5
+        Dim result As Single = NativeFunction.Call(Of Single)(Hash.GET_VEHICLE_MAX_TRACTION, veh) * 6.5
         If result >= 200 Then result = 200
         Return result
     End Function
 
     Public Function RequestAdditionTextFile(ByVal textname As String, ByVal Optional timeout As Integer = 1000) As Boolean
-        If Not Native.Function.Call(Of Boolean)(Hash.HAS_THIS_ADDITIONAL_TEXT_LOADED, textname, 9) Then
-            Native.Function.Call(Hash.CLEAR_ADDITIONAL_TEXT, 9, True)
-            Native.Function.Call(Hash.REQUEST_ADDITIONAL_TEXT, textname, 9)
+        If Not NativeFunction.Call(Of Boolean)(Hash.HAS_THIS_ADDITIONAL_TEXT_LOADED, textname, 9) Then
+            NativeFunction.Call(Hash.CLEAR_ADDITIONAL_TEXT, 9, True)
+            NativeFunction.Call(Hash.REQUEST_ADDITIONAL_TEXT, textname, 9)
             Dim [end] As Integer = Game.GameTime + timeout
 
             If True Then
                 While Game.GameTime < [end]
-                    If Native.Function.Call(Of Boolean)(Hash.HAS_THIS_ADDITIONAL_TEXT_LOADED, textname, 9) Then Return True
+                    If NativeFunction.Call(Of Boolean)(Hash.HAS_THIS_ADDITIONAL_TEXT_LOADED, textname, 9) Then Return True
                     Script.Yield()
                 End While
                 Return False

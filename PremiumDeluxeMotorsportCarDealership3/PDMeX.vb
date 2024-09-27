@@ -11,11 +11,11 @@ Public Class PDMeX
         _menuPool.UpdateStats(GetVehTopSpeed(VehPreview), GetVehAcceleration(VehPreview), GetVehBraking(VehPreview), GetVehTraction(VehPreview))
 
         If HideHud Then
-            Native.Function.Call(Hash.HIDE_HUD_AND_RADAR_THIS_FRAME)
-            Native.Function.Call(Hash.SHOW_HUD_COMPONENT_THIS_FRAME, 3)
-            Native.Function.Call(Hash.SHOW_HUD_COMPONENT_THIS_FRAME, 4)
-            Native.Function.Call(Hash.SHOW_HUD_COMPONENT_THIS_FRAME, 5)
-            Native.Function.Call(Hash.SHOW_HUD_COMPONENT_THIS_FRAME, 13)
+            NativeFunction.Call(Hash.HIDE_HUD_AND_RADAR_THIS_FRAME)
+            NativeFunction.Call(Hash.SHOW_HUD_COMPONENT_THIS_FRAME, 3)
+            NativeFunction.Call(Hash.SHOW_HUD_COMPONENT_THIS_FRAME, 4)
+            NativeFunction.Call(Hash.SHOW_HUD_COMPONENT_THIS_FRAME, 5)
+            NativeFunction.Call(Hash.SHOW_HUD_COMPONENT_THIS_FRAME, 13)
             wsCamera.Update()
         End If
 

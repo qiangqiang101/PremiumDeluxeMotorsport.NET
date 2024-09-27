@@ -1,0 +1,89 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "E:\\Users\\Admin\\Documents\\Gitlab\\PremiumDeluxeMotorsport.NET\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{4566FCA9-4D7F-4813-9ADD-76C7723B1655}|PremiumDeluxeMotorsportCarDealership3\\PDMCD4.vbproj|e:\\users\\admin\\documents\\gitlab\\premiumdeluxemotorsport.net\\premiumdeluxemotorsportcardealership3\\menuhelper.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{4566FCA9-4D7F-4813-9ADD-76C7723B1655}|PremiumDeluxeMotorsportCarDealership3\\PDMCD4.vbproj|solutionrelative:premiumdeluxemotorsportcardealership3\\menuhelper.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4566FCA9-4D7F-4813-9ADD-76C7723B1655}|PremiumDeluxeMotorsportCarDealership3\\PDMCD4.vbproj|e:\\users\\admin\\documents\\gitlab\\premiumdeluxemotorsport.net\\premiumdeluxemotorsportcardealership3\\class\\helper.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{4566FCA9-4D7F-4813-9ADD-76C7723B1655}|PremiumDeluxeMotorsportCarDealership3\\PDMCD4.vbproj|solutionrelative:premiumdeluxemotorsportcardealership3\\class\\helper.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4566FCA9-4D7F-4813-9ADD-76C7723B1655}|PremiumDeluxeMotorsportCarDealership3\\PDMCD4.vbproj|e:\\users\\admin\\documents\\gitlab\\premiumdeluxemotorsport.net\\premiumdeluxemotorsportcardealership3\\pdm.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{4566FCA9-4D7F-4813-9ADD-76C7723B1655}|PremiumDeluxeMotorsportCarDealership3\\PDMCD4.vbproj|solutionrelative:premiumdeluxemotorsportcardealership3\\pdm.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{00000000-0000-0000-0000-000000000000}|\u003CSolution\u003E|PDMCD4||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4566FCA9-4D7F-4813-9ADD-76C7723B1655}|PremiumDeluxeMotorsportCarDealership3\\PDMCD4.vbproj|e:\\users\\admin\\documents\\gitlab\\premiumdeluxemotorsport.net\\premiumdeluxemotorsportcardealership3\\||{B270807C-D8C6-49EB-8EBE-8E8D566637A1}|8998e48e-b89a-4034-b66e-353d8c1fdc2e"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Helper.vb",
+              "DocumentMoniker": "E:\\Users\\Admin\\Documents\\Gitlab\\PremiumDeluxeMotorsport.NET\\PremiumDeluxeMotorsportCarDealership3\\Class\\Helper.vb",
+              "RelativeDocumentMoniker": "PremiumDeluxeMotorsportCarDealership3\\Class\\Helper.vb",
+              "ToolTip": "E:\\Users\\Admin\\Documents\\Gitlab\\PremiumDeluxeMotorsport.NET\\PremiumDeluxeMotorsportCarDealership3\\Class\\Helper.vb",
+              "RelativeToolTip": "PremiumDeluxeMotorsportCarDealership3\\Class\\Helper.vb",
+              "ViewState": "AQIAALUBAAAAAAAAAAAuwMoBAAAVAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2024-09-27T15:26:48.209Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MenuHelper.vb",
+              "DocumentMoniker": "E:\\Users\\Admin\\Documents\\Gitlab\\PremiumDeluxeMotorsport.NET\\PremiumDeluxeMotorsportCarDealership3\\MenuHelper.vb",
+              "RelativeDocumentMoniker": "PremiumDeluxeMotorsportCarDealership3\\MenuHelper.vb",
+              "ToolTip": "E:\\Users\\Admin\\Documents\\Gitlab\\PremiumDeluxeMotorsport.NET\\PremiumDeluxeMotorsportCarDealership3\\MenuHelper.vb",
+              "RelativeToolTip": "PremiumDeluxeMotorsportCarDealership3\\MenuHelper.vb",
+              "ViewState": "AQIAADsBAAAAAAAAAAAEwBgBAAAuAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2024-09-27T14:37:49.628Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "PDMCD4",
+              "DocumentMoniker": "E:\\Users\\Admin\\Documents\\Gitlab\\PremiumDeluxeMotorsport.NET\\PremiumDeluxeMotorsportCarDealership3\\PDMCD4.vbproj",
+              "RelativeDocumentMoniker": "PremiumDeluxeMotorsportCarDealership3\\PDMCD4.vbproj",
+              "ToolTip": "E:\\Users\\Admin\\Documents\\Gitlab\\PremiumDeluxeMotorsport.NET\\PremiumDeluxeMotorsportCarDealership3\\PDMCD4.vbproj",
+              "RelativeToolTip": "PremiumDeluxeMotorsportCarDealership3\\PDMCD4.vbproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-09-27T14:35:53.339Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "PDM.vb",
+              "DocumentMoniker": "E:\\Users\\Admin\\Documents\\Gitlab\\PremiumDeluxeMotorsport.NET\\PremiumDeluxeMotorsportCarDealership3\\PDM.vb",
+              "RelativeDocumentMoniker": "PremiumDeluxeMotorsportCarDealership3\\PDM.vb",
+              "ToolTip": "E:\\Users\\Admin\\Documents\\Gitlab\\PremiumDeluxeMotorsport.NET\\PremiumDeluxeMotorsportCarDealership3\\PDM.vb",
+              "RelativeToolTip": "PremiumDeluxeMotorsportCarDealership3\\PDM.vb",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA8AAABIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2024-09-27T14:29:34.258Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
